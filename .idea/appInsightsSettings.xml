@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="fpt.anhdhph.bittweet" />
+                  <option name="mobileSdkAppId" value="1:157530766086:android:cbbba78c853a09608ffc87" />
+                  <option name="projectId" value="tramquan-253dc" />
+                  <option name="projectNumber" value="157530766086" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
