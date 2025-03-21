@@ -1,9 +1,6 @@
 package fpt.anhdhph.bittweet.screen;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,25 +10,17 @@ import androidx.core.view.WindowInsetsCompat;
 
 import fpt.anhdhph.bittweet.R;
 
-public class ScreenRecover1 extends AppCompatActivity {
-    Button btnXacNhan;
+public class ScreenRecover2 extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_screen_recover1);
+        setContentView(R.layout.activity_screen_recover2);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
-        });
-        btnXacNhan = findViewById(R.id.btnXacNhan);
-        btnXacNhan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ScreenRecover1.this, ScreenRecover2.class);
-                startActivity(intent);
-            }
         });
     }
 }
