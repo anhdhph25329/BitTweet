@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "157530766086",
+    "project_id": "tramquan-253dc",
+    "storage_bucket": "tramquan-253dc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:157530766086:android:cbbba78c853a09608ffc87",
+        "android_client_info": {
+          "package_name": "fpt.anhdhph.bittweet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiVSK9b9IRqh7geRlJSSzHkY41Waf046E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
