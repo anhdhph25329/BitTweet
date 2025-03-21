@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -12,12 +13,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import fpt.anhdhph.bittweet.R;
 
 public class ScreenLogin extends AppCompatActivity {
 
     Button btnLogin;
     TextView tvRecover, tvRegister;
+    TextInputEditText edtTele, edtPass;
+    CheckBox cbRemember;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +34,9 @@ public class ScreenLogin extends AppCompatActivity {
             return insets;
         });
 
-        btnLogin = findViewById(R.id.btnLogin);
-        tvRegister = findViewById(R.id.tvRegister);
-        tvRecover = findViewById(R.id.tvRecover);
+        anhXa();
+
+        dangNhap();
 
         tvRegister.setOnClickListener(view -> {
             Intent intent = new Intent(ScreenLogin.this, ScreenRegister.class);
@@ -47,4 +52,23 @@ public class ScreenLogin extends AppCompatActivity {
         });
 
     }
+
+    public void anhXa(){
+        btnLogin = findViewById(R.id.btnLogin);
+        tvRegister = findViewById(R.id.tvRegister);
+        tvRecover = findViewById(R.id.tvRecover);
+        edtTele = findViewById(R.id.edtTele);
+        edtPass = findViewById(R.id.edtPass);
+        cbRemember = findViewById(R.id.cbRemember);
+    }
+
+    public void dangNhap(){
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
 }

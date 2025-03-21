@@ -30,9 +30,10 @@ public class ScreenWelcome extends AppCompatActivity {
             public void run() {
                 Intent intent = new Intent(ScreenWelcome.this, ScreenLogin.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_out_top,R.anim.slide_out_down);
                 finish();
             }
-        }, 2000);
+        }, 3000);
 
     }
 }

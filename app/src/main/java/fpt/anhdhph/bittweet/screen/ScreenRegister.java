@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ public class ScreenRegister extends AppCompatActivity {
     ImageView dpDob;
     TextInputEditText edtDob;
     TextView tvLogin, tvRecover;
+    Button btnSave;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,11 +38,37 @@ public class ScreenRegister extends AppCompatActivity {
             return insets;
         });
 
+        anhXa();
+
+        dangKy();
+
+
+        tvLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        tvRecover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ScreenRegister.this, ScreenRecover1.class);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    public void anhXa(){
         dpDob = findViewById(R.id.dpDob);
         edtDob = findViewById(R.id.edtDob);
         tvLogin = findViewById(R.id.tvLogin);
         tvRecover = findViewById(R.id.tvRecover);
+        btnSave = findViewById(R.id.btnSave);
+    }
 
+    public void dangKy(){
         dpDob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,20 +87,7 @@ public class ScreenRegister extends AppCompatActivity {
             }
         });
 
-        tvLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        tvRecover.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ScreenRegister.this, ScreenRecover1.class);
-                startActivity(intent);
-            }
-        });
 
     }
+
 }
