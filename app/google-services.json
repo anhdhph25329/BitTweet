@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "839791602366",
+    "project_id": "tramquan-2452a",
+    "storage_bucket": "tramquan-2452a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839791602366:android:b7cb5c44bb9b26b5040cef",
+        "android_client_info": {
+          "package_name": "fpt.anhdhph.bittweet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqC-XAWv9e-KA_T2ETsDKnenjh3X8hcP4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839791602366:android:bc00e5b960a33842040cef",
+        "android_client_info": {
+          "package_name": "fpt.anhdhph.bittweet.screen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqC-XAWv9e-KA_T2ETsDKnenjh3X8hcP4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
