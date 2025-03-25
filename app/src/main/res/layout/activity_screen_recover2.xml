@@ -10,45 +10,59 @@
     android:gravity="center"
     android:layout_marginHorizontal="16dp"
     >
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/logo"
+        android:contentDescription="App Logo"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="0dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Khôi phục tài khoản"
+        android:text="Recover account"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:textSize="30dp"
-        android:layout_margin="20dp"/>
+        android:textAllCaps="true"
+        android:textColor="@color/orange"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Mật khẩu mới"
-        android:layout_marginVertical="10dp"
-        app:passwordToggleEnabled="true"
+        android:hint="New password"
+        android:layout_marginBottom="10dp"
+        app:endIconMode="password_toggle"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtNewPass"
-            android:password="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Xác nhận mật khẩu"
-        android:layout_marginVertical="10dp"
-        app:passwordToggleEnabled="true"
+        android:hint="Confirm password"
+        android:layout_marginBottom="20dp"
+        app:endIconMode="password_toggle"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtConfirmPass"
-            android:password="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btnXacNhan"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:layout_marginTop="16dp"
-        android:text="Xác nhận" />
+        android:backgroundTint="@color/orange"
+        android:text="Confirm"
+        android:textColor="@color/white"
+        android:textStyle="bold"/>
 
 </LinearLayout>

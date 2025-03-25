@@ -10,13 +10,23 @@
     android:gravity="center"
     android:layout_marginHorizontal="16dp"
     >
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/logo"
+        android:contentDescription="App Logo"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Xác thực tài khoản"
+        android:text="Account verification"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:textSize="30dp"
-        android:layout_margin="20dp"/>
+        android:textAllCaps="true"
+        android:textColor="@color/orange"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,6 +51,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:backgroundTint="@color/orange"
+            android:textColor="@color/white"
+            android:textStyle="bold"
             android:text="Gửi lại" />
     </LinearLayout>
     <Button
@@ -48,6 +61,9 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:backgroundTint="@color/orange"
+        android:textColor="@color/white"
+        android:textStyle="bold"
         android:text="Xác nhận" />
 
 </LinearLayout>
