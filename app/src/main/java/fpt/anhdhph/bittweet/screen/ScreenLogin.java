@@ -53,7 +53,7 @@ public class ScreenLogin extends AppCompatActivity {
         tvRecover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ScreenLogin.this, ScreenRecover1.class);
+                Intent intent = new Intent(ScreenLogin.this, ScreenLogin.class);
                 startActivity(intent);
             }
         });
@@ -103,7 +103,7 @@ public class ScreenLogin extends AppCompatActivity {
                 if(task.isSuccessful()){
                     FirebaseUser user = mAuth.getCurrentUser();
                     Toast.makeText(ScreenLogin.this, "Đăng nhap thành công", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(ScreenLogin.this, ScreenRecover1.class));
+                    startActivity(new Intent(ScreenLogin.this, ScreenLogin.class));
                     finish(); // Đóng màn hình đăng nhập
                 }else{
                     Toast.makeText(ScreenLogin.this, "Lỗi:"+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
