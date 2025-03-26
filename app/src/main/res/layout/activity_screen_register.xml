@@ -11,9 +11,8 @@
     android:layout_marginHorizontal="16dp">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:src="@drawable/logo" />
     <TextView
         android:layout_width="wrap_content"
@@ -125,7 +124,7 @@
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:text="Sign up"
         android:backgroundTint="@color/orange"
         android:textColor="@color/white"
@@ -135,13 +134,13 @@
         android:id="@+id/tvRecover"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Forgotten password?" />
+        android:text="Forgotten password?"
+        android:layout_marginVertical="5dp"/>
 
     <TextView
         android:id="@+id/tvLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="16dp"
         android:text="Already have an account?" />
 
 

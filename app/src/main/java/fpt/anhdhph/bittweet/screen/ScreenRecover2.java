@@ -1,6 +1,8 @@
 package fpt.anhdhph.bittweet.screen;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import fpt.anhdhph.bittweet.R;
 
 public class ScreenRecover2 extends AppCompatActivity {
 
+    Button btnConfirm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,5 +25,15 @@ public class ScreenRecover2 extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        btnConfirm = findViewById(R.id.btnConfirm);
+
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 }

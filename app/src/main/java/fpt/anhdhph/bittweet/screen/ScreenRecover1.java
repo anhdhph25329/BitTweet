@@ -31,6 +31,7 @@ public class ScreenRecover1 extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ScreenRecover1.this, ScreenRecover2.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
