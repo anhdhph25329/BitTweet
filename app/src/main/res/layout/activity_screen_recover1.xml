@@ -15,7 +15,6 @@
         android:layout_height="120dp"
         android:src="@drawable/logo"
         android:contentDescription="App Logo"
-        android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp"/>
     <TextView
         android:layout_width="wrap_content"
@@ -27,34 +26,20 @@
         android:textColor="@color/orange"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nhập mã OTP được gửi về số điện thoại"
-        android:layout_margin="7dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="vd:12345"
+            android:hint="Telephone or email"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtTele"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
-        <Button
-            android:id="@+id/btnGuilai"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:backgroundTint="@color/orange"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:text="Gửi lại" />
     </LinearLayout>
     <Button
         android:id="@+id/btnXacNhan"
