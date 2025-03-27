@@ -15,6 +15,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.fragment.FragClient;
@@ -28,7 +29,6 @@ public class ScreenHome extends AppCompatActivity {
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     NavigationView navigationView;
-
     FragmentManager fm;
 
     FragProfile fragProfile;
@@ -37,32 +37,30 @@ public class ScreenHome extends AppCompatActivity {
     FragIncome fragIncome;
     FragOrder fragOrder;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_screen_home);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+
+        // Sửa lỗi null pointer bằng cách sử dụng đúng ID
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawer_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
         anhXa();
-
         thanhCongCu();
-
         nhanMo();
-
     }
 
-    void anhXa(){
-        drawerLayout = findViewById(R.id.main);
+    void anhXa() {
+        drawerLayout = findViewById(R.id.drawer_layout);
         toolbar = findViewById(R.id.toolbar);
         navigationView = findViewById(R.id.nav_drawer);
 
-        setSupportActionBar( toolbar );
+        setSupportActionBar(toolbar);
         fm = getSupportFragmentManager();
 
         fragProfile = new FragProfile();
@@ -70,9 +68,16 @@ public class ScreenHome extends AppCompatActivity {
         fragProduct = new FragProduct();
         fragIncome = new FragIncome();
         fragOrder = new FragOrder();
+
+        // Thiết lập TabLayout
+        TabLayout tabLayout = findViewById(R.id.tab_filter);
+        tabLayout.addTab(tabLayout.newTab().setText("All"));
+        tabLayout.addTab(tabLayout.newTab().setText("Special"));
+        tabLayout.addTab(tabLayout.newTab().setText("Caffee"));
+        tabLayout.addTab(tabLayout.newTab().setText("Other drinks"));
     }
 
-    void thanhCongCu(){
+    void thanhCongCu() {
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
                 this,
                 drawerLayout,
@@ -82,34 +87,30 @@ public class ScreenHome extends AppCompatActivity {
         );
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
-        drawerLayout.addDrawerListener( drawerToggle );
+        drawerLayout.addDrawerListener(drawerToggle);
     }
 
-    void nhanMo(){
+    void nhanMo() {
         fm.beginTransaction().add(R.id.frag_container, fragProfile).commit();
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                if(menuItem.getItemId() == R.id.mnu_profile){
-                    fm.beginTransaction().replace(R.id.frag_container, fragProfile).commit();
-                    toolbar.setTitle("Profile");
-                }else if(menuItem.getItemId() == R.id.mnu_managecli){
-                    fm.beginTransaction().replace(R.id.frag_container, fragClient).commit();
-                    toolbar.setTitle("Manage Client");
-                }else if(menuItem.getItemId() == R.id.mnu_managepro){
-                    fm.beginTransaction().replace(R.id.frag_container, fragProduct).commit();
-                    toolbar.setTitle("Manage Product");
-                }else if(menuItem.getItemId() == R.id.mnu_manageincome){
-                    fm.beginTransaction().replace(R.id.frag_container, fragIncome).commit();
-                    toolbar.setTitle("Manage Income");
-                }else if(menuItem.getItemId() == R.id.mnu_manageorder){
-                    fm.beginTransaction().replace(R.id.frag_container, fragOrder).commit();
-                    toolbar.setTitle("Manage Order");
-                }
-                drawerLayout.close();
-                return true;
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            if (menuItem.getItemId() == R.id.mnu_profile) {
+                fm.beginTransaction().replace(R.id.frag_container, fragProfile).commit();
+                toolbar.setTitle("Profile");
+            } else if (menuItem.getItemId() == R.id.mnu_managecli) {
+                fm.beginTransaction().replace(R.id.frag_container, fragClient).commit();
+                toolbar.setTitle("Manage Client");
+            } else if (menuItem.getItemId() == R.id.mnu_managepro) {
+                fm.beginTransaction().replace(R.id.frag_container, fragProduct).commit();
+                toolbar.setTitle("Manage Product");
+            } else if (menuItem.getItemId() == R.id.mnu_manageincome) {
+                fm.beginTransaction().replace(R.id.frag_container, fragIncome).commit();
+                toolbar.setTitle("Manage Income");
+            } else if (menuItem.getItemId() == R.id.mnu_manageorder) {
+                fm.beginTransaction().replace(R.id.frag_container, fragOrder).commit();
+                toolbar.setTitle("Manage Order");
             }
+            drawerLayout.close();
+            return true;
         });
     }
-
 }
