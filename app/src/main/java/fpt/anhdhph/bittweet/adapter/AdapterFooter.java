@@ -7,17 +7,20 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import fpt.anhdhph.bittweet.fragment.FragCart;
 import fpt.anhdhph.bittweet.fragment.FragFavorite;
 import fpt.anhdhph.bittweet.fragment.FragHome;
+import fpt.anhdhph.bittweet.fragment.FragSetting;
 
 public class AdapterFooter extends FragmentStateAdapter {
     FragHome fragHome;
     FragFavorite fragFavorite;
     FragCart fragCart;
-    int pageNumber = 3;
+    FragSetting fragSetting;
+    int pageNumber = 4;
     public AdapterFooter (Fragment fragment){
         super(fragment);
         fragHome = new FragHome();
         fragFavorite = new FragFavorite();
         fragCart = new FragCart();
+        fragSetting = new FragSetting();
     }
 
     @NonNull
@@ -26,6 +29,7 @@ public class AdapterFooter extends FragmentStateAdapter {
         switch (position){
             case 1: return  fragFavorite;
             case 2: return  fragCart;
+            case 3: return fragSetting;
             default: return  fragHome;
         }
     }

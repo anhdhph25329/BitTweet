@@ -45,7 +45,7 @@ public class ScreenLogin extends AppCompatActivity {
         tvRecover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ScreenLogin.this, ScreenLogin.class);
+                Intent intent = new Intent(ScreenLogin.this, ScreenRecover1.class);
                 startActivity(intent);
             }
         });

@@ -13,6 +13,24 @@
         android:theme="@style/Theme.BitTweet"
         tools:targetApi="31">
         <activity
+            android:name=".screen.ScreenManageOrder"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenManageIncome"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenManagePro"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenManageCli"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenProfile"
+            android:exported="false" />
+        <activity
+            android:name=".fragment.FragSetting"
+            android:exported="false" />
+        <activity
             android:name=".screen.ScreenDetail"
             android:exported="false" />
         <activity

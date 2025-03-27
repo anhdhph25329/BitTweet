@@ -8,6 +8,14 @@
     tools:context=".fragment.FragCart"
     android:orientation="vertical"
     android:gravity="bottom">
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
         android:padding="5dp"
@@ -15,7 +23,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="#fab87f">
-
         <LinearLayout
             android:layout_gravity="center_vertical"
             android:layout_width="0dp"

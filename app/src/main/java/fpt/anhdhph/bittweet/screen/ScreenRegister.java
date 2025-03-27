@@ -54,7 +54,7 @@ public class ScreenRegister extends AppCompatActivity {
         tvRecover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ScreenRegister.this, ScreenLogin.class);
+                Intent intent = new Intent(ScreenRegister.this, ScreenRecover1.class);
                 startActivity(intent);
             }
         });
@@ -62,8 +62,8 @@ public class ScreenRegister extends AppCompatActivity {
     }
 
     public void anhXa(){
-        edtEmail = findViewById(R.id.emailInput);
-        edtPass = findViewById(R.id.passInput);
+        edtEmail = findViewById(R.id.edtEmail);
+        edtPass = findViewById(R.id.edtPass);
         dpDob = findViewById(R.id.dpDob);
         edtDob = findViewById(R.id.edtDob);
         tvLogin = findViewById(R.id.tvLogin);
