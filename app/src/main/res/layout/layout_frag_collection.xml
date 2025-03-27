@@ -19,4 +19,5 @@
         app:tabIndicatorColor="@color/black"
         app:tabSelectedTextColor="@color/black"
         app:tabTextColor="#808080"/>
+
 </LinearLayout>
