@@ -103,7 +103,7 @@ public class ScreenLogin extends AppCompatActivity {
                 if(task.isSuccessful()){
                     FirebaseUser user = mAuth.getCurrentUser();
                     Toast.makeText(ScreenLogin.this, "Đăng nhap thành công", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(ScreenLogin.this, ScreenLogin.class));
+                    startActivity(new Intent(ScreenLogin.this, ScreenHome.class));
                     finish(); // Đóng màn hình đăng nhập
                 }else{
                     Toast.makeText(ScreenLogin.this, "Lỗi:"+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
