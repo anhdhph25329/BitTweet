@@ -6,26 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.FragFavorite"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
-    <!-- Tiêu đề "FAVORITE" nếu cần -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FAVORITE"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:layout_marginTop="40dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"/>
-
-    <!-- ListView hiển thị danh sách item -->
-    <ListView
-        android:id="@+id/lvFavorite"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcFavorite"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="8dp" />
+        android:layout_height="match_parent"/>
+
+
 </LinearLayout>
