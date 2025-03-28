@@ -37,9 +37,7 @@ public class ScreenRegister extends AppCompatActivity {
     Button btnSignUp;
     User user;
     RadioGroup rgGender;
-    RadioButton rbMale, rbFmale;
 
-    private ProgressDialog progressDialog;  // Hiển thị trạng thái loading
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,12 +107,10 @@ public class ScreenRegister extends AppCompatActivity {
     }
 
     public void dangKy(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
                 String name = edtName.getText().toString();
                 int selectedId = rgGender.getCheckedRadioButtonId();
                 String gender = "";
@@ -129,15 +125,30 @@ public class ScreenRegister extends AppCompatActivity {
                 String address = edtAddress.getText().toString();
                 String password = edtPass.getText().toString();
 
-                if(name.isEmpty() || birthdate.isEmpty() || phone.isEmpty() || email.isEmpty()
+                if(name.isEmpty() || selectedId == -1 || birthdate.isEmpty() || phone.isEmpty() || email.isEmpty()
                 || address.isEmpty() || password.isEmpty()){
                     Toast.makeText(ScreenRegister.this, "Fill the graph", Toast.LENGTH_SHORT).show();
                 }else {
-                    user = new User(name, gender, birthdate, phone, email, address, password);
+                    Map<String, Object> users = new HashMap<>();
+                    users.put("name", name);
+                    users.put("gender", gender);
+                    users.put("birthdate", birthdate);
+                    users.put("phone", phone);
+                    users.put("email", email);
+                    users.put("address", address);
+                    users.put("password", password);
+
                     db.collection("Users").document(email)
-                            .set(user)
-                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "Đăng ký thành công!"))
-                            .addOnFailureListener(e -> Log.e("Firestore", "Lỗi khi đăng ký", e));
+                            .set(users)
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d("Firestore", "Đăng ký thành công!");
+                                Toast.makeText(ScreenRegister.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("Firestore", "Lỗi khi đăng ký", e);
+                                Toast.makeText(ScreenRegister.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            });
                     finish();
                 }
 

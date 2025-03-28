@@ -35,12 +35,15 @@ android {
 dependencies {
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
+
     // TODO: Add the dependencies for Firebase products you want to use
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics")
+
     // Add the dependencies for any other desired Firebase products
-    implementation("com.google.firebase:firebase-firestore")
     // https://firebase.google.com/docs/android/setup#available-libraries
+    implementation("com.google.firebase:firebase-firestore:25.1.3")
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
