@@ -25,7 +25,7 @@ public class ScreenRegister extends AppCompatActivity {
     ImageView dpDob;
     TextInputEditText edtDob,edtEmail,edtPass;
     TextView tvLogin, tvRecover;
-    Button btnSave;
+    Button btnSignUp;
 
     private ProgressDialog progressDialog;  // Hiển thị trạng thái loading
     @Override
@@ -68,7 +68,7 @@ public class ScreenRegister extends AppCompatActivity {
         edtDob = findViewById(R.id.edtDob);
         tvLogin = findViewById(R.id.tvLogin);
         tvRecover = findViewById(R.id.tvRecover);
-        btnSave = findViewById(R.id.btnSave);
+        btnSignUp = findViewById(R.id.btnSignUp);
     }
 
     public void dangKy(){
@@ -89,7 +89,7 @@ public class ScreenRegister extends AppCompatActivity {
             }
         });
 
-        btnSave.setOnClickListener(new View.OnClickListener() {
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

@@ -59,7 +59,6 @@ public class ScreenLogin extends AppCompatActivity {
         edtTele = findViewById(R.id.edtTele);
         edtPass = findViewById(R.id.edtPass);
         cbRemember = findViewById(R.id.cbRemember);
-
     }
 
     public void dangNhap(){
