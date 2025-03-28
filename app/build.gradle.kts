@@ -39,6 +39,7 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics")
     // Add the dependencies for any other desired Firebase products
+    implementation("com.google.firebase:firebase-firestore")
     // https://firebase.google.com/docs/android/setup#available-libraries
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -47,5 +48,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+
 
 }
