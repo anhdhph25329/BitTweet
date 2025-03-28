@@ -5,13 +5,15 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screen.ScreenHome">
+    tools:context=".screen.ScreenManagePro"
+    android:orientation="vertical">
 
-    <fragment
-        android:id="@+id/fragment_collection_pager"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="fpt.anhdhph.bittweet.fragment.FragCollection"/>
-
+        android:layout_height="?attr/actionBarSize"
+        android:background="#8e451c"
+        app:navigationIcon="@android:drawable/ic_media_previous"
+        app:titleTextColor="@color/white"/>
 
 </LinearLayout>

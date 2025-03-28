@@ -10,13 +10,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import fpt.anhdhph.bittweet.R;
 
-public class ScreenHome extends AppCompatActivity {
+public class ScreenDetail extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_screen_home);
+        setContentView(R.layout.activity_screen_detail);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -26,5 +26,4 @@ public class ScreenHome extends AppCompatActivity {
 
 
     }
-
 }

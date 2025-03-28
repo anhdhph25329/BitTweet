@@ -7,11 +7,35 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Trạm Quán"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BitTweet"
         tools:targetApi="31">
+        <activity
+            android:name=".screen.ScreenPayment"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenManageOrder"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenManageIncome"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenManagePro"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenManageCli"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenProfile"
+            android:exported="false" />
+        <activity
+            android:name=".fragment.FragSetting"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenDetail"
+            android:exported="false" />
         <activity
             android:name=".fragment.FragCart"
             android:exported="false" />
