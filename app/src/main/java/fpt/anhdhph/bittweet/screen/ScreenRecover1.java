@@ -55,6 +55,7 @@ public class ScreenRecover1 extends AppCompatActivity {
                                 Intent intent = new Intent(ScreenRecover1.this, ScreenRecover2.class);
                                 intent.putExtra("userId", task.getResult().getDocuments().get(0).getId());
                                 startActivity(intent);
+                                finish();
                             } else {
                                 usersRef.whereEqualTo("phone", input)
                                         .get()
@@ -63,6 +64,7 @@ public class ScreenRecover1 extends AppCompatActivity {
                                                 Intent intent = new Intent(ScreenRecover1.this, ScreenRecover2.class);
                                                 intent.putExtra("userId", task2.getResult().getDocuments().get(0).getId());
                                                 startActivity(intent);
+                                                finish();
                                             } else {
                                                 Toast.makeText(ScreenRecover1.this, "Tài khoản không tồn tại", Toast.LENGTH_SHORT).show();
                                             }

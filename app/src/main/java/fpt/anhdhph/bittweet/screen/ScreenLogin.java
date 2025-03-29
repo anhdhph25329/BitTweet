@@ -3,7 +3,6 @@ package fpt.anhdhph.bittweet.screen;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -19,10 +18,6 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import fpt.anhdhph.bittweet.R;
 
@@ -70,6 +65,7 @@ public class ScreenLogin extends AppCompatActivity {
 
     }
 
+    // Hàm ánh xạ
     void anhXa(){
         btnLogin = findViewById(R.id.btnLogin);
         tvRegister = findViewById(R.id.tvRegister);
@@ -82,6 +78,7 @@ public class ScreenLogin extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("LoginPref", MODE_PRIVATE);
     }
 
+    // Hàm kiểm tra ghi nhớ
     void kiemTraGhiNho(){
         String savedTele = sharedPreferences.getString("tele", "");
         String savedPass = sharedPreferences.getString("pass", "");
@@ -92,13 +89,24 @@ public class ScreenLogin extends AppCompatActivity {
         }
     }
 
+    // Hàm đăng nhập
     void dangNhap(){
         String tele = edtTele.getText().toString().trim();
         String pass = edtPass.getText().toString().trim();
-        if (tele.isEmpty() || pass.isEmpty()) {
-            Toast.makeText(ScreenLogin.this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+
+        if (tele.isEmpty()) {
+            edtTele.setError("Vui lòng nhập email hoặc số điện thoại");
             return;
         }
+        if (pass.isEmpty()) {
+            edtPass.setError("Vui lòng nhập mật khẩu");
+            return;
+        }
+        if (pass.length() < 6) {
+            edtPass.setError("Mật khẩu phải có ít nhất 6 ký tự");
+            return;
+        }
+
         db.collection("Users")
                 .whereEqualTo("email", tele)
                 .get()
@@ -122,6 +130,7 @@ public class ScreenLogin extends AppCompatActivity {
                 });
     }
 
+    // Hàm kiểm tra mật khẩu
     void checkPassword(DocumentSnapshot document, String inputPassword) {
         String storedPassword = document.getString("password");
         if (storedPassword != null && storedPassword.equals(inputPassword)) {

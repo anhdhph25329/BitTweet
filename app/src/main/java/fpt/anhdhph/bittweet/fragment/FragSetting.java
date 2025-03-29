@@ -21,7 +21,6 @@ import fpt.anhdhph.bittweet.screen.ScreenManageIncome;
 import fpt.anhdhph.bittweet.screen.ScreenManageOrder;
 import fpt.anhdhph.bittweet.screen.ScreenManagePro;
 import fpt.anhdhph.bittweet.screen.ScreenProfile;
-import fpt.anhdhph.bittweet.screen.ScreenWelcome;
 
 public class FragSetting extends Fragment {
 

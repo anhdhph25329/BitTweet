@@ -1,6 +1,5 @@
 package fpt.anhdhph.bittweet.screen;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -46,12 +45,10 @@ public class ScreenRecover2 extends AppCompatActivity {
                     Toast.makeText(ScreenRecover2.this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 if (!pass1.equals(pass2)) {
                     Toast.makeText(ScreenRecover2.this, "Mật khẩu không khớp", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 if (pass1.length() < 6) {
                     Toast.makeText(ScreenRecover2.this, "Mật khẩu phải có ít nhất 6 ký tự", Toast.LENGTH_SHORT).show();
                     return;
@@ -63,8 +60,6 @@ public class ScreenRecover2 extends AppCompatActivity {
                         .update("password", pass1)
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(ScreenRecover2.this, "Cập nhật mật khẩu thành công!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(ScreenRecover2.this, ScreenLogin.class);
-                            startActivity(intent);
                             finish();
                         })
                         .addOnFailureListener(e -> Toast.makeText(ScreenRecover2.this, "Lỗi khi cập nhật mật khẩu", Toast.LENGTH_SHORT).show());
