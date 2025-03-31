@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +48,7 @@ public class ScreenLogin extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ScreenLogin.this, ScreenRecover1.class);
                 startActivity(intent);
+                Toast.makeText(ScreenLogin.this, "", Toast.LENGTH_SHORT).show();
             }
         });
 
