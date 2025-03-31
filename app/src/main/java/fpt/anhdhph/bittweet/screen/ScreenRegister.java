@@ -160,10 +160,10 @@ public class ScreenRegister extends AppCompatActivity {
                     edtDob.setError("Ngày sinh không hợp lệ");
                     return;
                 }
-                if (!phone.matches("^0\\\\d{8,10}$")) {
-                    edtPhone.setError("Số điện thoại không hợp lệ");
-                    return;
-                }
+//                if (!phone.matches("^0\\\\d{8,10}$")) {
+//                    edtPhone.setError("Số điện thoại không hợp lệ");
+//                    return;
+//                }
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     edtEmail.setError("Email không hợp lệ");
                     return;

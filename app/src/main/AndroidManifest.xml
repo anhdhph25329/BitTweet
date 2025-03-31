@@ -34,22 +34,27 @@
             android:exported="false" />
         <activity
             android:name=".fragment.FragSetting"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".screen.ScreenDetail"
             android:exported="false" />
         <activity
             android:name=".fragment.FragCart"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".fragment.FragFavorite"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".fragment.FragHome"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".fragment.FragCollection"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".screen.ScreenHome"
             android:exported="false" />
