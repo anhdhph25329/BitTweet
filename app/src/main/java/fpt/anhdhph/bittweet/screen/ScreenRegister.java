@@ -28,6 +28,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.model.User;
@@ -160,10 +162,14 @@ public class ScreenRegister extends AppCompatActivity {
                     edtDob.setError("Ngày sinh không hợp lệ");
                     return;
                 }
-//                if (!phone.matches("^0\\\\d{8,10}$")) {
-//                    edtPhone.setError("Số điện thoại không hợp lệ");
-//                    return;
-//                }
+
+                String regex = "^(0[3|5|7|8|9])\\d{8,10}$";
+                Pattern pattern = Pattern.compile(regex);
+                Matcher matcher = pattern.matcher(phone);
+                if (!matcher.matches()) {
+                    edtPhone.setError("Số điện thoại không hợp lệ");
+                    return;
+                }
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     edtEmail.setError("Email không hợp lệ");
                     return;
@@ -186,10 +192,10 @@ public class ScreenRegister extends AppCompatActivity {
                 users.put("address", address);
                 users.put("password", password);
 
-                db.collection("Users").document(email)
-                        .set(users)
-                        .addOnSuccessListener(aVoid -> {
-                            Log.d("Firestore", "Đăng ký thành công!");
+                db.collection("Users")
+                        .add(users)
+                        .addOnSuccessListener(documentReference -> {
+                            Log.d("Firestore", "Đăng ký thành công với ID: " + documentReference.getId());
                             Toast.makeText(ScreenRegister.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
                             finish();
                         })

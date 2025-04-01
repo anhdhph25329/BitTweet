@@ -67,7 +67,7 @@ public class ScreenLogin extends AppCompatActivity {
     }
 
     // Hàm ánh xạ
-    void anhXa(){
+    void anhXa() {
         btnLogin = findViewById(R.id.btnLogin);
         tvRegister = findViewById(R.id.tvRegister);
         tvRecover = findViewById(R.id.tvRecover);
@@ -80,7 +80,7 @@ public class ScreenLogin extends AppCompatActivity {
     }
 
     // Hàm kiểm tra ghi nhớ
-    void kiemTraGhiNho(){
+    void kiemTraGhiNho() {
         String savedTele = sharedPreferences.getString("tele", "");
         String savedPass = sharedPreferences.getString("pass", "");
         if (!savedTele.isEmpty() && !savedPass.isEmpty()) {
@@ -91,7 +91,7 @@ public class ScreenLogin extends AppCompatActivity {
     }
 
     // Hàm đăng nhập
-    void dangNhap(){
+    void dangNhap() {
         String tele = edtTele.getText().toString().trim();
         String pass = edtPass.getText().toString().trim();
 
@@ -113,9 +113,11 @@ public class ScreenLogin extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
+                        // Email
                         DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
                         checkPassword(document, pass);
                     } else {
+                        // Phone
                         db.collection("Users")
                                 .whereEqualTo("phone", tele)
                                 .get()
@@ -126,21 +128,51 @@ public class ScreenLogin extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(ScreenLogin.this, "Tài khoản không tồn tại", Toast.LENGTH_SHORT).show();
                                     }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(ScreenLogin.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(ScreenLogin.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
     // Hàm kiểm tra mật khẩu
     void checkPassword(DocumentSnapshot document, String inputPassword) {
         String storedPassword = document.getString("password");
+
         if (storedPassword != null && storedPassword.equals(inputPassword)) {
+            // Lưu thông tin đăng nhập và dữ liệu người dùng vào SharedPreferences
+            SharedPreferences.Editor editor = sharedPreferences.edit();
             if (cbRemember.isChecked()) {
-                sharedPreferences.edit()
-                        .putString("tele", edtTele.getText().toString().trim())
-                        .putString("pass", edtPass.getText().toString().trim())
-                        .apply();
+                editor.putString("tele", edtTele.getText().toString().trim());
+                editor.putString("pass", edtPass.getText().toString().trim());
             }
+
+            // Lưu toàn bộ dữ liệu người dùng
+            String documentId = document.getId();
+            String name = document.getString("name") != null ? document.getString("name") : "";
+            String gender = document.getString("gender") != null ? document.getString("gender") : "";
+            String birthdate = document.getString("birthdate") != null ? document.getString("birthdate") : "";
+            String phone = document.getString("phone") != null ? document.getString("phone") : "";
+            String email = document.getString("email") != null ? document.getString("email") : "";
+            String address = document.getString("address") != null ? document.getString("address") : "";
+            String password = document.getString("password") != null ? document.getString("password") : "";
+
+            editor.putString("documentId", documentId);
+            editor.putString("name", name);
+            editor.putString("gender", gender);
+            editor.putString("birthdate", birthdate);
+            editor.putString("phone", phone);
+            editor.putString("email", email);
+            editor.putString("address", address);
+            editor.putString("password", password);
+            editor.putBoolean("isLoggedIn", true); // Đánh dấu đã đăng nhập
+            editor.apply();
+
+            // Chuyển sang ScreenHome
             Intent intent = new Intent(ScreenLogin.this, ScreenHome.class);
             startActivity(intent);
             finish();

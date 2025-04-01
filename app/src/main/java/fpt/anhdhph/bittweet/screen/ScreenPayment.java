@@ -1,7 +1,9 @@
 package fpt.anhdhph.bittweet.screen;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +17,7 @@ import fpt.anhdhph.bittweet.R;
 public class ScreenPayment extends AppCompatActivity {
 
     Toolbar toolbar;
+    LinearLayout btnCard, btnCash;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +30,8 @@ public class ScreenPayment extends AppCompatActivity {
         });
 
         toolbar = findViewById(R.id.toolbar);
+        btnCard = findViewById(R.id.btnCard);
+        btnCash = findViewById(R.id.btnCash);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -38,5 +43,27 @@ public class ScreenPayment extends AppCompatActivity {
             }
         });
 
+        btnCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ScreenPayment.this, ScreenCard.class);
+                startActivity(intent);
+            }
+        });
+
+        btnCash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ScreenPayment.this, ScreenCash.class);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        finish();
     }
 }
