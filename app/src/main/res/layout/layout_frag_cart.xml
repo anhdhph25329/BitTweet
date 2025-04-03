@@ -1,82 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".fragment.FragCart">
+    tools:context=".fragment.FragCart"
+    android:orientation="vertical"
+    android:gravity="bottom">
 
-    <!-- Tiêu đề giỏ hàng -->
-    <TextView
-        android:id="@+id/tv_cart_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CART"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:textColor="@color/orange"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
-
-    <!-- Danh sách sản phẩm -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_cart_items"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_cart_title"
-        app:layout_constraintBottom_toTopOf="@id/layout_checkout"
-        android:layout_marginTop="8dp"
-        android:padding="8dp" />
+        android:layout_weight="1"/>
 
-    <!-- Thanh tổng tiền và nút thanh toán -->
     <LinearLayout
-        android:id="@+id/layout_checkout"
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/white"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:background="#fab87f">
 
-        <!-- Tổng tiền -->
-        <TextView
-            android:id="@+id/tv_total_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sum:"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/tv_total_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="65.000 VND"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:layout_marginStart="4dp" />
-
-        <!-- Khoảng trống để đẩy nút "Pay now" sang phải -->
-        <View
+        <LinearLayout
+            android:layout_gravity="center_vertical"
             android:layout_width="0dp"
+            android:orientation="vertical"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_marginRight="100dp">
 
-        <!-- Nút thanh toán -->
+            <TextView
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tổng:"/>
+
+            <TextView
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="65.000 VNĐ"/>
+        </LinearLayout>
+
         <Button
-            android:id="@+id/btn_pay_now"
+            android:id="@+id/btnPay"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pay now"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/orange"
-            android:padding="8dp"
-            android:minWidth="100dp" />
+            android:text="Thanh Toán"
+            android:backgroundTint="#e87b1c"/>
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

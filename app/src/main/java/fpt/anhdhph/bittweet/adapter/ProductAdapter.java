@@ -18,10 +18,13 @@ import fpt.anhdhph.bittweet.model.Product;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
     private List<Product> productList;
     private Context context;
+    private ProductClickListener productClickListener; // Thêm listener
 
-    public ProductAdapter(Context context, List<Product> productList) {
+    // Constructor với listener
+    public ProductAdapter(Context context, List<Product> productList, ProductClickListener listener) {
         this.context = context;
         this.productList = productList;
+        this.productClickListener = listener;
     }
 
     @NonNull
@@ -37,6 +40,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.tvName.setText(product.getName());
         holder.tvPrice.setText(product.getPrice());
         holder.imgProduct.setImageResource(product.getImageResId());
+
+        // Khi nhấn vào item, gọi onProductClick từ listener
+        holder.itemView.setOnClickListener(v -> {
+            if (productClickListener != null) {
+                productClickListener.onProductClick(product);
+            }
+        });
     }
 
     @Override

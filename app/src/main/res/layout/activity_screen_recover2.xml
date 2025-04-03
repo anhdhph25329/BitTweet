@@ -15,8 +15,8 @@
         android:layout_height="120dp"
         android:src="@drawable/logo"
         android:contentDescription="App Logo"
-        android:layout_marginTop="50dp"
         android:layout_marginBottom="0dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,41 +27,43 @@
         android:textColor="@color/orange"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="New password"
-        android:layout_marginVertical="10dp"
-        app:passwordToggleEnabled="true"
+        android:layout_marginBottom="10dp"
+        app:endIconMode="password_toggle"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtNewPass"
-            android:password="true"
+            android:id="@+id/edtPass1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Confirm password"
-        android:layout_marginVertical="10dp"
-        app:passwordToggleEnabled="true"
+        android:layout_marginBottom="20dp"
+        app:endIconMode="password_toggle"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtConfirmPass"
-            android:password="true"
+            android:id="@+id/edtPass2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/btnXacNhan"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/btnConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/orange"
         android:text="Confirm"
         android:textColor="@color/white"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
 </LinearLayout>

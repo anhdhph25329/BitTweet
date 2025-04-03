@@ -2,28 +2,68 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Trạm Quán"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BitTweet"
         tools:targetApi="31">
         <activity
-            android:name=".fragment.FragCart"
+            android:name=".screen.ScreenPaymentDone"
             android:exported="false" />
+        <activity
+            android:name=".screen.ScreenCash"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenCard"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenPayment"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenManageOrder"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenManageIncome"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenManagePro"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenManageCli"
+            android:exported="false" />
+        <activity
+            android:name=".screen.ScreenProfile"
+            android:exported="false" />
+        <activity
+            android:name=".fragment.FragSetting"
+            android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".screen.ScreenDetail"
+            android:exported="false" />
+        <activity
+            android:name=".fragment.FragCart"
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".fragment.FragFavorite"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".fragment.FragHome"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".fragment.FragCollection"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".screen.ScreenHome"
             android:exported="false" />
