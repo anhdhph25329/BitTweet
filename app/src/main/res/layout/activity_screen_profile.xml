@@ -21,12 +21,12 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:layout_marginHorizontal="16dp">
+
         <ImageView
-            android:layout_marginVertical="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/logo"
-            />
+            android:src="@drawable/logo" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -58,13 +58,13 @@
                 android:layout_height="wrap_content"
                 android:text="Female"/>
         </RadioGroup>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="10dp"
-            android:gravity="center_vertical"
-            >
+            android:gravity="center_vertical">
             <ImageView
                 android:padding="5dp"
                 android:id="@+id/dpDob"
@@ -83,6 +83,7 @@
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,8 +95,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
 
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email"
@@ -120,7 +121,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
@@ -133,6 +133,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
+
         <Button
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
@@ -142,7 +143,7 @@
             android:backgroundTint="@color/orange"
             android:textColor="@color/white"
             android:textStyle="bold"/>
-    </LinearLayout>
 
+    </LinearLayout>
 
 </LinearLayout>

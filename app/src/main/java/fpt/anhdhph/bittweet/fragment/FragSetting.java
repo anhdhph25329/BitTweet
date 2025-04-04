@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +25,7 @@ import fpt.anhdhph.bittweet.screen.ScreenProfile;
 
 public class FragSetting extends Fragment {
 
+    SharedPreferences sharedPreferences;
     LinearLayout btnProfile, btnManageCli, btnManagePro, btnManageIncome, btnManageOrder, btnLogOut;
     @Nullable
     @Override
@@ -42,13 +44,20 @@ public class FragSetting extends Fragment {
         btnManageOrder = view.findViewById(R.id.btnManageOrder);
         btnLogOut = view.findViewById(R.id.btnLogOut);
 
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        sharedPreferences = requireActivity().getSharedPreferences("LoginPref", MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+
+        if (isLoggedIn) {
+            btnProfile.setOnClickListener(v -> {
                 Intent intent = new Intent(getActivity(), ScreenProfile.class);
                 startActivity(intent);
-            }
-        });
+            });
+        } else {
+            Toast.makeText(getContext(), "Vui lòng đăng nhập!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getActivity(), ScreenLogin.class);
+            startActivity(intent);
+            requireActivity().finish();
+        }
 
         btnManageCli.setOnClickListener(new View.OnClickListener() {
             @Override
