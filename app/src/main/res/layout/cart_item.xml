@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/backgounditem"
+    android:padding="8dp">
+
+    <!-- Ảnh sản phẩm -->
+    <ImageView
+        android:id="@+id/iv_product"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/sample_coffee" />
+
+    <!-- Tên sản phẩm -->
+    <TextView
+        android:id="@+id/tv_product_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Caffee latte"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/iv_product"
+        app:layout_constraintTop_toTopOf="@id/iv_product"
+        android:layout_marginStart="8dp"/>
+
+    <!-- Kích thước -->
+    <TextView
+        android:id="@+id/tv_product_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="S"
+        android:padding="4dp"
+        app:layout_constraintStart_toStartOf="@id/tv_product_name"
+        app:layout_constraintTop_toBottomOf="@id/tv_product_name"
+        android:textSize="12sp"/>
+
+    <!-- Giá tiền -->
+    <TextView
+        android:id="@+id/tv_product_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="65.000 VND"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_product_size"
+        app:layout_constraintStart_toStartOf="@id/tv_product_name"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Nút tăng giảm số lượng -->
+    <Button
+        android:id="@+id/btn_minus"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:text="-"
+        app:layout_constraintEnd_toStartOf="@id/tv_quantity"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:backgroundTint="@color/orange"/>
+
+    <TextView
+        android:id="@+id/tv_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@id/btn_plus"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="8dp"/>
+
+    <Button
+        android:id="@+id/btn_plus"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:text="+"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:backgroundTint="@color/orange"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
