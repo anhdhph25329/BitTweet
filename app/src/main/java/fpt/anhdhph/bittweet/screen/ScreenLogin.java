@@ -139,19 +139,16 @@ public class ScreenLogin extends AppCompatActivity {
                 });
     }
 
-    // Hàm kiểm tra mật khẩu
     void checkPassword(DocumentSnapshot document, String inputPassword) {
         String storedPassword = document.getString("password");
 
         if (storedPassword != null && storedPassword.equals(inputPassword)) {
-            // Lưu thông tin đăng nhập và dữ liệu người dùng vào SharedPreferences
             SharedPreferences.Editor editor = sharedPreferences.edit();
             if (cbRemember.isChecked()) {
                 editor.putString("tele", edtTele.getText().toString().trim());
                 editor.putString("pass", edtPass.getText().toString().trim());
             }
 
-            // Lưu toàn bộ dữ liệu người dùng
             String documentId = document.getId();
             String name = document.getString("name") != null ? document.getString("name") : "";
             String gender = document.getString("gender") != null ? document.getString("gender") : "";
@@ -169,10 +166,9 @@ public class ScreenLogin extends AppCompatActivity {
             editor.putString("email", email);
             editor.putString("address", address);
             editor.putString("password", password);
-            editor.putBoolean("isLoggedIn", true); // Đánh dấu đã đăng nhập
+            editor.putBoolean("isLoggedIn", true);
             editor.apply();
 
-            // Chuyển sang ScreenHome
             Intent intent = new Intent(ScreenLogin.this, ScreenHome.class);
             startActivity(intent);
             finish();

@@ -30,7 +30,7 @@ public class ScreenManageOrder extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Manage Order");
+        getSupportActionBar().setTitle("Quản lý đơn hàng");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

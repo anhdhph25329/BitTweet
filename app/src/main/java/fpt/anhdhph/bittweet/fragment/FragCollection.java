@@ -57,7 +57,7 @@ public class FragCollection extends Fragment {
                                 break;
                             case 3:
                                 tab.setText("Setting");
-                                tab.setIcon(R.drawable.ic_setting);
+                                tab.setIcon(R.drawable.ic_menu);
                                 break;
                         }
                     }

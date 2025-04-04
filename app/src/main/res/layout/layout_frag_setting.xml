@@ -16,7 +16,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/logo"/>
+            android:src="@drawable/ic_profile"/>
         <TextView
             android:textColor="@color/white"
             android:layout_marginLeft="10dp"
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="Chiec tat boc mui"/>
+            android:text="Thông tin cá nhân"/>
     </LinearLayout>
 
     <LinearLayout
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="Quan Ly Khach Hang"/>
+            android:text="Quản lý khách hàng"/>
     </LinearLayout>
 
     <LinearLayout
@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="Quan Ly San Pham"/>
+            android:text="Quản lý sản phẩm"/>
     </LinearLayout>
 
     <LinearLayout
@@ -93,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="Quan Ly Doanh Thu"/>
+            android:text="Quản lý doanh thu"/>
     </LinearLayout>
 
     <LinearLayout
@@ -116,7 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="Quan Ly Don Hang"/>
+            android:text="Quản lý đơn hàng"/>
     </LinearLayout>
 
     <LinearLayout
@@ -139,7 +139,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="Dang Xuat"/>
+            android:text="Đăng xuất"/>
     </LinearLayout>
 
 

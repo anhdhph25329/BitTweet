@@ -3,7 +3,7 @@ package fpt.anhdhph.bittweet.screen;
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +19,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -29,6 +28,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import fpt.anhdhph.bittweet.R;
 
@@ -74,7 +75,7 @@ public class ScreenProfile extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Profile");
+        getSupportActionBar().setTitle("Thông tin cá nhân");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,14 +219,46 @@ public class ScreenProfile extends AppCompatActivity {
         String gender = selectedId == R.id.rbMale ? "Nam" : (selectedId == R.id.rbFemale ? "Nữ" : "");
         String birthdate = edtDob.getText().toString().trim();
         String phone = edtPhone.getText().toString().trim();
+        String email = edtEmail.getText().toString().trim();
         String address = edtAddress.getText().toString().trim();
         String password = edtPass.getText().toString().trim();
+
+        //validate
+        if (name.isEmpty()) {
+            edtName.setError("Vui lòng nhập họ và tên");
+            return;
+        }
+        if (!birthdate.matches("^\\d{2}/\\d{2}/\\d{4}$")) {
+            edtDob.setError("Ngày sinh không hợp lệ");
+            return;
+        }
+
+        String regex = "^(0[3|5|7|8|9])\\d{8,10}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(phone);
+        if (!matcher.matches()) {
+            edtPhone.setError("Số điện thoại không hợp lệ");
+            return;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            edtEmail.setError("Email không hợp lệ");
+            return;
+        }
+        if (address.isEmpty()) {
+            edtAddress.setError("Vui lòng nhập địa chỉ");
+            return;
+        }
+        if (password.length() < 6) {
+            edtPass.setError("Mật khẩu phải có ít nhất 6 ký tự");
+            return;
+        }
 
         Map<String, Object> users = new HashMap<>();
         users.put("name", name);
         users.put("gender", gender);
         users.put("birthdate", birthdate);
         users.put("phone", phone);
+        users.put("email", email);
         users.put("address", address);
         users.put("password", password);
 
@@ -240,6 +273,7 @@ public class ScreenProfile extends AppCompatActivity {
                                 .putString("gender", gender)
                                 .putString("birthdate", birthdate)
                                 .putString("phone", phone)
+                                .putString("email", email)
                                 .putString("address", address)
                                 .putString("password", password)
                                 .apply();

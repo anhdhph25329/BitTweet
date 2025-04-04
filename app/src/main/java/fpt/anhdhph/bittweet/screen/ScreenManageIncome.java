@@ -30,7 +30,7 @@ public class ScreenManageIncome extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Manage Income");
+        getSupportActionBar().setTitle("Quản lý doanh thu");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
