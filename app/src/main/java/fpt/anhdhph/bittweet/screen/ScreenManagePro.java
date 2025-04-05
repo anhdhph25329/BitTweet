@@ -1,12 +1,18 @@
 package fpt.anhdhph.bittweet.screen;
 
-import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -21,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -37,6 +42,7 @@ public class ScreenManagePro extends AppCompatActivity {
     Toolbar toolbar;
     RecyclerView rvPro;
     FloatingActionButton btnAddPro;
+    Button btnDemo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +57,12 @@ public class ScreenManagePro extends AppCompatActivity {
         anhXa();
 
         themSanPham();
+
+
+        //demo sua xoa
+        btnDemo = findViewById(R.id.btnDemo);
+        tuongTacSP();
+
 
     }
 
@@ -170,9 +182,60 @@ public class ScreenManagePro extends AppCompatActivity {
                     }
                 });
 
-
-
                 dialog.show();
+            }
+        });
+    }
+
+    void tuongTacSP(){
+        btnDemo.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                View popupView = LayoutInflater.from(ScreenManagePro.this).inflate(R.layout.layout_menu_pro, null);
+                PopupWindow popupWindow = new PopupWindow(popupView,
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+
+                // Optional: set background & animation
+                popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                popupWindow.setElevation(10f);
+
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int screenWidth = displayMetrics.widthPixels;
+
+                // Đo chiều rộng popup
+                popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                int popupWidth = popupView.getMeasuredWidth();
+
+                // Tính margin 16dp
+                int marginInPx = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 22, getResources().getDisplayMetrics());
+
+                // Tính xOffset để cách phải 16dp
+                int xOffset = screenWidth - popupWidth - marginInPx;
+
+                // Lấy tọa độ Y của view (cho popup hiện gần nó)
+                int[] location = new int[2];
+                v.getLocationOnScreen(location);
+                int yOffset = location[1] + v.getHeight();
+
+                // Hiện popup ở vị trí tính toán
+                popupWindow.showAtLocation(v, Gravity.TOP | Gravity.START, xOffset, yOffset);
+
+
+                LinearLayout editBtn = popupView.findViewById(R.id.btnEdit);
+                LinearLayout deleteBtn = popupView.findViewById(R.id.btnDel);
+
+                editBtn.setOnClickListener(view -> {
+                    Toast.makeText(ScreenManagePro.this, "Sửa custom", Toast.LENGTH_SHORT).show();
+                    popupWindow.dismiss();
+                });
+                deleteBtn.setOnClickListener(view -> {
+                    Toast.makeText(ScreenManagePro.this, "Xóa custom", Toast.LENGTH_SHORT).show();
+                    popupWindow.dismiss();
+                });
+
+                return true;
             }
         });
     }

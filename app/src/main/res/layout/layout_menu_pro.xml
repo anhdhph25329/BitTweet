@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/bg_popup_rounded"
+    android:padding="8dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="16dp">
+
+    <LinearLayout
+        android:id="@+id/btnEdit"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:orientation="horizontal"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center_vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="✏️ Sửa"
+            android:textSize="16sp"
+            android:textColor="#0000FF"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DDD"
+        android:layout_marginVertical="4dp" />
+
+    <LinearLayout
+        android:id="@+id/btnDel"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:orientation="horizontal"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center_vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🗑️ Xóa"
+            android:textSize="16sp"
+            android:textColor="@android:color/holo_red_dark"/>
+    </LinearLayout>
+
+</LinearLayout>

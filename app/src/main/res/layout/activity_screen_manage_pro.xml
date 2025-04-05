@@ -16,10 +16,18 @@
         app:navigationIcon="@drawable/ic_back"
         app:titleTextColor="@color/white"/>
 
+    <Button
+        android:id="@+id/btnDemo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="demo"
+        android:layout_marginHorizontal="16dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPro"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"/>
 
     <FrameLayout
         android:layout_width="match_parent"
