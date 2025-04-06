@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-    id("com.google.gms.google-services")
+    id("com.google.gms.google-services") // Cài đặt Google Services
 }
 
 android {
@@ -26,24 +26,15 @@ android {
             )
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17 // Hoặc VERSION_11 nếu cần
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
-
-    // TODO: Add the dependencies for Firebase products you want to use
-    // When using the BoM, don't specify versions in Firebase dependencies
-    implementation("com.google.firebase:firebase-analytics")
-
-    // Add the dependencies for any other desired Firebase products
-    // https://firebase.google.com/docs/android/setup#available-libraries
-    implementation("com.google.firebase:firebase-firestore:25.1.3")
-
+    // Các thư viện cơ bản
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -52,7 +43,15 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+    // Firebase BOM để đồng bộ các phiên bản Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
+
+    // Các thư viện Firebase
+    implementation("com.google.firebase:firebase-analytics") // Firebase Analytics
+    implementation("com.google.firebase:firebase-firestore") // Firebase Firestore
+
+    // Các thư viện khác
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("com.google.zxing:core:3.5.1")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
-
 }
