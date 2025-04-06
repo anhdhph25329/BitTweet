@@ -1,135 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:id="@+id/main"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_marginHorizontal="16dp">
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="256dp"
-        android:src="@drawable/logo" />
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <TextView
-            android:layout_marginLeft="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Coffee latte"
-            android:textSize="25dp"/>
+        <!-- Product Image -->
         <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:src="@android:drawable/star_on"
-            android:layout_marginLeft="150dp"
-            android:layout_gravity="center_vertical"/>
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/sample_coffee"
+            android:background="#EEEEEE"/>
 
-        <TextView
-            android:layout_marginLeft="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4,5/5(123)"
-            android:textSize="15dp"
-            android:layout_gravity="center_vertical"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="300dp"
-        android:layout_marginTop="5dp"
-        >
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/logo"/>
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/logo"/>
-
-    </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description:"
-        android:textSize="20dp"
-        android:textStyle="bold"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tôi yêu em: đến nay chừng có thể.\nNgọn lửa tình chưa hẳn đã tàn phai;\nLúc rụt rè, khi hậm hực lòng ghen,\nCầu em được người tình như tôi đã yêu em."
-        android:textSize="16sp"
-        android:layout_marginBottom="10dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="31dp"
-        android:text="Choose size"
-        android:textSize="20dp"
-        android:textStyle="bold"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-
-        >
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="S"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="M"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            />
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="L"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"/>
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="150dp"
-        >
+        <!-- Product Title and Rating -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="10dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Giá"
-                android:textSize="18dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="65.000 VND"
-                android:textSize="18dp"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical">
 
+            <TextView
+                android:id="@+id/tv_product_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Black"
+                android:textSize="24sp"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/star_on"
+                android:layout_marginLeft="8dp"/>
+
+            <TextView
+                android:id="@+id/tv_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.5/5(123)"
+                android:textSize="16sp"
+                android:layout_marginLeft="4dp"/>
         </LinearLayout>
-        <Button
-            android:layout_marginLeft="130dp"
-            android:layout_width="wrap_content"
+
+        <!-- Description Section -->
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Thêm vào giỏ"/>
+            android:text="Mô tả:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tôi yêu em: đến nay chừng có thể.\nNgọn lửa tình chưa hẳn đã tàn phai;\nLúc rụt rè, khi hậm hực lòng ghen,\nCầu em được người tình như tôi đã yêu em."
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"
+            android:lineSpacingExtra="4dp"/>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DDDDDD"
+            android:layout_marginVertical="16dp"/>
+
+        <!-- Size Selection -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chọn kích cỡ:"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <Button
+                android:id="@+id/btn_size_s"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="S"
+                android:textAllCaps="false"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@color/orange"
+                android:textColor="@android:color/white"/>
+
+
+            <Button
+                android:id="@+id/btn_size_m"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="M"
+                android:textAllCaps="false"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@color/orange"
+                android:textColor="@android:color/white"/>
+
+            <Button
+                android:id="@+id/btn_size_l"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="L"
+                android:textAllCaps="false"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@color/orange"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+
+        <!-- Price and Add to Cart -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="32dp"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Giá"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/tv_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="65.000 VND"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_add_to_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="Thêm vào giỏ"
+                android:backgroundTint="@color/orange"
+                android:textColor="@android:color/white"
+                android:paddingHorizontal="24dp"
+                android:textAllCaps="false"/>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

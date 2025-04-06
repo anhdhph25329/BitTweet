@@ -39,7 +39,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/logo"/>
+            android:src="@drawable/ic_customer"/>
         <TextView
             android:textColor="@color/white"
             android:layout_marginLeft="10dp"
@@ -62,7 +62,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/logo"/>
+            android:src="@drawable/ic_product"/>
         <TextView
             android:textColor="@color/white"
             android:layout_marginLeft="10dp"
@@ -85,7 +85,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/logo"/>
+            android:src="@drawable/ic_income"/>
         <TextView
             android:textColor="@color/white"
             android:layout_marginLeft="10dp"
@@ -108,7 +108,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/logo"/>
+            android:src="@drawable/ic_order"/>
         <TextView
             android:textColor="@color/white"
             android:layout_marginLeft="10dp"
@@ -131,7 +131,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@android:drawable/ic_lock_power_off" />
+            android:src="@android:drawable/ic_logout" />
         <TextView
             android:textColor="@color/white"
             android:layout_marginLeft="10dp"
