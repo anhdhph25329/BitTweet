@@ -48,12 +48,12 @@ public class FragHome extends Fragment {
 
     private void initializeProducts() {
         allProducts.clear();
-        allProducts.add(new Product("Black", "65.000 VND", R.drawable.sample_coffee, "Coffee"));
-        allProducts.add(new Product("Cappuchino", "65.000 VND", R.drawable.sample_coffee, "Coffee"));
-        allProducts.add(new Product("Matcha Latte", "65.000 VND", R.drawable.sample_coffee, "Other drinks"));
-        allProducts.add(new Product("Matchachino", "65.000 VND", R.drawable.sample_coffee, "Other drinks"));
-        allProducts.add(new Product("Coffee egg", "65.000 VND", R.drawable.sample_coffee, "Special"));
-        allProducts.add(new Product("Awake", "65.000 VND", R.drawable.sample_coffee, "Special"));
+//        allProducts.add(new Product("Black", "65.000 VND", R.drawable.sample_coffee, "Coffee"));
+//        allProducts.add(new Product("Cappuchino", "65.000 VND", R.drawable.sample_coffee, "Coffee"));
+//        allProducts.add(new Product("Matcha Latte", "65.000 VND", R.drawable.sample_coffee, "Other drinks"));
+//        allProducts.add(new Product("Matchachino", "65.000 VND", R.drawable.sample_coffee, "Other drinks"));
+//        allProducts.add(new Product("Coffee egg", "65.000 VND", R.drawable.sample_coffee, "Special"));
+//        allProducts.add(new Product("Awake", "65.000 VND", R.drawable.sample_coffee, "Special"));
     }
 
     private void setupRecyclerView(View view) {
@@ -63,11 +63,11 @@ public class FragHome extends Fragment {
         adapter = new ProductAdapter(getContext(), allProducts, new ProductClickListener() {
             @Override
             public void onProductClick(Product product) {
-                Intent intent = new Intent(getContext(), ScreenDetail.class);
-                intent.putExtra("product_name", product.getName());
-                intent.putExtra("product_price", product.getPrice());
-                intent.putExtra("product_image", product.getImageResId());
-                startActivity(intent);
+//                Intent intent = new Intent(getContext(), ScreenDetail.class);
+//                intent.putExtra("product_name", product.getName());
+//                intent.putExtra("product_price", product.getPrice());
+//                intent.putExtra("product_image", product.getImageResId());
+//                startActivity(intent);
             }
         });
 

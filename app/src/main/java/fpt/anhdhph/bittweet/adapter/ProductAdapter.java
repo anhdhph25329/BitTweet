@@ -46,7 +46,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = productList.get(position);
-        holder.bind(product, productClickListener);
+//        holder.bind(product, productClickListener);
     }
 
     @Override
@@ -66,16 +66,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             tvPrice = itemView.findViewById(R.id.tv_product_price);
         }
 
-        public void bind(Product product, ProductClickListener listener) {
-            tvName.setText(product.getName());
-            tvPrice.setText(product.getPrice());
-            imgProduct.setImageResource(product.getImageResId());
-
-            itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onProductClick(product);
-                }
-            });
-        }
+//        public void bind(Product product, ProductClickListener listener) {
+//            tvName.setText(product.getName());
+//            tvPrice.setText(product.getPrice());
+//            imgProduct.setImageResource(product.getImageResId());
+//
+//            itemView.setOnClickListener(v -> {
+//                if (listener != null) {
+//                    listener.onProductClick(product);
+//                }
+//            });
+//        }
     }
 }

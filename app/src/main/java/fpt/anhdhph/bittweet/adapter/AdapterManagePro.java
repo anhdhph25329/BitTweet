@@ -16,13 +16,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fpt.anhdhph.bittweet.DAO.ProductDAO;
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.model.Product;
+import fpt.anhdhph.bittweet.screen.ScreenManagePro;
 
 public class AdapterManagePro extends RecyclerView.Adapter<AdapterManagePro.ManageProViewHolder> {
 
@@ -31,6 +34,7 @@ public class AdapterManagePro extends RecyclerView.Adapter<AdapterManagePro.Mana
     private final ProductDAO productDAO;
     private final String docName;
     private final Runnable refreshCallback;
+    FirebaseFirestore db;
 
     // Constructor nhận vào 4 tham số: context, danh sách sản phẩm, docName, refreshCallback
     public AdapterManagePro(Context context, List<Product> productList, String docName, Runnable refreshCallback) {
@@ -39,6 +43,7 @@ public class AdapterManagePro extends RecyclerView.Adapter<AdapterManagePro.Mana
         this.docName = docName;
         this.refreshCallback = refreshCallback;
         this.productDAO = new ProductDAO();
+        this.db = FirebaseFirestore.getInstance();
     }
 
     @NonNull
@@ -116,9 +121,25 @@ public class AdapterManagePro extends RecyclerView.Adapter<AdapterManagePro.Mana
         edtMPrice.setText(product.getMPrice());
         edtLPrice.setText(product.getLPrice());
 
+        List<String> cateList = new ArrayList<>();
+        ArrayAdapter<String> spAdapter = new ArrayAdapter<>(context,
+                android.R.layout.simple_spinner_item, cateList);
+        spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spCategory.setAdapter(spAdapter);
+
+        db.collection("Categories").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (var doc : queryDocumentSnapshots) {
+                        String categoryName = doc.getString("name");
+                        if (categoryName != null) cateList.add(categoryName);
+                    }
+                    spAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> Toast.makeText(context, "Lỗi khi tải danh mục!", Toast.LENGTH_SHORT).show());
+
         // Load category (nếu cần)
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, List.of(product.getCategory()));
-        spCategory.setAdapter(adapter);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, List.of(product.getCategory()));
+//        spCategory.setAdapter(adapter);
 
         AlertDialog dialog = builder.create();
 
