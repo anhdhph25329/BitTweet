@@ -1,10 +1,16 @@
 package fpt.anhdhph.bittweet.screen;
 
+import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,7 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -21,9 +30,12 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.UUID;
 
 import fpt.anhdhph.bittweet.R;
@@ -53,7 +65,6 @@ public class ScreenCard extends AppCompatActivity {
         setGeneratedQR();
         startCountdownTimer();
 
-
         btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +72,15 @@ public class ScreenCard extends AppCompatActivity {
             }
         });
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(ScreenCard.this, ScreenPaymentDone.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_out_top,R.anim.slide_out_down);
+                finish();
+            }
+        }, 6000);
 
     }
 
@@ -71,7 +91,6 @@ public class ScreenCard extends AppCompatActivity {
             BitMatrix bitMatrix = writer.encode(generatedQR, BarcodeFormat.QR_CODE, 500, 500);
             BarcodeEncoder encoder = new BarcodeEncoder();
             qrBitmap = encoder.createBitmap(bitMatrix);
-
             qrCodeImg.setImageBitmap(qrBitmap);
         } catch (Exception e) {
             Toast.makeText(this, "Lỗi khi tạo mã QR", Toast.LENGTH_SHORT).show();
@@ -89,6 +108,7 @@ public class ScreenCard extends AppCompatActivity {
                 tvCountDown.setText("Mã QR đã hết hạn!");
                 Toast.makeText(ScreenCard.this, "Mã QR đã hết hạn!", Toast.LENGTH_SHORT).show();
                 qrCodeImg.setImageBitmap(null);
+                generatedQR = null;
             }
         }.start();
     }
@@ -99,15 +119,19 @@ public class ScreenCard extends AppCompatActivity {
             return;
         }
         try {
-            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            File qrFile = new File(path, "QRCode_" + System.currentTimeMillis() + ".png");
+            String fileName = "QRCode_" + System.currentTimeMillis() + ".png";
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
 
-            FileOutputStream outputStream = new FileOutputStream(qrFile);
-            qrBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            outputStream.flush();
-            outputStream.close();
-
-            Toast.makeText(this, "Đã lưu mã QR vào: " + qrFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
+            Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            if (uri != null) {
+                OutputStream outputStream = getContentResolver().openOutputStream(uri);
+                qrBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                outputStream.close();
+                Toast.makeText(this, "Đã lưu mã QR vào thư viện ảnh!", Toast.LENGTH_LONG).show();
+            }
         } catch (Exception e) {
             Toast.makeText(this, "Lưu thất bại!", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
@@ -115,7 +139,7 @@ public class ScreenCard extends AppCompatActivity {
     }
 
     public void checkQRCode(String scannedCode) {
-        if (scannedCode.equals(generatedQR)) {
+        if (scannedCode != null && scannedCode.equals(generatedQR)) {
             Intent successIntent = new Intent(this, ScreenPaymentDone.class);
             startActivity(successIntent);
             finish();

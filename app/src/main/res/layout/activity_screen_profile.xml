@@ -31,7 +31,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"
+            android:hint="Tên"
             android:layout_marginBottom="10dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
             <com.google.android.material.textfield.TextInputEditText
@@ -51,12 +51,12 @@
                 android:id="@+id/rbMale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Male"/>
+                android:text="Nam"/>
             <RadioButton
                 android:id="@+id/rbFemale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Female"/>
+                android:text="Nữ"/>
         </RadioGroup>
 
         <LinearLayout
@@ -73,7 +73,7 @@
                 android:src="@drawable/calendar"/>
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_marginLeft="5dp"
-                android:hint="Date of birth"
+                android:hint="Ngày sinh"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -87,7 +87,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Telephone"
+            android:hint="Số điện thoại"
             android:layout_marginBottom="10dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
             <com.google.android.material.textfield.TextInputEditText
@@ -111,7 +111,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Address"
+            android:hint="Địa chỉ"
             android:layout_marginBottom="10dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
             <com.google.android.material.textfield.TextInputEditText
@@ -123,7 +123,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
+            android:hint="Mật khẩu"
             android:layout_marginBottom="10dp"
             app:passwordToggleEnabled="true"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -139,7 +139,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="10dp"
-            android:text="Save"
+            android:text="Luu"
             android:backgroundTint="@color/orange"
             android:textColor="@color/white"
             android:textStyle="bold"/>

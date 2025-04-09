@@ -20,7 +20,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Recover account"
+        android:text="Tìm lại tài khoản"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textAllCaps="true"
@@ -31,7 +31,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="New password"
+        android:hint="Mật khẩu mới"
         android:layout_marginBottom="10dp"
         app:endIconMode="password_toggle"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -45,7 +45,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Confirm password"
+        android:hint="Nhập lại mật khẩu"
         android:layout_marginBottom="20dp"
         app:endIconMode="password_toggle"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -62,7 +62,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/orange"
-        android:text="Confirm"
+        android:text="Xác nhận"
         android:textColor="@color/white"
         android:textStyle="bold"/>
 

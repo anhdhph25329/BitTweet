@@ -18,7 +18,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign up HERE"
+        android:text="Đăng kí"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textAllCaps="true"
@@ -29,7 +29,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name"
+        android:hint="Họ và tên"
         android:layout_marginBottom="10dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
@@ -49,12 +49,12 @@
             android:id="@+id/rbMale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Male"/>
+            android:text="Nam"/>
         <RadioButton
             android:id="@+id/rbFemale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Female"/>
+            android:text="Nữ"/>
     </RadioGroup>
 
     <LinearLayout
@@ -72,7 +72,7 @@
             android:src="@drawable/calendar"/>
         <com.google.android.material.textfield.TextInputLayout
             android:layout_marginLeft="5dp"
-            android:hint="Date of birth"
+            android:hint="Ngày sinh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -85,7 +85,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Telephone"
+        android:hint="Số điện thoại"
         android:layout_marginBottom="10dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
@@ -109,7 +109,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Address"
+        android:hint="Địa chỉ"
         android:layout_marginBottom="10dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
@@ -122,7 +122,7 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="Mật khẩu"
         android:layout_marginBottom="10dp"
         app:passwordToggleEnabled="true"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -137,7 +137,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
-        android:text="Sign up"
+        android:text="Đăng kí"
         android:backgroundTint="@color/orange"
         android:textColor="@color/white"
         android:textStyle="bold"/>
@@ -146,14 +146,14 @@
         android:id="@+id/tvRecover"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Forgotten password?"
+        android:text="Quên mật khẩu?"
         android:layout_marginVertical="16dp"/>
 
     <TextView
         android:id="@+id/tvLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Already have an account?" />
+        android:text="Bạn đã có tài khoản?" />
 
 
 </LinearLayout>

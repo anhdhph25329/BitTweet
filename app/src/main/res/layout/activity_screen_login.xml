@@ -20,7 +20,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WELCOME TO TRẠM QUÁN!"
+        android:text="CHÀO MỪNG TỚI TRẠM QUÁN!"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -28,7 +28,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LOG IN HERE"
+        android:text="ĐĂNG NHẬP"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textAllCaps="true"
@@ -39,7 +39,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Telephone or email"
+        android:hint="Nhập số điện thoại hoặc email"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtTele"
@@ -49,7 +49,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="Mật khẩu"
         android:layout_marginVertical="10dp"
         app:passwordToggleEnabled="true"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -65,7 +65,7 @@
         android:layout_gravity="start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Remember?"/>
+        android:text="Ghi nhớ?"/>
 
     <Button
         android:id="@+id/btnLogin"
@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/orange"
-        android:text="Log in"
+        android:text="Đăng nhập"
         android:textColor="@color/white"
         android:textStyle="bold" />
 
@@ -81,7 +81,7 @@
         android:id="@+id/tvRecover"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Forgotten password?"
+        android:text="Quên mật khẩu?"
         android:layout_marginVertical="16dp"
         android:textColor="@color/black"/>
 
@@ -89,7 +89,7 @@
         android:id="@+id/tvRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Don't have an account?"
+        android:text="Bạn chưa có tài khoản?"
         android:textColor="@color/black"/>
 
 </LinearLayout>
