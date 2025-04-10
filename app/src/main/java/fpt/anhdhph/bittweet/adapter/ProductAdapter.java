@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import fpt.anhdhph.bittweet.R;
@@ -23,6 +25,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     public interface ProductClickListener {
         void onProductClick(Product product);
+        void onFavoriteClick(Product product, boolean isFavorite);
     }
 
     public ProductAdapter(Context context, List<Product> productList, ProductClickListener listener) {
@@ -58,22 +61,42 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         private final ImageView imgProduct;
         private final TextView tvName;
         private final TextView tvPrice;
+        private final ImageView imgFavorite;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             imgProduct = itemView.findViewById(R.id.img_product);
             tvName = itemView.findViewById(R.id.tv_product_name);
             tvPrice = itemView.findViewById(R.id.tv_product_price);
+            imgFavorite = itemView.findViewById(R.id.img_favorite);
         }
 
         public void bind(Product product, ProductClickListener listener) {
-            tvName.setText(product.getName());
-            tvPrice.setText(product.getPrice());
-            imgProduct.setImageResource(product.getImageResId());
+            tvName.setText(product.getProName());
+            tvPrice.setText(product.getMPrice() + " VND");
 
+            // Load image from Firebase using Glide
+            if (product.getImage() != null && !product.getImage().isEmpty()) {
+                Glide.with(itemView.getContext())
+                        .load(product.getImage())
+                        .placeholder(R.drawable.sample_coffee)
+                        .into(imgProduct);
+            }
+
+            // Set favorite icon based on product status (you need to implement this logic)
+            imgFavorite.setImageResource(product.isFavorite() ?
+                    R.drawable.ic_favorite_filled : R.drawable.ic_favorite_selector);
+
+            // Handle click events
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onProductClick(product);
+                }
+            });
+
+            imgFavorite.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onFavoriteClick(product, !product.isFavorite());
                 }
             });
         }

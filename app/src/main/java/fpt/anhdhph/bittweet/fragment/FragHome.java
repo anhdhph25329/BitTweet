@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,21 +14,25 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.adapter.ProductAdapter;
-import fpt.anhdhph.bittweet.adapter.ProductAdapter.ProductClickListener;
 import fpt.anhdhph.bittweet.model.Product;
 import fpt.anhdhph.bittweet.screen.ScreenDetail;
 
-public class FragHome extends Fragment {
+public class FragHome extends Fragment implements ProductAdapter.ProductClickListener {
 
     private RecyclerView recyclerView;
     private ProductAdapter adapter;
     private List<Product> allProducts = new ArrayList<>();
+    private FirebaseFirestore db;
+    private FirebaseAuth auth;
 
     @Nullable
     @Override
@@ -39,49 +44,47 @@ public class FragHome extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Khởi tạo danh sách sản phẩm
-        initializeProducts();
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         setupRecyclerView(view);
         setupTabs(view);
+        loadProductsFromFirebase();
     }
 
-    private void initializeProducts() {
-        allProducts.clear();
-        allProducts.add(new Product("Black", "65.000 VND", R.drawable.sample_coffee, "Coffee"));
-        allProducts.add(new Product("Cappuchino", "65.000 VND", R.drawable.sample_coffee, "Coffee"));
-        allProducts.add(new Product("Matcha Latte", "65.000 VND", R.drawable.sample_coffee, "Other drinks"));
-        allProducts.add(new Product("Matchachino", "65.000 VND", R.drawable.sample_coffee, "Other drinks"));
-        allProducts.add(new Product("Coffee egg", "65.000 VND", R.drawable.sample_coffee, "Special"));
-        allProducts.add(new Product("Awake", "65.000 VND", R.drawable.sample_coffee, "Special"));
+    private void loadProductsFromFirebase() {
+        // Lấy data từ: Products -> Coffee -> Items
+        db.collection("Products")
+                .document("Coffee")
+                .collection("Items")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    allProducts.clear();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Product product = document.toObject(Product.class);
+                        product.setId(document.getId());
+                        allProducts.add(product);
+                    }
+                    adapter.updateList(allProducts);
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(getContext(), "Error loading products: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
 
     private void setupRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recycler_products);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2)); // 2 cột như BitTweet
-
-        adapter = new ProductAdapter(getContext(), allProducts, new ProductClickListener() {
-            @Override
-            public void onProductClick(Product product) {
-                Intent intent = new Intent(getContext(), ScreenDetail.class);
-                intent.putExtra("product_name", product.getName());
-                intent.putExtra("product_price", product.getPrice());
-                intent.putExtra("product_image", product.getImageResId());
-                startActivity(intent);
-            }
-        });
-
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        adapter = new ProductAdapter(getContext(), allProducts, this);
         recyclerView.setAdapter(adapter);
     }
 
     private void setupTabs(View view) {
         TabLayout tabLayout = view.findViewById(R.id.tab_filter);
-
-        // Thêm các tab
-        tabLayout.addTab(tabLayout.newTab().setText("All"));
-        tabLayout.addTab(tabLayout.newTab().setText("Special"));
+        tabLayout.addTab(tabLayout.newTab().setText("Tất cả"));
+        tabLayout.addTab(tabLayout.newTab().setText("Đặc biệt"));
         tabLayout.addTab(tabLayout.newTab().setText("Coffee"));
-        tabLayout.addTab(tabLayout.newTab().setText("Other drinks"));
+        tabLayout.addTab(tabLayout.newTab().setText("Đồ uống khác"));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -106,7 +109,7 @@ public class FragHome extends Fragment {
                 break;
             case 1: // Special
                 for (Product product : allProducts) {
-                    if ("Special".equals(product.getCategory())) {
+                    if ("Đặc biệt".equals(product.getCategory())) {
                         filteredList.add(product);
                     }
                 }
@@ -120,7 +123,7 @@ public class FragHome extends Fragment {
                 break;
             case 3: // Other drinks
                 for (Product product : allProducts) {
-                    if ("Other drinks".equals(product.getCategory())) {
+                    if ("Đồ uống khác".equals(product.getCategory())) {
                         filteredList.add(product);
                     }
                 }
@@ -128,5 +131,39 @@ public class FragHome extends Fragment {
         }
 
         adapter.updateList(filteredList);
+    }
+
+    @Override
+    public void onProductClick(Product product) {
+        Intent intent = new Intent(getContext(), ScreenDetail.class);
+        intent.putExtra("product", product);
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void onFavoriteClick(Product product, boolean isFavorite) {
+        if (auth.getCurrentUser() != null) {
+            String userId = auth.getCurrentUser().getUid();
+            if (isFavorite) {
+                db.collection("users")
+                        .document(userId)
+                        .collection("favorites")
+                        .document(product.getId())
+                        .set(product)
+                        .addOnSuccessListener(aVoid -> {})
+                        .addOnFailureListener(e -> Toast.makeText(getContext(), "Lỗi", Toast.LENGTH_SHORT).show());
+            } else {
+                db.collection("users")
+                        .document(userId)
+                        .collection("favorites")
+                        .document(product.getId())
+                        .delete()
+                        .addOnSuccessListener(aVoid -> {})
+                        .addOnFailureListener(e -> Toast.makeText(getContext(), "Lỗi", Toast.LENGTH_SHORT).show());
+            }
+        } else {
+            Toast.makeText(getContext(), "Vui lòng đăng nhập để thêm sản phẩm yêu thích", Toast.LENGTH_SHORT).show();
+        }
     }
 }
