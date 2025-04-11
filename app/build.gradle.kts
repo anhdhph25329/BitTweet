@@ -36,24 +36,37 @@ dependencies {
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
 
-    // TODO: Add the dependencies for Firebase products you want to use
-    // When using the BoM, don't specify versions in Firebase dependencies
+    // Firebase dependencies
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-auth") // Cho chức năng xác thực
+    implementation("com.google.firebase:firebase-storage") // Nếu cần lưu ảnh
 
-    // Add the dependencies for any other desired Firebase products
-    // https://firebase.google.com/docs/android/setup#available-libraries
-    implementation("com.google.firebase:firebase-firestore:25.1.3")
+    // Thư viện load ảnh (chọn 1 trong 2)
+    implementation("com.squareup.picasso:picasso:2.8") // Đã có
+    // Hoặc Glide (nếu muốn dùng Glide thay cho Picasso)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
+    // AndroidX và Material Design
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+    // QR Code
     implementation("com.google.zxing:core:3.5.1")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
-    implementation ("com.squareup.picasso:picasso:2.8")
 
+    // ViewModel và LiveData (nếu cần)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+
+    // Coroutines (cho xử lý bất đồng bộ)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 }

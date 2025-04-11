@@ -2,10 +2,11 @@ package fpt.anhdhph.bittweet.model;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Product {
+public class Product implements Serializable {
     private String id;
     private String proName;
     private String des;
@@ -14,6 +15,15 @@ public class Product {
     private String lPrice;
     private String category; // ✅ THÊM TRƯỜNG MỚI
     private String image;  // Trường image để chứa URL ảnh
+    private boolean isFavorite;
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
 
     // ✅ Constructor rỗng cần thiết cho Firestore
     public Product() {}

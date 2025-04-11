@@ -1,35 +1,69 @@
 package fpt.anhdhph.bittweet.screen;
 
 import android.os.Bundle;
-import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.bumptech.glide.Glide;
 
 import fpt.anhdhph.bittweet.R;
+import fpt.anhdhph.bittweet.model.Product;
 
 public class ScreenDetail extends AppCompatActivity {
+
+    private TextView name, desc, category, price;
+    private ImageView imgProduct;
+    private Product product;
+    private RadioGroup rgSize;
+    private RadioButton rbSizeS, rbSizeM, rbSizeL;
+    private Button btnAddToCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_screen_detail);
 
-        View mainView = findViewById(R.id.main);
+        name = findViewById(R.id.tvName);
+        desc = findViewById(R.id.tvDesc);
+        category = findViewById(R.id.tvCategory);
+        price = findViewById(R.id.tvPrice);
+        imgProduct = findViewById(R.id.imgProduct);
+        rgSize = findViewById(R.id.rgSize);
+        rbSizeS = findViewById(R.id.rbSizeS);
+        rbSizeM = findViewById(R.id.rbSizeM);
+        rbSizeL = findViewById(R.id.rbSizeL);
+        btnAddToCart = findViewById(R.id.btnAddToCart);
 
-        if (mainView != null) {
-            ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
-                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-                return insets;
+        product = (Product) getIntent().getSerializableExtra("product");
+
+        if (product != null) {
+            name.setText(product.getProName());
+            desc.setText(product.getDes());
+
+            category.setText("Loại: " + product.getCategory());
+
+            Glide.with(this)
+                    .load(product.getImage())
+                    .into(imgProduct);
+
+            // Default chọn size S
+            rgSize.check(rbSizeS.getId());
+            price.setText(product.getSPrice() + "đ");
+
+            rgSize.setOnCheckedChangeListener((group, checkedId) -> {
+                if (checkedId == rbSizeS.getId()) {
+                    price.setText(product.getSPrice() + "đ");
+                } else if (checkedId == rbSizeM.getId()) {
+                    price.setText(product.getMPrice() + "đ");
+                } else if (checkedId == rbSizeL.getId()) {
+                    price.setText(product.getLPrice() + "đ");
+                }
             });
-        } else {
-            // Xử lý khi không tìm thấy view, có thể log lỗi
-            throw new IllegalStateException("Không tìm thấy view với ID 'main' trong layout");
         }
     }
 }

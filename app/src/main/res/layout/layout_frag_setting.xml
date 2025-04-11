@@ -131,7 +131,9 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/ic_logout" />
+            android:src="@drawable/ic_logout"
+            />
+
         <TextView
             android:textColor="@color/white"
             android:layout_marginLeft="10dp"
