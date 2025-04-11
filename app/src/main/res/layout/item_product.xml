@@ -16,6 +16,15 @@
         android:scaleType="centerCrop"
         android:src="@drawable/sample_coffee" />
 
+    <!-- Icon yêu thích -->
+    <ImageView
+        android:id="@+id/img_favorite"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_favorite_selector"
+        android:contentDescription="Favorite" />
+
     <TextView
         android:id="@+id/tv_product_name"
         android:layout_width="wrap_content"

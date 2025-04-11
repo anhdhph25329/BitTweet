@@ -11,15 +11,13 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Product Image -->
         <ImageView
+            android:id="@+id/imgProduct"
             android:layout_width="match_parent"
             android:layout_height="256dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/sample_coffee"
-            android:background="#EEEEEE"/>
+            android:background="#EEEEEE" />
 
-        <!-- Product Title and Rating -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,104 +26,88 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:id="@+id/tv_product_name"
+                android:id="@+id/tvName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Black"
+                android:text="Product Name"
                 android:textSize="24sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@android:drawable/star_on"
-                android:layout_marginLeft="8dp"/>
+                android:layout_marginLeft="8dp" />
 
             <TextView
-                android:id="@+id/tv_rating"
+                android:id="@+id/tvRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4.5/5(123)"
                 android:textSize="16sp"
-                android:layout_marginLeft="4dp"/>
+                android:layout_marginLeft="4dp" />
         </LinearLayout>
 
-        <!-- Description Section -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Mô tả:"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp" />
 
         <TextView
-            android:id="@+id/tv_description"
+            android:id="@+id/tvDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tôi yêu em: đến nay chừng có thể.\nNgọn lửa tình chưa hẳn đã tàn phai;\nLúc rụt rè, khi hậm hực lòng ghen,\nCầu em được người tình như tôi đã yêu em."
+            android:text="Product Description"
             android:textSize="16sp"
             android:layout_marginTop="8dp"
-            android:lineSpacingExtra="4dp"/>
+            android:lineSpacingExtra="4dp" />
 
-        <!-- Divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#DDDDDD"
-            android:layout_marginVertical="16dp"/>
+        <TextView
+            android:id="@+id/tvCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loại: Coffee"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp" />
 
-        <!-- Size Selection -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Chọn kích cỡ:"
+            android:text="Chọn Size:"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
 
-        <LinearLayout
+        <RadioGroup
+            android:id="@+id/rgSize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="8dp">
 
-            <Button
-                android:id="@+id/btn_size_s"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:text="S"
-                android:textAllCaps="false"
-                android:layout_marginEnd="8dp"
-                android:backgroundTint="@color/orange"
-                android:textColor="@android:color/white"/>
+            <RadioButton
+                android:id="@+id/rbSizeS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Size S" />
 
+            <RadioButton
+                android:id="@+id/rbSizeM"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Size M" />
 
-            <Button
-                android:id="@+id/btn_size_m"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:text="M"
-                android:textAllCaps="false"
-                android:layout_marginEnd="8dp"
-                android:backgroundTint="@color/orange"
-                android:textColor="@android:color/white"/>
+            <RadioButton
+                android:id="@+id/rbSizeL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Size L" />
+        </RadioGroup>
 
-            <Button
-                android:id="@+id/btn_size_l"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:text="L"
-                android:textAllCaps="false"
-                android:layout_marginEnd="8dp"
-                android:backgroundTint="@color/orange"
-                android:textColor="@android:color/white"/>
-        </LinearLayout>
-
-        <!-- Price and Add to Cart -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -143,26 +125,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Giá"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/tv_price"
+                    android:id="@+id/tvPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="65.000 VND"
+                    android:text="0đ"
                     android:textSize="20sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <Button
-                android:id="@+id/btn_add_to_cart"
+                android:id="@+id/btnAddToCart"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:text="Thêm vào giỏ"
                 android:backgroundTint="@color/orange"
                 android:textColor="@android:color/white"
                 android:paddingHorizontal="24dp"
-                android:textAllCaps="false"/>
+                android:textAllCaps="false" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
