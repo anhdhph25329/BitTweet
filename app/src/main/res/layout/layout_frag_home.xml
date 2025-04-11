@@ -7,26 +7,41 @@
     android:layout_height="match_parent"
     tools:context=".fragment.FragHome">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Toolbar -->
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/orange"
-            app:title=""/>
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_height="50dp"
+            android:background="#8e441d">
 
-        <!-- Thanh tìm kiếm -->
-        <EditText
-            android:id="@+id/edt_search"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/semi_logo"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:padding="8dp"
-            android:drawableLeft="@drawable/ic_search"/>
+            android:layout_marginHorizontal="16dp"
+            android:background="#fab87f"
+            android:hint="Bạn đang tìm gì?"
+            android:layout_marginVertical="16dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText
+                android:drawableLeft="@drawable/ic_search"
+                android:id="@+id/edt_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- TabLayout -->
         <com.google.android.material.tabs.TabLayout
@@ -35,7 +50,7 @@
             android:layout_height="wrap_content"
             app:tabIndicatorColor="@color/orange"
             app:tabSelectedTextColor="@color/orange"
-            app:tabTextColor="@color/black"/>
+            app:tabTextColor="@color/black" />
 
         <!-- CHỈ GIỮ LẠI RECYCLERVIEW, BỎ FRAMELAYOUT -->
         <androidx.recyclerview.widget.RecyclerView
