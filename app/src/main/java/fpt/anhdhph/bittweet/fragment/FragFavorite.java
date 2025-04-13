@@ -76,7 +76,7 @@ public class FragFavorite extends Fragment {
     private void loadFavoriteItems() {
         if (isLoading) {
             Log.d("FragFavorite", "loadFavoriteItems skipped: already loading");
-            return; // Ngăn chặn gọi lại nếu đang tải
+            return;
         }
         isLoading = true;
 
@@ -87,7 +87,6 @@ public class FragFavorite extends Fragment {
             return;
         }
 
-        // Xóa danh sách hiện tại để tránh trùng lặp
         favoriteProducts.clear();
 
         db.collection("Favorites")
@@ -117,13 +116,12 @@ public class FragFavorite extends Fragment {
                                                 product.setId(productDoc.getId());
                                                 product.setCategory(category);
                                                 product.setFavorite(true);
-                                                tempProductMap.put(productId, product); // Lưu vào map tạm
+                                                tempProductMap.put(productId, product);
                                             }
                                         }
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.e("FragFavorite", "Error loading product: " + e.getMessage());
-                                        // Không hiển thị Toast để tránh làm phiền người dùng
                                     });
                             tasks.add(task);
                         }

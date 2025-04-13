@@ -1,6 +1,7 @@
 package fpt.anhdhph.bittweet.screen;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -49,9 +50,10 @@ public class ScreenDetail extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-
         product = (Product) getIntent().getSerializableExtra("product");
         getSupportActionBar().setTitle(product.getProName());
+
+        themGioHang();
 
         if (product != null) {
             name.setText(product.getProName());
@@ -79,4 +81,15 @@ public class ScreenDetail extends AppCompatActivity {
         }
 
     }
+
+    void themGioHang(){
+        btnAddToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                finish();
+            }
+        });
+    }
+
 }

@@ -44,11 +44,11 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
     private RecyclerView recyclerView;
     private ProductAdapter adapter;
     private List<Product> allProducts = new ArrayList<>();
-    private List<Product> filteredProducts = new ArrayList<>(); // Danh sách sản phẩm sau khi lọc
+    private List<Product> filteredProducts = new ArrayList<>();
     private List<String> categoryList = new ArrayList<>();
     private FirebaseFirestore db;
     private boolean isLoading = false;
-    private EditText searchEditText; // Thanh tìm kiếm
+    private EditText searchEditText;
 
     @Nullable
     @Override
@@ -63,14 +63,14 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
 
         setupRecyclerView(view);
         setupTabs(view);
-        setupSearchBar(view); // Thiết lập thanh tìm kiếm
+        setupSearchBar(view);
         loadCategories(() -> loadProductsFromFirebase());
     }
 
     private void setupRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recycler_products);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        adapter = new ProductAdapter(getContext(), filteredProducts, this, this); // Sử dụng filteredProducts
+        adapter = new ProductAdapter(getContext(), filteredProducts, this, this);
         recyclerView.setAdapter(adapter);
     }
 
