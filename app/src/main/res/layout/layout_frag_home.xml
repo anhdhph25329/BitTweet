@@ -7,60 +7,64 @@
     android:layout_height="match_parent"
     tools:context=".fragment.FragHome">
 
-
-
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_height="50dp"
-            android:background="#8e441d">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/semi_logo"/>
-
-        </LinearLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginHorizontal="16dp"
-            android:background="#fab87f"
-            android:hint="Bạn đang tìm gì?"
-            android:layout_marginVertical="16dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-            <com.google.android.material.textfield.TextInputEditText
-                android:drawableLeft="@drawable/ic_search"
-                android:id="@+id/edt_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- TabLayout -->
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_filter"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabIndicatorColor="@color/orange"
-            app:tabSelectedTextColor="@color/orange"
-            app:tabTextColor="@color/black" />
+            android:orientation="vertical">
 
-        <!-- CHỈ GIỮ LẠI RECYCLERVIEW, BỎ FRAMELAYOUT -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_products"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="8dp"/>
+            <!-- Toolbar -->
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/orange"
+                app:title="" />
 
-    </LinearLayout>
+            <!-- Thanh tìm kiếm -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="16dp"
+                android:background="@drawable/rounded_background"
+                android:hint="Bạn đang tìm gì?"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_search"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:background="@drawable/rounded_background"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- TabLayout -->
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_filter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabIndicatorColor="@color/orange"
+                app:tabSelectedTextColor="@color/orange"
+                app:tabTextColor="@color/black" />
+
+            <!-- RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_products"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:padding="8dp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- NavigationDrawer -->
     <com.google.android.material.navigation.NavigationView
@@ -68,6 +72,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:headerLayout="@layout/layout_header_menu_drawer"/>
+        app:headerLayout="@layout/layout_header_menu_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
