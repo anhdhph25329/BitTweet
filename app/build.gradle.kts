@@ -48,6 +48,7 @@ dependencies {
     // Hoặc Glide (nếu muốn dùng Glide thay cho Picasso)
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
+
     // AndroidX và Material Design
     implementation(libs.appcompat)
     implementation(libs.material)

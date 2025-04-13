@@ -8,6 +8,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 
@@ -22,6 +23,7 @@ public class ScreenDetail extends AppCompatActivity {
     private RadioGroup rgSize;
     private RadioButton rbSizeS, rbSizeM, rbSizeL;
     private Button btnAddToCart;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,14 @@ public class ScreenDetail extends AppCompatActivity {
         rbSizeL = findViewById(R.id.rbSizeL);
         btnAddToCart = findViewById(R.id.btnAddToCart);
 
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
         product = (Product) getIntent().getSerializableExtra("product");
+        getSupportActionBar().setTitle(product.getProName());
 
         if (product != null) {
             name.setText(product.getProName());
@@ -65,5 +74,6 @@ public class ScreenDetail extends AppCompatActivity {
                 }
             });
         }
+
     }
 }
