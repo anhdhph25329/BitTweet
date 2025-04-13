@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.model.Product;
@@ -24,6 +25,7 @@ public class ScreenDetail extends AppCompatActivity {
     private RadioButton rbSizeS, rbSizeM, rbSizeL;
     private Button btnAddToCart;
     Toolbar toolbar;
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class ScreenDetail extends AppCompatActivity {
         rbSizeM = findViewById(R.id.rbSizeM);
         rbSizeL = findViewById(R.id.rbSizeL);
         btnAddToCart = findViewById(R.id.btnAddToCart);
+        db = FirebaseFirestore.getInstance();
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

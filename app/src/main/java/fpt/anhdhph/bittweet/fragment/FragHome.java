@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,9 +44,11 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
     private RecyclerView recyclerView;
     private ProductAdapter adapter;
     private List<Product> allProducts = new ArrayList<>();
+    private List<Product> filteredProducts = new ArrayList<>(); // Danh sách sản phẩm sau khi lọc
     private List<String> categoryList = new ArrayList<>();
     private FirebaseFirestore db;
     private boolean isLoading = false;
+    private EditText searchEditText; // Thanh tìm kiếm
 
     @Nullable
     @Override
@@ -56,23 +61,23 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
         super.onViewCreated(view, savedInstanceState);
         db = FirebaseFirestore.getInstance();
 
-
         setupRecyclerView(view);
         setupTabs(view);
+        setupSearchBar(view); // Thiết lập thanh tìm kiếm
         loadCategories(() -> loadProductsFromFirebase());
     }
 
     private void setupRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recycler_products);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        adapter = new ProductAdapter(getContext(), allProducts, this, this);
+        adapter = new ProductAdapter(getContext(), filteredProducts, this, this); // Sử dụng filteredProducts
         recyclerView.setAdapter(adapter);
     }
 
     private void setupTabs(View view) {
         TabLayout tabLayout = view.findViewById(R.id.tab_filter);
         tabLayout.addTab(tabLayout.newTab().setText("Tất cả"));
-        tabLayout.addTab(tabLayout.newTab().setText("Đặc biệt"));
+        tabLayout.addTab(tabLayout.newTab().setText("Cocktail"));
         tabLayout.addTab(tabLayout.newTab().setText("Coffee"));
         tabLayout.addTab(tabLayout.newTab().setText("Đồ uống khác"));
 
@@ -88,6 +93,36 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
             @Override
             public void onTabReselected(TabLayout.Tab tab) {}
         });
+    }
+
+    private void setupSearchBar(View view) {
+        searchEditText = view.findViewById(R.id.edt_search);
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filterProductsBySearch(s.toString().toLowerCase());
+            }
+        });
+    }
+
+    private void filterProductsBySearch(String query) {
+        filteredProducts.clear();
+        if (query.isEmpty()) {
+            filteredProducts.addAll(allProducts);
+        } else {
+            for (Product product : allProducts) {
+                if (product.getProName() != null && product.getProName().toLowerCase().contains(query)) {
+                    filteredProducts.add(product);
+                }
+            }
+        }
+        adapter.updateList(filteredProducts);
     }
 
     private void loadCategories(Runnable onComplete) {
@@ -111,15 +146,16 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                     Toast.makeText(getContext(), "Lỗi khi tải danh mục: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     onComplete.run();
                 })
-                .addOnCompleteListener(task -> isLoading = false); // Reset trạng thái
+                .addOnCompleteListener(task -> isLoading = false);
     }
 
     private void loadProductsFromFirebase() {
         List<Task<?>> tasks = new ArrayList<>();
         allProducts.clear();
+        filteredProducts.clear();
 
         if (categoryList.isEmpty()) {
-            adapter.updateList(allProducts);
+            adapter.updateList(filteredProducts);
             return;
         }
 
@@ -148,7 +184,7 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "Lỗi khi tải sản phẩm: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    adapter.updateList(allProducts);
+                    adapter.updateList(filteredProducts);
                 });
     }
 
@@ -156,7 +192,7 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
         String userId = getUserId();
         if (userId == null) {
             Toast.makeText(getContext(), "Không thể xác định người dùng!", Toast.LENGTH_SHORT).show();
-            adapter.updateList(allProducts);
+            adapter.updateList(filteredProducts);
             return;
         }
 
@@ -180,35 +216,31 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                     Set<Product> uniqueProducts = new LinkedHashSet<>(allProducts);
                     allProducts.clear();
                     allProducts.addAll(uniqueProducts);
+                    filteredProducts.clear();
+                    filteredProducts.addAll(allProducts); // Cập nhật filteredProducts ban đầu
 
-                    adapter.updateList(allProducts);
+                    adapter.updateList(filteredProducts);
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "Lỗi khi kiểm tra yêu thích: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    adapter.updateList(allProducts);
+                    adapter.updateList(filteredProducts);
                 });
     }
 
     private void filterProducts(int position) {
-        List<Product> filteredList = new ArrayList<>();
+        filteredProducts.clear();
         for (Product product : allProducts) {
-            if (position == 0) { // Tab "Tất cả"
-                filteredList.add(product);
-            } else if (position == 1) { // Tab "Đặc biệt"
-                try {
-                    double price = Double.parseDouble(product.getMPrice());
-                    if (price > 100000) {
-                        filteredList.add(product);
-                    }
-                } catch (NumberFormatException e) {
-                }
-            } else if (position == 2 && "Coffee".equals(product.getCategory())) { // Tab "Coffee"
-                filteredList.add(product);
-            } else if (position == 3 && !"Coffee".equals(product.getCategory())) { // Tab "Đồ uống khác"
-                filteredList.add(product);
+            if (position == 0) {
+                filteredProducts.add(product);
+            } else if (position == 1 && "Cocktail".equals(product.getCategory())) {
+                filteredProducts.add(product);
+            } else if (position == 2 && "Coffee".equals(product.getCategory())) {
+                filteredProducts.add(product);
+            } else if (position == 3 && !"Coffee".equals(product.getCategory()) && !"Cocktail".equals(product.getCategory())) {
+                filteredProducts.add(product);
             }
         }
-        adapter.updateList(filteredList);
+        adapter.updateList(filteredProducts);
     }
 
     @Override
@@ -227,7 +259,6 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
         }
 
         if (isFavorite) {
-            // Kiểm tra xem sản phẩm đã có trong Favorites chưa
             db.collection("Favorites")
                     .document(userId)
                     .collection("favorite")
@@ -235,7 +266,6 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                     .get()
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
-                            // Sản phẩm đã có, không thêm lại
                             Toast.makeText(getContext(), "Sản phẩm đã có trong danh sách yêu thích", Toast.LENGTH_SHORT).show();
                         } else {
                             Map<String, Object> favoriteData = new HashMap<>();
@@ -253,14 +283,14 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                                     .addOnFailureListener(e -> {
                                         Toast.makeText(getContext(), "Lỗi khi thêm vào yêu thích: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                         product.setFavorite(false);
-                                        adapter.notifyItemChanged(allProducts.indexOf(product));
+                                        adapter.notifyItemChanged(filteredProducts.indexOf(product));
                                     });
                         }
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(getContext(), "Lỗi khi kiểm tra yêu thích: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         product.setFavorite(false);
-                        adapter.notifyItemChanged(allProducts.indexOf(product));
+                        adapter.notifyItemChanged(filteredProducts.indexOf(product));
                     });
         } else {
             db.collection("Favorites")
@@ -274,7 +304,7 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                     .addOnFailureListener(e -> {
                         Toast.makeText(getContext(), "Lỗi khi xóa khỏi yêu thích: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         product.setFavorite(true);
-                        adapter.notifyItemChanged(allProducts.indexOf(product));
+                        adapter.notifyItemChanged(filteredProducts.indexOf(product));
                     });
         }
     }
@@ -292,7 +322,6 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
     @Override
     public void onResume() {
         super.onResume();
-            loadCategories(() -> loadProductsFromFirebase());
-
+        loadCategories(() -> loadProductsFromFirebase());
     }
 }
