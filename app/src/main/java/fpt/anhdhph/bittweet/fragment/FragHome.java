@@ -44,7 +44,6 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
     private List<String> categoryList = new ArrayList<>();
     private FirebaseFirestore db;
     private boolean isLoading = false;
-    private boolean isDataLoaded = false;
 
     @Nullable
     @Override
@@ -174,12 +173,10 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                         }
                     }
 
-                    // Cập nhật trạng thái yêu thích
                     for (Product product : allProducts) {
                         product.setFavorite(favoriteIds.contains(product.getId()));
                     }
 
-                    // Đảm bảo danh sách không trùng lặp
                     Set<Product> uniqueProducts = new LinkedHashSet<>(allProducts);
                     allProducts.clear();
                     allProducts.addAll(uniqueProducts);
@@ -204,7 +201,6 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                         filteredList.add(product);
                     }
                 } catch (NumberFormatException e) {
-                    // Bỏ qua nếu giá không hợp lệ
                 }
             } else if (position == 2 && "Coffee".equals(product.getCategory())) { // Tab "Coffee"
                 filteredList.add(product);

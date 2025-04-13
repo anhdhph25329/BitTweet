@@ -42,7 +42,6 @@ public class FragFavorite extends Fragment {
     private List<Product> favoriteProducts;
     private FirebaseFirestore db;
     private boolean isLoading = false;
-    private boolean isDataLoaded = false;
 
     @Nullable
     @Override
@@ -98,7 +97,7 @@ public class FragFavorite extends Fragment {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Task<?>> tasks = new ArrayList<>();
                     Set<String> productIds = new HashSet<>();
-                    Map<String, Product> tempProductMap = new HashMap<>(); // Lưu tạm để đồng bộ
+                    Map<String, Product> tempProductMap = new HashMap<>();
 
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         String productId = doc.getString("productId");
