@@ -5,10 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +24,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.adapter.ProductAdapter;
@@ -33,6 +38,7 @@ public class FragHome extends Fragment implements ProductAdapter.ProductClickLis
     private List<Product> allProducts = new ArrayList<>();
     private FirebaseFirestore db;
     private FirebaseAuth auth;
+    private androidx.appcompat.widget.SearchView searchView;
 
     @Nullable
     @Override
@@ -46,11 +52,51 @@ public class FragHome extends Fragment implements ProductAdapter.ProductClickLis
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
-
+        // Sử dụng biến searchView đã khai báo ở lớp, không khai báo lại
+        searchView = view.findViewById(R.id.search_view);
+        searchView.setQueryHint("Tìm kiếm sản phẩm...");
+        searchView.setIconified(false);
+        EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchEditText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.gray)); // bạn có thể chọn màu khác
+        setupSearchView();
         setupRecyclerView(view);
         setupTabs(view);
         loadProductsFromFirebase();
     }
+
+    private void setupSearchView() {
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchProductsByName(query.trim());
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.trim().isEmpty()) {
+                    adapter.updateList(allProducts); // nếu xoá text, hiển thị lại toàn bộ
+                } else {
+                    searchProductsByName(newText.trim());
+                }
+                return true;
+            }
+        });
+    }
+    private void searchProductsByName(String name) {
+        String lowerCaseName = name.toLowerCase();
+        List<Product> filteredList = new ArrayList<>();
+
+        for (Product product : allProducts) {
+            if (product.getProName().toLowerCase().contains(lowerCaseName)) {
+                filteredList.add(product);
+            }
+        }
+
+        adapter.updateList(filteredList);
+    }
+
 
     private void loadProductsFromFirebase() {
         // Lấy data từ: Products -> Coffee -> Items

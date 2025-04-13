@@ -138,4 +138,9 @@ public class AdapterManageCli extends RecyclerView.Adapter<AdapterManageCli.User
             btnEdit = itemView.findViewById(R.id.btnEdit);
         }
     }
+    public void updateList(List<User> newList) {
+        this.userList = newList;
+        notifyDataSetChanged(); // Cập nhật lại RecyclerView
+    }
+
 }

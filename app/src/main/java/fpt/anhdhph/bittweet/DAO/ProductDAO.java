@@ -64,17 +64,34 @@ public class ProductDAO {
     }
     public void updateProduct(String docName, Product product, OnProductLoadListener listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         db.collection("Products")
                 .document(docName)
                 .collection("Items")
                 .document(product.getId())
-                .set(product.toMap())
-                .addOnSuccessListener(aVoid -> {
-                    listener.onSuccess(null);
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot.exists()) {
+                        String currentImage = snapshot.getString("image");
+
+                        // Nếu image mới null hoặc rỗng, thì giữ nguyên ảnh cũ
+                        if (product.getImage() == null || product.getImage().isEmpty()) {
+                            product.setImage(currentImage);
+                        }
+
+                        db.collection("Products")
+                                .document(docName)
+                                .collection("Items")
+                                .document(product.getId())
+                                .set(product.toMap())
+                                .addOnSuccessListener(aVoid -> listener.onSuccess(null))
+                                .addOnFailureListener(e -> listener.onFailure("Lỗi khi cập nhật: " + e.getMessage()));
+                    } else {
+                        listener.onFailure("Không tìm thấy sản phẩm để cập nhật.");
+                    }
                 })
-                .addOnFailureListener(e -> {
-                    listener.onFailure("Lỗi khi cập nhật: " + e.getMessage());
-                });
+                .addOnFailureListener(e -> listener.onFailure("Lỗi truy vấn sản phẩm: " + e.getMessage()));
     }
+
 
 }

@@ -33,6 +33,7 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.appcompat:appcompat:1.6.1")
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
 

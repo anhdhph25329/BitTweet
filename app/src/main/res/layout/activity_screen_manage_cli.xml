@@ -15,6 +15,23 @@
         android:background="#8e451c"
         app:navigationIcon="@drawable/ic_back"
         app:titleTextColor="@color/white" />
+    <!-- Thanh tìm kiếm -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@android:color/white">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view_cli"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_search_view"
+            android:iconifiedByDefault="false"
+            android:queryHint="Tìm kiếm sản phẩm..."
+            android:layout_marginBottom="8dp" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCli"
