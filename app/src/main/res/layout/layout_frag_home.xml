@@ -26,12 +26,26 @@
                 app:title="" />
 
             <!-- Thanh tìm kiếm -->
-            <EditText
-                android:id="@+id/edt_search"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:padding="8dp"
-                android:drawableLeft="@drawable/ic_search" />
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="16dp"
+                android:background="@drawable/rounded_background"
+                android:hint="Bạn đang tìm gì?"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_search"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:background="@drawable/rounded_background"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- TabLayout -->
             <com.google.android.material.tabs.TabLayout
@@ -42,7 +56,7 @@
                 app:tabSelectedTextColor="@color/orange"
                 app:tabTextColor="@color/black" />
 
-            <!-- RecyclerView bên trong ScrollView -->
+            <!-- RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_products"
                 android:layout_width="match_parent"

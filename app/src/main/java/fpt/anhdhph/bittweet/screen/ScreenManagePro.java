@@ -85,7 +85,6 @@ public class ScreenManagePro extends AppCompatActivity {
         rvPro.setAdapter(adapterManagePro);
     }
 
-
     void getData() {
         String[] docNames = {"Coffee", "Sinh tố", "Cooktail"};
         List<Product> allProducts = new ArrayList<>();
@@ -119,7 +118,6 @@ public class ScreenManagePro extends AppCompatActivity {
                     Toast.makeText(this, "Lỗi khi tải dữ liệu!", Toast.LENGTH_SHORT).show();
                 });
     }
-
 
     void themSanPham() {
         btnAddPro.setOnClickListener(v -> {
