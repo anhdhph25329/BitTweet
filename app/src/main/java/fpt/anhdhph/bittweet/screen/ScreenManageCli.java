@@ -2,6 +2,7 @@ package fpt.anhdhph.bittweet.screen;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,12 +10,28 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import fpt.anhdhph.bittweet.DAO.UserDAO;
 import fpt.anhdhph.bittweet.R;
+import fpt.anhdhph.bittweet.adapter.AdapterManageCli;
+
+import fpt.anhdhph.bittweet.model.User;
 
 public class ScreenManageCli extends AppCompatActivity {
 
     Toolbar toolbar;
+    RecyclerView rvCli;
+    List<User> userList = new ArrayList<>();
+    AdapterManageCli adapterManageCli;
+    UserDAO userDAO;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,17 +43,44 @@ public class ScreenManageCli extends AppCompatActivity {
             return insets;
         });
 
+        // Setup toolbar
         toolbar = findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Quản lý khách hàng");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
+        // Ánh xạ view
+        rvCli = findViewById(R.id.rvCli);
+
+        userDAO = new UserDAO();
+
+        // Khởi tạo RecyclerView
+        setupRecyclerView();
+        getData();
+
+
+    }
+
+    private void setupRecyclerView() {
+        rvCli.setLayoutManager(new LinearLayoutManager(this));
+        adapterManageCli = new AdapterManageCli(this, userList, this::getData); // callback reload
+        rvCli.setAdapter(adapterManageCli);
+    }
+
+    private void getData() {
+        userDAO.getAllUsers(new UserDAO.UserCallback() {
             @Override
-            public void onClick(View v) {
-                onBackPressed();
+            public void onSuccess(List<User> users) {
+                userList.clear();
+                userList.addAll(users);
+                adapterManageCli.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(ScreenManageCli.this, "Lỗi khi tải khách hàng: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 }
