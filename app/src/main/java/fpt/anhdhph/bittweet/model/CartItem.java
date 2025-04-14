@@ -1,28 +1,59 @@
 package fpt.anhdhph.bittweet.model;
 
-public class CartItem {
-    private String name;
-    private String note;
-    private int price;
+import java.io.Serializable;
+
+public class CartItem implements Serializable {
+    private String name, size, image;
     private int quantity;
-    private String imageUrl;
+    private long price;
 
-    // Constructor rỗng cần thiết cho Firestore
-    public CartItem() { }
+    public CartItem() {}
 
-    public CartItem(String name, String note, int price, int quantity, String imageUrl) {
+    public CartItem(String name, String size, String image, int quantity, long price) {
         this.name = name;
-        this.note = note;
-        this.price = price;
+        this.size = size;
+        this.image = image;
         this.quantity = quantity;
-        this.imageUrl = imageUrl;
+        this.price = price;
     }
 
-    // Getter và Setter
-    public String getName() { return name; }
-    public String getNote() { return note; }
-    public int getPrice() { return price; }
-    public int getQuantity() { return quantity; }
-    public String getImageUrl() { return imageUrl; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public long getPrice() {
+        return price;
+    }
+
+    public void setPrice(long price) {
+        this.price = price;
+    }
 }
