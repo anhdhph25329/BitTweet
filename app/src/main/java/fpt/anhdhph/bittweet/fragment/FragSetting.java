@@ -66,6 +66,7 @@ public class FragSetting extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ScreenManageCli.class);
                 startActivity(intent);
+
             }
         });
 

@@ -1,88 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="10dp"
+    app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:padding="12dp"
+        android:background="@drawable/bg_gradient_orange">
 
         <ImageView
-            android:id="@+id/item_image"
+            android:id="@+id/image_product"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_background" />
+            android:src="@drawable/sample_coffee"
+            android:background="@drawable/circle_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/item_name"
-            android:layout_width="wrap_content"
+            android:id="@+id/text_title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/item_image"
-            android:layout_marginLeft="10dp"
             android:text="Caffee latte"
-            android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#000" />
-
-        <TextView
-            android:id="@+id/item_note"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/item_name"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/item_image"
-            android:text="Note: ..."
-            android:textColor="#666"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/item_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/item_note"
-            android:layout_toRightOf="@id/item_image"
-            android:layout_marginLeft="10dp"
-            android:text="65.000 VND"
             android:textSize="16sp"
-            android:textColor="#000"
-            android:textStyle="bold"/>
+            app:layout_constraintStart_toEndOf="@id/image_product"
+            app:layout_constraintTop_toTopOf="@id/image_product"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="12dp" />
+
+        <TextView
+            android:id="@+id/text_note"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Ghi chú:...."
+            android:textSize="14sp"
+            android:textColor="#444"
+            app:layout_constraintTop_toBottomOf="@id/text_title"
+            app:layout_constraintStart_toStartOf="@id/text_title"
+            app:layout_constraintEnd_toEndOf="@id/text_title" />
+
+        <Button
+            android:id="@+id/btn_size"
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:text="S"
+            android:backgroundTint="#D2691E"
+            android:textColor="#fff"
+            app:layout_constraintStart_toStartOf="@id/text_title"
+            app:layout_constraintTop_toBottomOf="@id/text_note"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/text_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="65.000 VNĐ"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/btn_size"
+            app:layout_constraintTop_toTopOf="@id/btn_size" />
 
         <LinearLayout
-            android:id="@+id/item_quantity_layout"
+            android:id="@+id/quantity_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btn_size">
 
             <Button
                 android:id="@+id/btn_decrease"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:text="-"
-                android:textSize="18sp"/>
+                android:backgroundTint="#FF7F9F"
+                android:textColor="#fff" />
 
             <TextView
-                android:id="@+id/item_quantity"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:id="@+id/text_quantity"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:gravity="center"
                 android:text="1"
-                android:textSize="16sp"/>
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/btn_increase"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:text="+"
-                android:textSize="18sp"/>
+                android:backgroundTint="#FF7F9F"
+                android:textColor="#fff" />
         </LinearLayout>
-    </RelativeLayout>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

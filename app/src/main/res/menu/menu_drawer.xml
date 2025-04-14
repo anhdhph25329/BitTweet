@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/mnu_profile"
+        android:title="Profile"/>
+
+    <item android:id="@+id/mnu_managecli"
+        android:title="Manage Client"/>
+
+    <item android:id="@+id/mnu_managepro"
+        android:title="Manage Product"/>
+
+    <item android:id="@+id/mnu_manageincome"
+        android:title="Manage Income"/>
+
+    <item android:id="@+id/mnu_manageorder"
+        android:title="Manage Order"/>
+
+    <item android:id="@+id/mnu_managelog"
+        android:title="Log out"/>
+
+</menu>

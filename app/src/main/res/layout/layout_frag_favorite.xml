@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".fragment.FragFavorite"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="8dp"
+    >
 
 <!--    <TextView-->
 <!--        android:id="@+id/tvTitle"-->
