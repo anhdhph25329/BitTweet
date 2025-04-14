@@ -1,5 +1,7 @@
 package fpt.anhdhph.bittweet.screen;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -31,6 +33,7 @@ public class ScreenManageCli extends AppCompatActivity {
     List<User> userList = new ArrayList<>();
     AdapterManageCli adapterManageCli;
     UserDAO userDAO;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,15 @@ public class ScreenManageCli extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Kiểm tra vai trò
+        sharedPreferences = getSharedPreferences("LoginPref", MODE_PRIVATE);
+        String role = sharedPreferences.getString("role", "user");
+        if (!role.equals("admin")) {
+            Toast.makeText(this, "Bạn không có quyền truy cập ở đây", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         // Setup toolbar
         toolbar = findViewById(R.id.toolbar);
@@ -58,7 +70,6 @@ public class ScreenManageCli extends AppCompatActivity {
         // Khởi tạo RecyclerView
         setupRecyclerView();
         getData();
-
 
     }
 

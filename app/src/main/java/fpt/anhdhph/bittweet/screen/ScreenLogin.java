@@ -108,25 +108,43 @@ public class ScreenLogin extends AppCompatActivity {
             return;
         }
 
+        // Kiểm tra trong collection Users trước
         db.collection("Users")
                 .whereEqualTo("email", tele)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
-                        // Email
+                        // Tìm thấy trong Users (email)
                         DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
                         checkPassword(document, pass);
                     } else {
-                        // Phone
+                        // Không tìm thấy qua email, kiểm tra qua phone trong Users
                         db.collection("Users")
                                 .whereEqualTo("phone", tele)
                                 .get()
                                 .addOnSuccessListener(phoneQuery -> {
                                     if (!phoneQuery.isEmpty()) {
+                                        // Tìm thấy trong Users (phone)
                                         DocumentSnapshot document = phoneQuery.getDocuments().get(0);
                                         checkPassword(document, pass);
                                     } else {
-                                        Toast.makeText(ScreenLogin.this, "Tài khoản không tồn tại", Toast.LENGTH_SHORT).show();
+                                        // Không tìm thấy trong Users, kiểm tra trong Admin
+                                        db.collection("Admin")
+                                                .whereEqualTo("tele", tele)
+                                                .get()
+                                                .addOnSuccessListener(adminQuery -> {
+                                                    if (!adminQuery.isEmpty()) {
+                                                        // Tìm thấy trong Admin (tele)
+                                                        DocumentSnapshot document = adminQuery.getDocuments().get(0);
+                                                        checkPassword(document, pass);
+                                                    } else {
+                                                        // Không tìm thấy trong cả Users và Admin
+                                                        Toast.makeText(ScreenLogin.this, "Tài khoản không tồn tại", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Toast.makeText(ScreenLogin.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                });
                                     }
                                 })
                                 .addOnFailureListener(e -> {
@@ -140,7 +158,7 @@ public class ScreenLogin extends AppCompatActivity {
     }
 
     void checkPassword(DocumentSnapshot document, String inputPassword) {
-        String storedPassword = document.getString("password");
+        String storedPassword = document.getString("password") != null ? document.getString("password") : document.getString("pass");
 
         if (storedPassword != null && storedPassword.equals(inputPassword)) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -150,14 +168,16 @@ public class ScreenLogin extends AppCompatActivity {
             }
 
             String documentId = document.getId();
+            // Xử lý các field có thể không tồn tại trong Admin
             String name = document.getString("name") != null ? document.getString("name") : "";
             String gender = document.getString("gender") != null ? document.getString("gender") : "";
             String birthdate = document.getString("birthdate") != null ? document.getString("birthdate") : "";
-            String phone = document.getString("phone") != null ? document.getString("phone") : "";
-            String email = document.getString("email") != null ? document.getString("email") : "";
+            String phone = document.getString("phone") != null ? document.getString("phone") : document.getString("tele") != null ? document.getString("tele") : "";
+            String email = document.getString("email") != null ? document.getString("email") : document.getString("tele") != null ? document.getString("tele") : "";
             String address = document.getString("address") != null ? document.getString("address") : "";
-            String password = document.getString("password") != null ? document.getString("password") : "";
+            String password = storedPassword;
 
+            // Lưu thông tin cơ bản vào SharedPreferences
             editor.putString("documentId", documentId);
             editor.putString("name", name);
             editor.putString("gender", gender);
@@ -167,8 +187,16 @@ public class ScreenLogin extends AppCompatActivity {
             editor.putString("address", address);
             editor.putString("password", password);
             editor.putBoolean("isLoggedIn", true);
+
+            // Kiểm tra vai trò: nếu tài khoản thuộc collection Admin
+            if (document.getReference().getParent().getId().equals("Admin")) {
+                editor.putString("role", "admin");
+            } else {
+                editor.putString("role", "user");
+            }
             editor.apply();
 
+            // Chuyển đến ScreenHome
             Intent intent = new Intent(ScreenLogin.this, ScreenHome.class);
             startActivity(intent);
             finish();
