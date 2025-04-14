@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Họ tên -->
+        <EditText
+            android:id="@+id/edtName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Họ tên"
+            android:inputType="textPersonName" />
+
+        <!-- Địa chỉ -->
+        <EditText
+            android:id="@+id/edtAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Địa chỉ"
+            android:inputType="textPostalAddress"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Ngày sinh -->
+        <EditText
+            android:id="@+id/edtBirthdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ngày sinh (dd/MM/yyyy)"
+            android:inputType="date"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Giới tính -->
+        <EditText
+            android:id="@+id/edtGender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Giới tính"
+            android:inputType="text"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Email -->
+        <EditText
+            android:id="@+id/edtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Số điện thoại -->
+        <EditText
+            android:id="@+id/edtPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Số điện thoại"
+            android:inputType="phone"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Nút xác nhận -->
+        <Button
+            android:id="@+id/btnSubmitUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lưu"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#8e451c"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</ScrollView>

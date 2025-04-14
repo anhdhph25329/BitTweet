@@ -2,7 +2,6 @@ package fpt.anhdhph.bittweet.DAO;
 
 import android.util.Log;
 
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -24,16 +23,16 @@ public class ProductDAO {
         this.db = FirebaseFirestore.getInstance();
     }
 
-    public void getAllProducts(String docName, final OnProductLoadListener listener) {
+    public void getAllProducts(String category, final OnProductLoadListener listener) {
         db.collection("Products")
-                .document(docName)
+                .document(category)
                 .collection("Items")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Product> productList = new ArrayList<>();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Product product = document.toObject(Product.class);
-                        product.setId(document.getId()); // Set id để xoá
+                        product.setId(document.getId());
                         productList.add(product);
                     }
                     listener.onSuccess(productList);
@@ -44,37 +43,32 @@ public class ProductDAO {
                 });
     }
 
-    // Hàm thêm sản phẩm vào Firestore
-    public void addProduct(String docName, Product product, OnProductLoadListener listener) {
+    public void addProduct(String category, Product product, OnProductLoadListener listener) {
         db.collection("Products")
-                .document(docName)
+                .document(category)
                 .collection("Items")
                 .add(product.toMap())
                 .addOnSuccessListener(documentReference -> listener.onSuccess(null))
                 .addOnFailureListener(e -> listener.onFailure("Lỗi khi thêm sản phẩm: " + e.getMessage()));
     }
-    public void deleteProduct(String docName, String productId, OnProductLoadListener listener) {
+
+    public void deleteProduct(String category, String productId, OnProductLoadListener listener) {
         db.collection("Products")
-                .document(docName)
+                .document(category)
                 .collection("Items")
                 .document(productId)
                 .delete()
                 .addOnSuccessListener(unused -> listener.onSuccess(null))
-                .addOnFailureListener(e -> listener.onFailure("Lỗi khi xoá sản phẩm: " + e.getMessage()));
+                .addOnFailureListener(e -> listener.onFailure("Lỗi khi xóa sản phẩm: " + e.getMessage()));
     }
-    public void updateProduct(String docName, Product product, OnProductLoadListener listener) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    public void updateProduct(String category, Product product, OnProductLoadListener listener) {
         db.collection("Products")
-                .document(docName)
+                .document(category)
                 .collection("Items")
                 .document(product.getId())
                 .set(product.toMap())
-                .addOnSuccessListener(aVoid -> {
-                    listener.onSuccess(null);
-                })
-                .addOnFailureListener(e -> {
-                    listener.onFailure("Lỗi khi cập nhật: " + e.getMessage());
-                });
+                .addOnSuccessListener(aVoid -> listener.onSuccess(null))
+                .addOnFailureListener(e -> listener.onFailure("Lỗi khi cập nhật: " + e.getMessage()));
     }
-
 }

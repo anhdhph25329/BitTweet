@@ -13,22 +13,14 @@ public class Product implements Serializable {
     private String sPrice;
     private String mPrice;
     private String lPrice;
-    private String category; // ✅ THÊM TRƯỜNG MỚI
-    private String image;  // Trường image để chứa URL ảnh
+    private String category;
+    private String image;
     private boolean isFavorite;
 
-    public boolean isFavorite() {
-        return isFavorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
-    }
-
-    // ✅ Constructor rỗng cần thiết cho Firestore
+    // Constructor rỗng cho Firestore
     public Product() {}
 
-    public Product(String proName, String des, String sPrice, String mPrice, String lPrice, String category,String image) {
+    public Product(String proName, String des, String sPrice, String mPrice, String lPrice, String category, String image) {
         this.proName = proName;
         this.des = des;
         this.sPrice = sPrice;
@@ -37,13 +29,14 @@ public class Product implements Serializable {
         this.category = category;
         this.image = image;
     }
-    public Product(String proName, String des, String sPrice, String mPrice, String lPrice, String category) {
-        this.proName = proName;
-        this.des = des;
-        this.sPrice = sPrice;
-        this.mPrice = mPrice;
-        this.lPrice = lPrice;
-        this.category = category;
+
+    // Getters và setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getProName() {
@@ -102,37 +95,39 @@ public class Product implements Serializable {
         this.image = image;
     }
 
-    public String getId() {
-        return id;
+    public boolean isFavorite() {
+        return isFavorite;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
+
     // Chuyển dữ liệu thành Map để đẩy lên Firestore
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("proName", proName);
-        map.put("des", des);
-        map.put("sPrice", sPrice);
-        map.put("mPrice", mPrice);
-        map.put("lPrice", lPrice);
-        map.put("category", category); // ✅ Gán thêm category
-        map.put("image", image);  // Lưu URL ảnh vào Firestore
+        map.put("proName", proName != null ? proName : "");
+        map.put("des", des != null ? des : "");
+        map.put("sPrice", sPrice != null ? sPrice : "");
+        map.put("mPrice", mPrice != null ? mPrice : "");
+        map.put("lPrice", lPrice != null ? lPrice : "");
+        map.put("category", category != null ? category : "");
+        map.put("image", image != null ? image : "");
+        // Không lưu isFavorite vì nó được quản lý trong collection Favorites
         return map;
     }
 
+    // Tạo Product từ DocumentSnapshot
     public static Product fromDocument(DocumentSnapshot doc) {
-        String proName = doc.getString("proName");
-        String des = doc.getString("des");
-        String sPrice = doc.getString("sPrice");
-        String mPrice = doc.getString("mPrice");
-        String lPrice = doc.getString("lPrice");
-        String category = doc.getString("category");
-        String image = doc.getString("image");
-
-        Product product = new Product(proName, des, sPrice, mPrice, lPrice, category, image);
+        Product product = new Product();
+        product.setId(doc.getId());
+        product.setProName(doc.getString("proName") != null ? doc.getString("proName") : "");
+        product.setDes(doc.getString("des") != null ? doc.getString("des") : "");
+        product.setSPrice(doc.getString("sPrice") != null ? doc.getString("sPrice") : "");
+        product.setMPrice(doc.getString("mPrice") != null ? doc.getString("mPrice") : "");
+        product.setLPrice(doc.getString("lPrice") != null ? doc.getString("lPrice") : "");
+        product.setCategory(doc.getString("category") != null ? doc.getString("category") : "");
+        product.setImage(doc.getString("image") != null ? doc.getString("image") : "");
         return product;
     }
-
 }

@@ -14,6 +14,15 @@
         android:layout_height="?attr/actionBarSize"
         android:background="#8e451c"
         app:navigationIcon="@drawable/ic_back"
-        app:titleTextColor="@color/white"/>
+        app:titleTextColor="@color/white" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCli"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp" />
+
+
 
 </LinearLayout>

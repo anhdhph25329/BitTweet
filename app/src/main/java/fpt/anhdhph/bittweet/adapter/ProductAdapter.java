@@ -12,7 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.model.Product;
@@ -21,21 +24,29 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     private final Context context;
     private List<Product> productList;
-    private final ProductClickListener productClickListener;
+    private final OnProductClickListener productClickListener;
+    private final OnFavoriteClickListener favoriteClickListener;
 
-    public interface ProductClickListener {
+    public interface OnProductClickListener {
         void onProductClick(Product product);
+    }
+
+    public interface OnFavoriteClickListener {
         void onFavoriteClick(Product product, boolean isFavorite);
     }
 
-    public ProductAdapter(Context context, List<Product> productList, ProductClickListener listener) {
+    public ProductAdapter(Context context, List<Product> productList,
+                          OnProductClickListener productClickListener,
+                          OnFavoriteClickListener favoriteClickListener) {
         this.context = context;
-        this.productList = productList;
-        this.productClickListener = listener;
+        this.productList = productList != null ? productList : new ArrayList<>();
+        this.productClickListener = productClickListener;
+        this.favoriteClickListener = favoriteClickListener;
     }
 
     public void updateList(List<Product> newList) {
-        productList = newList;
+        Set<Product> uniqueProducts = new LinkedHashSet<>(newList != null ? newList : new ArrayList<>());
+        this.productList = new ArrayList<>(uniqueProducts);
         notifyDataSetChanged();
     }
 
@@ -49,15 +60,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = productList.get(position);
-        holder.bind(product, productClickListener);
+        holder.bind(product);
     }
 
     @Override
     public int getItemCount() {
-        return productList != null ? productList.size() : 0;
+        return productList.size();
     }
 
-    static class ProductViewHolder extends RecyclerView.ViewHolder {
+    class ProductViewHolder extends RecyclerView.ViewHolder {
+
         private final ImageView imgProduct;
         private final TextView tvName;
         private final TextView tvPrice;
@@ -71,32 +83,32 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             imgFavorite = itemView.findViewById(R.id.img_favorite);
         }
 
-        public void bind(Product product, ProductClickListener listener) {
+        public void bind(Product product) {
             tvName.setText(product.getProName());
             tvPrice.setText(product.getMPrice() + " VND");
 
-            // Load image from Firebase using Glide
-            if (product.getImage() != null && !product.getImage().isEmpty()) {
-                Glide.with(itemView.getContext())
-                        .load(product.getImage())
-                        .placeholder(R.drawable.sample_coffee)
-                        .into(imgProduct);
-            }
+            Glide.with(itemView.getContext())
+                    .load(product.getImage())
+                    .placeholder(R.drawable.sample_coffee)
+                    .into(imgProduct);
 
-            // Set favorite icon based on product status (you need to implement this logic)
-            imgFavorite.setImageResource(product.isFavorite() ?
-                    R.drawable.ic_favorite_filled : R.drawable.ic_favorite_selector);
+            // Sử dụng selector để hiển thị trạng thái yêu thích
+            imgFavorite.setSelected(product.isFavorite());
 
-            // Handle click events
+            // Bấm vào sản phẩm
             itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onProductClick(product);
+                if (productClickListener != null) {
+                    productClickListener.onProductClick(product);
                 }
             });
 
+            // Bấm vào trái tim
             imgFavorite.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onFavoriteClick(product, !product.isFavorite());
+                if (favoriteClickListener != null) {
+                    boolean newFavoriteState = !product.isFavorite();
+                    product.setFavorite(newFavoriteState);
+                    imgFavorite.setSelected(newFavoriteState);
+                    favoriteClickListener.onFavoriteClick(product, newFavoriteState);
                 }
             });
         }

@@ -1,6 +1,7 @@
 package fpt.anhdhph.bittweet.screen;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -8,8 +9,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.model.Product;
@@ -22,6 +25,8 @@ public class ScreenDetail extends AppCompatActivity {
     private RadioGroup rgSize;
     private RadioButton rbSizeS, rbSizeM, rbSizeL;
     private Button btnAddToCart;
+    Toolbar toolbar;
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +43,17 @@ public class ScreenDetail extends AppCompatActivity {
         rbSizeM = findViewById(R.id.rbSizeM);
         rbSizeL = findViewById(R.id.rbSizeL);
         btnAddToCart = findViewById(R.id.btnAddToCart);
+        db = FirebaseFirestore.getInstance();
 
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
         product = (Product) getIntent().getSerializableExtra("product");
+        getSupportActionBar().setTitle(product.getProName());
+
+        themGioHang();
 
         if (product != null) {
             name.setText(product.getProName());
@@ -65,5 +79,17 @@ public class ScreenDetail extends AppCompatActivity {
                 }
             });
         }
+
     }
+
+    void themGioHang(){
+        btnAddToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                finish();
+            }
+        });
+    }
+
 }
