@@ -1,5 +1,7 @@
 package fpt.anhdhph.bittweet.screen;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +45,7 @@ public class ScreenManagePro extends AppCompatActivity {
     FirebaseFirestore db;
     ProductDAO productDAO;
     List<String> categoryList = new ArrayList<>();
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,14 @@ public class ScreenManagePro extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        sharedPreferences = getSharedPreferences("LoginPref", MODE_PRIVATE);
+        String role = sharedPreferences.getString("role", "user");
+        if (!role.equals("admin")) {
+            Toast.makeText(this, "Bạn không có quyền truy cập ở đây", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         anhXa();
         setupRecyclerView();
