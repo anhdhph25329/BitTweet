@@ -42,7 +42,7 @@ public class ScreenManagePro extends AppCompatActivity {
     List<Product> productList = new ArrayList<>();
     FirebaseFirestore db;
     ProductDAO productDAO;
-    String docName = "Coffee"; // default
+    List<String> categoryList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,21 +55,21 @@ public class ScreenManagePro extends AppCompatActivity {
             return insets;
         });
 
-        // Nhận docName từ Intent
-        docName = getIntent().getStringExtra("docName");
-        if (docName == null) docName = "Coffee";
-
         anhXa();
         setupRecyclerView();
-        getData();
-        themSanPham();
+        loadCategories(() -> {
+            getData();
+            themSanPham();
+        });
     }
 
     void anhXa() {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Manage Product");
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Manage Product");
+        }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         btnAddPro = findViewById(R.id.btnAddPro);
@@ -81,41 +81,73 @@ public class ScreenManagePro extends AppCompatActivity {
 
     void setupRecyclerView() {
         rvPro.setLayoutManager(new LinearLayoutManager(this));
-        adapterManagePro = new AdapterManagePro(this, productList, docName, this::getData);
+        adapterManagePro = new AdapterManagePro(this, productList);
+        adapterManagePro.setRefreshCallback(this::getData);
         rvPro.setAdapter(adapterManagePro);
     }
 
-    void getData() {
-        String[] docNames = {"Coffee", "Sinh tố", "Cooktail"};
-        List<Product> allProducts = new ArrayList<>();
+    void loadCategories(Runnable onComplete) {
+        db.collection("Categories").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    categoryList.clear();
+                    for (var doc : queryDocumentSnapshots) {
+                        String categoryName = doc.getString("name");
+                        if (categoryName != null) {
+                            categoryList.add(categoryName);
+                        }
+                    }
+                    if (categoryList.isEmpty()) {
+                        Toast.makeText(this, "Không có danh mục nào!", Toast.LENGTH_SHORT).show();
+                    }
+                    onComplete.run();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Lỗi khi tải danh mục: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    onComplete.run();
+                });
+    }
 
+    void getData() {
+        List<Product> allProducts = new ArrayList<>();
         List<Task<?>> tasks = new ArrayList<>();
 
-        for (String name : docNames) {
-            Task<QuerySnapshot> task = FirebaseFirestore.getInstance()
-                    .collection("Products")
-                    .document(name)
+        if (categoryList.isEmpty()) {
+            productList.clear();
+            if (adapterManagePro != null) {
+                adapterManagePro.notifyDataSetChanged();
+            }
+            return;
+        }
+
+        for (String categoryName : categoryList) {
+            Task<QuerySnapshot> task = db.collection("Products")
+                    .document(categoryName)
                     .collection("Items")
                     .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        for (var doc : queryDocumentSnapshots.getDocuments()) {
-                            Product p = Product.fromDocument(doc);
-                            p.setId(doc.getId());
+                    .addOnSuccessListener(itemSnapshots -> {
+                        for (var itemDoc : itemSnapshots.getDocuments()) {
+                            Product p = Product.fromDocument(itemDoc);
+                            p.setId(itemDoc.getId());
+                            p.setCategory(categoryName);
                             allProducts.add(p);
                         }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Lỗi khi tải sản phẩm từ danh mục " + categoryName, Toast.LENGTH_SHORT).show();
                     });
             tasks.add(task);
         }
 
-        // Sau khi tất cả Task hoàn tất thì cập nhật giao diện
         Tasks.whenAllComplete(tasks)
                 .addOnSuccessListener(results -> {
                     productList.clear();
                     productList.addAll(allProducts);
-                    adapterManagePro.notifyDataSetChanged();
+                    if (adapterManagePro != null) {
+                        adapterManagePro.notifyDataSetChanged();
+                    }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Lỗi khi tải dữ liệu!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Lỗi khi tải dữ liệu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -131,33 +163,24 @@ public class ScreenManagePro extends AppCompatActivity {
             TextInputEditText edtSPrice = dialogView.findViewById(R.id.edtSPrice);
             TextInputEditText edtMPrice = dialogView.findViewById(R.id.edtMPrice);
             TextInputEditText edtLPrice = dialogView.findViewById(R.id.edtLPrice);
+            TextInputEditText edtImageUrl = dialogView.findViewById(R.id.edtImageUrl);
             Button btnAddProDialog = dialogView.findViewById(R.id.btnAddPro);
             Spinner spCategory = dialogView.findViewById(R.id.spCategory);
 
-            List<String> cateList = new ArrayList<>();
             ArrayAdapter<String> adapter = new ArrayAdapter<>(ScreenManagePro.this,
-                    android.R.layout.simple_spinner_item, cateList);
+                    android.R.layout.simple_spinner_item, categoryList);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spCategory.setAdapter(adapter);
-
-            db.collection("Categories").get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        for (var doc : queryDocumentSnapshots) {
-                            String categoryName = doc.getString("name");
-                            if (categoryName != null) cateList.add(categoryName);
-                        }
-                        adapter.notifyDataSetChanged();
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(ScreenManagePro.this, "Lỗi khi tải danh mục!", Toast.LENGTH_SHORT).show());
 
             AlertDialog dialog = builder.create();
 
             btnAddProDialog.setOnClickListener(view -> {
-                String proName = edtProName.getText().toString();
-                String des = edtDes.getText().toString();
-                String sPrice = edtSPrice.getText().toString();
-                String mPrice = edtMPrice.getText().toString();
-                String lPrice = edtLPrice.getText().toString();
+                String proName = edtProName.getText() != null ? edtProName.getText().toString().trim() : "";
+                String des = edtDes.getText() != null ? edtDes.getText().toString().trim() : "";
+                String sPrice = edtSPrice.getText() != null ? edtSPrice.getText().toString().trim() : "";
+                String mPrice = edtMPrice.getText() != null ? edtMPrice.getText().toString().trim() : "";
+                String lPrice = edtLPrice.getText() != null ? edtLPrice.getText().toString().trim() : "";
+                String imageUrl = edtImageUrl.getText() != null ? edtImageUrl.getText().toString().trim() : "";
                 String category = spCategory.getSelectedItem() != null ? spCategory.getSelectedItem().toString() : "";
 
                 if (proName.isEmpty()) {
@@ -168,11 +191,15 @@ public class ScreenManagePro extends AppCompatActivity {
                     edtDes.setError("Vui lòng nhập mô tả");
                     return;
                 }
+                if (category.isEmpty()) {
+                    Toast.makeText(ScreenManagePro.this, "Vui lòng chọn danh mục!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                Product product = new Product(proName, des, sPrice, mPrice, lPrice, category);
+                Product product = new Product(proName, des, sPrice, mPrice, lPrice, category, imageUrl);
 
                 db.collection("Products")
-                        .document(docName)
+                        .document(category)
                         .collection("Items")
                         .add(product.toMap())
                         .addOnSuccessListener(ref -> {
@@ -180,7 +207,9 @@ public class ScreenManagePro extends AppCompatActivity {
                             dialog.dismiss();
                             getData();
                         })
-                        .addOnFailureListener(e -> Toast.makeText(ScreenManagePro.this, "Lỗi khi thêm sản phẩm!", Toast.LENGTH_SHORT).show());
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(ScreenManagePro.this, "Lỗi khi thêm sản phẩm: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
             });
 
             dialog.show();
