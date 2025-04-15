@@ -215,6 +215,6 @@ public class FragFavorite extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-            loadFavoriteItems();
+        loadFavoriteItems();
     }
 }

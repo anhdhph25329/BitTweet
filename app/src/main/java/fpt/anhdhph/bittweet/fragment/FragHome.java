@@ -69,7 +69,6 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
         setupSearchBar(view);
         loadCategories(() -> loadProductsFromFirebase());
 
-
     }
 
     private void setupRecyclerView(View view) {
