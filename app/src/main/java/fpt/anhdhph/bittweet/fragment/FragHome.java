@@ -322,6 +322,6 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
     @Override
     public void onResume() {
         super.onResume();
-        loadCategories(() -> loadProductsFromFirebase());
+        checkAllFavorites();
     }
 }

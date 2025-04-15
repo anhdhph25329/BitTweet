@@ -48,6 +48,7 @@ public class ScreenPayment extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ScreenPayment.this, ScreenCard.class);
                 startActivity(intent);
+                finish();
             }
         });
 

@@ -19,7 +19,7 @@ import java.util.List;
 import fpt.anhdhph.bittweet.DAO.CartDAO;
 import fpt.anhdhph.bittweet.R;
 
-import fpt.anhdhph.bittweet.adapter.AdapterCart;
+//import fpt.anhdhph.bittweet.adapter.AdapterCart;
 import fpt.anhdhph.bittweet.model.CartItem;
 import fpt.anhdhph.bittweet.screen.ScreenPayment;
 
@@ -28,7 +28,7 @@ public class FragCart extends Fragment {
     private Button btnPay;
     private RecyclerView recyclerCart;
     private TextView totalPriceText;
-    private AdapterCart cartAdapter;
+//    private AdapterCart cartAdapter;
     private CartDAO cartDAO;
 
     @Nullable
@@ -52,8 +52,8 @@ public class FragCart extends Fragment {
 
         // Lấy dữ liệu từ Firestore
         cartDAO.getCartItems(cartItems -> {
-            cartAdapter = new AdapterCart(cartItems);
-            recyclerCart.setAdapter(cartAdapter);
+//            cartAdapter = new AdapterCart(cartItems);
+//            recyclerCart.setAdapter(cartAdapter);
             updateTotalPrice(cartItems);
         });
 

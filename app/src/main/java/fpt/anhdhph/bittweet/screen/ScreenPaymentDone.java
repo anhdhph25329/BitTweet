@@ -37,12 +37,10 @@ public class ScreenPaymentDone extends AppCompatActivity {
         // Tự động sau 3 giây
         handler = new Handler();
         runnable = this::navigateToHome;
-        handler.postDelayed(runnable, 10000);
+        handler.postDelayed(runnable, 3000);
     }
 
     private void navigateToHome() {
-        Intent intent = new Intent(ScreenPaymentDone.this, ScreenHome.class);
-        startActivity(intent);
         finish();
     }
 

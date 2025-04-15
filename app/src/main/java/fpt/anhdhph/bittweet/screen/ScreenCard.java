@@ -106,7 +106,6 @@ public class ScreenCard extends AppCompatActivity {
             }
             public void onFinish() {
                 tvCountDown.setText("Mã QR đã hết hạn!");
-                Toast.makeText(ScreenCard.this, "Mã QR đã hết hạn!", Toast.LENGTH_SHORT).show();
                 qrCodeImg.setImageBitmap(null);
                 generatedQR = null;
             }
