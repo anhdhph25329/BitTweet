@@ -14,12 +14,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import fpt.anhdhph.bittweet.DAO.CartDAO;
 import fpt.anhdhph.bittweet.R;
 
-//import fpt.anhdhph.bittweet.adapter.AdapterCart;
+import fpt.anhdhph.bittweet.adapter.AdapterCart;
 import fpt.anhdhph.bittweet.model.CartItem;
 import fpt.anhdhph.bittweet.screen.ScreenPayment;
 
@@ -28,8 +31,11 @@ public class FragCart extends Fragment {
     private Button btnPay;
     private RecyclerView recyclerCart;
     private TextView totalPriceText;
-//    private AdapterCart cartAdapter;
+    private AdapterCart cartAdapter;
     private CartDAO cartDAO;
+    private List<CartItem> cartItemList = new ArrayList<>();
+    public FragCart() {}
+
 
     @Nullable
     @Override
@@ -48,13 +54,20 @@ public class FragCart extends Fragment {
 
         // Setup RecyclerView
         recyclerCart.setLayoutManager(new LinearLayoutManager(getContext()));
-        cartDAO = new CartDAO();
+        cartDAO = new CartDAO(requireContext());
 
         // Lấy dữ liệu từ Firestore
         cartDAO.getCartItems(cartItems -> {
-//            cartAdapter = new AdapterCart(cartItems);
-//            recyclerCart.setAdapter(cartAdapter);
-            updateTotalPrice(cartItems);
+            cartItemList.clear();
+            cartItemList.addAll(cartItems);
+
+            cartAdapter = new AdapterCart(getContext(), cartItemList);
+            recyclerCart.setAdapter(cartAdapter);
+
+            updateTotalPrice();
+
+            // Khi số lượng thay đổi, cập nhật lại tổng tiền
+            cartAdapter.setOnQuantityChangedListener(this::updateTotalPrice);
         });
 
         // Sự kiện click nút thanh toán
@@ -64,11 +77,23 @@ public class FragCart extends Fragment {
         });
     }
 
-    private void updateTotalPrice(List<CartItem> cartItems) {
+    // Hàm tính và hiển thị tổng tiền
+    private void updateTotalPrice() {
         int total = 0;
-        for (CartItem item : cartItems) {
-            total += item.getPrice() * item.getQuantity();
+        for (CartItem item : cartItemList) {
+            try {
+                int price = Integer.parseInt(item.getPrice());
+                int quantity = Integer.parseInt(item.getQuantity());
+
+                total += price * quantity; // Tính tổng
+            } catch (Exception e) {
+                e.printStackTrace(); // Log nếu có lỗi bất thường
+            }
         }
-        totalPriceText.setText("Tổng: " + total + " VND");
+
+        // Format số tiền theo kiểu VNĐ
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        totalPriceText.setText("Tổng: " + formatter.format(total) + " VNĐ");
     }
+
 }
