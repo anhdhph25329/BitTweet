@@ -1,11 +1,14 @@
 package fpt.anhdhph.bittweet.fragment;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +68,8 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
         setupTabs(view);
         setupSearchBar(view);
         loadCategories(() -> loadProductsFromFirebase());
+
+
     }
 
     private void setupRecyclerView(View view) {
@@ -310,7 +315,7 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
     }
 
     private String getUserId() {
-        SharedPreferences prefs = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        SharedPreferences prefs = requireContext().getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String userId = prefs.getString("user_id", null);
         if (userId == null) {
             userId = UUID.randomUUID().toString();
