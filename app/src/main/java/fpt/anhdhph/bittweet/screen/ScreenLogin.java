@@ -168,7 +168,6 @@ public class ScreenLogin extends AppCompatActivity {
             }
 
             String documentId = document.getId();
-            // Xử lý các field có thể không tồn tại trong Admin
             String name = document.getString("name") != null ? document.getString("name") : "";
             String gender = document.getString("gender") != null ? document.getString("gender") : "";
             String birthdate = document.getString("birthdate") != null ? document.getString("birthdate") : "";
@@ -177,7 +176,7 @@ public class ScreenLogin extends AppCompatActivity {
             String address = document.getString("address") != null ? document.getString("address") : "";
             String password = storedPassword;
 
-            // Lưu thông tin cơ bản vào SharedPreferences
+            // Lưu thông tin cơ bản vào SharedPreferences LoginPref
             editor.putString("documentId", documentId);
             editor.putString("name", name);
             editor.putString("gender", gender);
@@ -188,13 +187,19 @@ public class ScreenLogin extends AppCompatActivity {
             editor.putString("password", password);
             editor.putBoolean("isLoggedIn", true);
 
-            // Kiểm tra vai trò: nếu tài khoản thuộc collection Admin
+            // Kiểm tra vai trò
             if (document.getReference().getParent().getId().equals("Admin")) {
                 editor.putString("role", "admin");
             } else {
                 editor.putString("role", "user");
             }
             editor.apply();
+
+            // Lưu documentId vào MyAppPrefs làm user_id
+            SharedPreferences myAppPrefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor myAppEditor = myAppPrefs.edit();
+            myAppEditor.putString("user_id", documentId);
+            myAppEditor.apply();
 
             // Chuyển đến ScreenHome
             Intent intent = new Intent(ScreenLogin.this, ScreenHome.class);

@@ -191,7 +191,7 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
     private void checkAllFavorites() {
         String userId = getUserId();
         if (userId == null) {
-            Toast.makeText(getContext(), "Không thể xác định người dùng!", Toast.LENGTH_SHORT).show();
+            filteredProducts.clear();
             adapter.updateList(filteredProducts);
             return;
         }
@@ -254,7 +254,6 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
     public void onFavoriteClick(Product product, boolean isFavorite) {
         String userId = getUserId();
         if (userId == null) {
-            Toast.makeText(getContext(), "Không thể xác định người dùng!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -313,8 +312,8 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
         SharedPreferences prefs = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         String userId = prefs.getString("user_id", null);
         if (userId == null) {
-            userId = UUID.randomUUID().toString();
-            prefs.edit().putString("user_id", userId).apply();
+            Toast.makeText(getContext(), "Vui lòng đăng nhập để sử dụng tính năng yêu thích", Toast.LENGTH_SHORT).show();
+            return null;
         }
         return userId;
     }

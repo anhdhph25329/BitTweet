@@ -82,7 +82,8 @@ public class FragFavorite extends Fragment {
 
         String userId = getUserId();
         if (userId == null) {
-            Toast.makeText(getContext(), "Không thể xác định người dùng!", Toast.LENGTH_SHORT).show();
+            favoriteProducts.clear();
+            productAdapter.updateList(favoriteProducts);
             isLoading = false;
             return;
         }
@@ -161,7 +162,6 @@ public class FragFavorite extends Fragment {
     private void toggleFavorite(Product product, boolean isFavorite) {
         String userId = getUserId();
         if (userId == null) {
-            Toast.makeText(getContext(), "Không thể xác định người dùng!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -206,8 +206,8 @@ public class FragFavorite extends Fragment {
         SharedPreferences prefs = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         String userId = prefs.getString("user_id", null);
         if (userId == null) {
-            userId = UUID.randomUUID().toString();
-            prefs.edit().putString("user_id", userId).apply();
+            Toast.makeText(getContext(), "Vui lòng đăng nhập để sử dụng tính năng yêu thích", Toast.LENGTH_SHORT).show();
+            return null;
         }
         return userId;
     }
