@@ -21,7 +21,6 @@
             android:src="@drawable/sample_coffee"
             android:background="@drawable/circle_background"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
@@ -47,13 +46,15 @@
             app:layout_constraintStart_toStartOf="@id/text_title"
             app:layout_constraintEnd_toEndOf="@id/text_title" />
 
-        <Button
+        <TextView
+            android:gravity="center"
             android:id="@+id/btn_size"
             android:layout_width="40dp"
             android:layout_height="36dp"
             android:text="S"
-            android:backgroundTint="#D2691E"
+            android:background="@drawable/setting_size_display"
             android:textColor="#fff"
+            android:visibility="visible"
             app:layout_constraintStart_toStartOf="@id/text_title"
             app:layout_constraintTop_toBottomOf="@id/text_note"
             android:layout_marginTop="8dp" />
@@ -62,28 +63,32 @@
             android:id="@+id/text_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
             android:text="65.000 VNĐ"
             android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@id/btn_size"
-            app:layout_constraintTop_toTopOf="@id/btn_size" />
+            app:layout_constraintTop_toTopOf="@id/btn_size"
+            app:layout_constraintBottom_toBottomOf="@id/btn_size" />
 
         <LinearLayout
             android:id="@+id/quantity_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btn_size">
+            app:layout_constraintTop_toTopOf="@id/btn_size"
+            app:layout_constraintBottom_toBottomOf="@id/btn_size">
 
-            <Button
+            <TextView
+                android:background="@drawable/setting_cart_button"
+                android:gravity="center"
                 android:id="@+id/btn_decrease"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:text="-"
-                android:backgroundTint="#FF7F9F"
-                android:textColor="#fff" />
+                android:textColor="#fff"
+                android:visibility="visible" />
 
             <TextView
                 android:id="@+id/text_quantity"
@@ -93,13 +98,16 @@
                 android:text="1"
                 android:textSize="14sp" />
 
-            <Button
+            <TextView
+                android:background="@drawable/setting_cart_button"
+                android:gravity="center"
                 android:id="@+id/btn_increase"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:text="+"
                 android:backgroundTint="#FF7F9F"
-                android:textColor="#fff" />
+                android:textColor="#fff"
+                android:visibility="visible" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

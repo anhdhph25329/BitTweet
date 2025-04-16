@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <CheckBox
+        android:id="@+id/cb_size_s"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Size S"
+        android:textSize="16sp" />
+
+    <CheckBox
+        android:id="@+id/cb_size_m"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Size M"
+        android:textSize="16sp" />
+
+    <CheckBox
+        android:id="@+id/cb_size_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Size L"
+        android:textSize="16sp" />
+
+</LinearLayout>

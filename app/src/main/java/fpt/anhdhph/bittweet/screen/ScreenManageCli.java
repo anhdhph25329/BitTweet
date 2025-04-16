@@ -1,9 +1,7 @@
 package fpt.anhdhph.bittweet.screen;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -15,7 +13,6 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +47,7 @@ public class ScreenManageCli extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("LoginPref", MODE_PRIVATE);
         String role = sharedPreferences.getString("role", "user");
         if (!role.equals("admin")) {
-            Toast.makeText(this, "Bạn không có quyền truy cập ở đây", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Không có quyền truy cập", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
