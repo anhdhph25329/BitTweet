@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import fpt.anhdhph.bittweet.R;
+import fpt.anhdhph.bittweet.screen.ScreenHistory;
 import fpt.anhdhph.bittweet.screen.ScreenLogin;
 import fpt.anhdhph.bittweet.screen.ScreenManageCli;
 import fpt.anhdhph.bittweet.screen.ScreenManageIncome;
@@ -27,7 +28,7 @@ import fpt.anhdhph.bittweet.screen.ScreenProfile;
 public class FragSetting extends Fragment {
 
     SharedPreferences sharedPreferences;
-    LinearLayout btnProfile, btnManageCli, btnManagePro, btnManageIncome, btnManageOrder, btnLogOut;
+    LinearLayout btnProfile, btnHistory, btnManageCli, btnManagePro, btnManageIncome, btnManageOrder, btnLogOut;
     ImageView lock1, lock2, lock3, lock4;
     @Nullable
     @Override
@@ -40,6 +41,7 @@ public class FragSetting extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         btnProfile = view.findViewById(R.id.btnProfile);
+        btnHistory = view.findViewById(R.id.btnHistory);
         btnManageCli = view.findViewById(R.id.btnManageCli);
         btnManagePro = view.findViewById(R.id.btnManagePro);
         btnManageIncome = view.findViewById(R.id.btnManageIncome);
@@ -82,7 +84,13 @@ public class FragSetting extends Fragment {
             requireActivity().finish();
         }
 
-
+        btnHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ScreenHistory.class);
+                startActivity(intent);
+            }
+        });
 
         btnManageCli.setOnClickListener(new View.OnClickListener() {
             @Override

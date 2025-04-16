@@ -47,7 +47,7 @@ public class AdapterOrderItem extends RecyclerView.Adapter<AdapterOrderItem.Orde
         }
 
         holder.tvProductName.setText(item.getProName() != null ? item.getProName() : "Không có tên");
-        holder.tvSize.setText("Kích thước: " + (item.getSize() != null ? item.getSize() : "N/A"));
+        holder.tvSize.setText("Size: " + (item.getSize() != null ? item.getSize() : "N/A"));
 
         // Hiển thị số lượng và giá
         String quantityPrice = "Số lượng: " + (item.getQuantity() != null ? item.getQuantity() : "1") +

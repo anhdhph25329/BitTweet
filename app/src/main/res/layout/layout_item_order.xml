@@ -14,7 +14,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Tên khách hàng -->
         <TextView
             android:id="@+id/tv_customer_name"
             android:layout_width="match_parent"
@@ -24,7 +23,6 @@
             android:textColor="@color/black"
             android:layout_marginBottom="4dp"/>
 
-        <!-- Số điện thoại -->
         <TextView
             android:id="@+id/tv_phone_number"
             android:layout_width="match_parent"
@@ -34,7 +32,6 @@
             android:textColor="@color/gray"
             android:layout_marginBottom="4dp"/>
 
-        <!-- Địa chỉ -->
         <TextView
             android:id="@+id/tv_address"
             android:layout_width="match_parent"
@@ -44,7 +41,6 @@
             android:textColor="@color/gray"
             android:layout_marginBottom="4dp"/>
 
-        <!-- Ngày đặt hàng -->
         <TextView
             android:id="@+id/tv_order_date"
             android:layout_width="match_parent"
@@ -54,7 +50,6 @@
             android:textColor="@color/gray"
             android:layout_marginBottom="4dp"/>
 
-        <!-- Tổng tiền -->
         <TextView
             android:id="@+id/tv_total_price"
             android:layout_width="match_parent"
@@ -65,7 +60,6 @@
             android:textColor="@color/black"
             android:layout_marginBottom="8dp"/>
 
-        <!-- RecyclerView hiển thị danh sách sản phẩm trong đơn hàng -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_order_items"
             android:layout_width="match_parent"

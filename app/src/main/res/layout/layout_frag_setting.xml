@@ -33,6 +33,34 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/btnHistory"
+        android:layout_marginBottom="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:background="@drawable/setting_button_theme"
+        android:layout_marginHorizontal="16dp"
+        android:gravity="center_vertical"
+        android:weightSum="1">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_customer"/>
+
+        <TextView
+            android:textColor="@color/white"
+            android:layout_marginLeft="10dp"
+            android:textSize="20sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="Lịch sử mua hàng"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/btnManageCli"
@@ -103,38 +131,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/btnManageIncome"
-        android:layout_marginBottom="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        android:background="@drawable/setting_button_theme"
-        android:layout_marginHorizontal="16dp"
-        android:gravity="center_vertical"
-        android:weightSum="1">
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_income"/>
-        <TextView
-            android:textColor="@color/white"
-            android:layout_marginLeft="10dp"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:text="Quản lý doanh thu"/>
-        <ImageView
-            android:id="@+id/lock3"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/ic_lock"/>
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/btnManageOrder"
         android:layout_marginBottom="16dp"
         android:layout_width="match_parent"
@@ -160,6 +156,38 @@
             android:text="Quản lý đơn hàng"/>
         <ImageView
             android:id="@+id/lock4"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_lock"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/btnManageIncome"
+        android:layout_marginBottom="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:background="@drawable/setting_button_theme"
+        android:layout_marginHorizontal="16dp"
+        android:gravity="center_vertical"
+        android:weightSum="1">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_income"/>
+        <TextView
+            android:textColor="@color/white"
+            android:layout_marginLeft="10dp"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:text="Quản lý doanh thu"/>
+        <ImageView
+            android:id="@+id/lock3"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="8dp"
