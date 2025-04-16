@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".screen.ScreenRegister"
     android:orientation="vertical"
+    android:background="#FFFFFF"
+
     android:gravity="center_horizontal"
     android:layout_marginHorizontal="16dp">
 

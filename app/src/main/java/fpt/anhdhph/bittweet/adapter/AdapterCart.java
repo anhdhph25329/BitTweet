@@ -265,13 +265,12 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.CartViewHolder
 
     public static class CartViewHolder extends RecyclerView.ViewHolder {
         ImageView imgProduct;
-        TextView tvTitle, tvNote, tvPrice, tvQuantity, btnSize, btnIncrease, btnDecrease;
+        TextView tvTitle, tvPrice, tvQuantity, btnSize, btnIncrease, btnDecrease;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
             imgProduct = itemView.findViewById(R.id.image_product);
             tvTitle = itemView.findViewById(R.id.text_title);
-            tvNote = itemView.findViewById(R.id.text_note);
             tvPrice = itemView.findViewById(R.id.text_price);
             tvQuantity = itemView.findViewById(R.id.text_quantity);
             btnSize = itemView.findViewById(R.id.btn_size);
