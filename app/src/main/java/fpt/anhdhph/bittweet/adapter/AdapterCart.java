@@ -19,11 +19,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import fpt.anhdhph.bittweet.DAO.CartDAO;
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.model.CartItem;
+import fpt.anhdhph.bittweet.model.Product;
 
 public class AdapterCart extends RecyclerView.Adapter<AdapterCart.CartViewHolder> {
 
@@ -60,7 +65,7 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.CartViewHolder
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         CartItem item = cartItems.get(position);
 
-        holder.tvTitle.setText(item.getName() != null ? item.getName() : "Không có tên");
+        holder.tvTitle.setText(item.getProName() != null ? item.getProName() : "Không có tên");
         holder.tvPrice.setText(item.getPrice() != null ? item.getPrice() + " VNĐ" : "0 VNĐ");
         holder.tvQuantity.setText(item.getQuantity() != null ? item.getQuantity() : "1");
         holder.btnSize.setText(item.getSize() != null ? item.getSize() : "N/A");
@@ -143,19 +148,28 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.CartViewHolder
 
     private void showSizeSelectionDialog(CartItem item, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Chọn kích thước");
+        builder.setTitle("Chọn size bạn muốn");
 
         View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_select_size, null);
         CheckBox cbSizeS = dialogView.findViewById(R.id.cb_size_s);
         CheckBox cbSizeM = dialogView.findViewById(R.id.cb_size_m);
         CheckBox cbSizeL = dialogView.findViewById(R.id.cb_size_l);
 
-        String currentSize = item.getSize();
-        if (currentSize != null) {
-            cbSizeS.setChecked(currentSize.contains("S"));
-            cbSizeM.setChecked(currentSize.contains("M"));
-            cbSizeL.setChecked(currentSize.contains("L"));
+        // Tìm tất cả kích thước của sản phẩm này trong giỏ hàng
+        Set<String> selectedSizesInCart = new HashSet<>();
+        String productId = item.getProductId();
+        for (CartItem cartItem : cartItems) {
+            if (cartItem.getProductId().equals(productId)) {
+                String size = cartItem.getSize();
+                if (size != null) {
+                    selectedSizesInCart.add(size);
+                }
+            }
         }
+
+        cbSizeS.setChecked(selectedSizesInCart.contains("S"));
+        cbSizeM.setChecked(selectedSizesInCart.contains("M"));
+        cbSizeL.setChecked(selectedSizesInCart.contains("L"));
 
         builder.setView(dialogView);
 
@@ -177,81 +191,122 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.CartViewHolder
                 return;
             }
 
-            // Xóa mục cũ nếu không còn kích thước nào được chọn
-            boolean shouldDeleteOldItem = true;
-            for (String size : selectedSizes) {
-                if (size.equals(currentSize)) {
-                    shouldDeleteOldItem = false;
-                    break;
-                }
-            }
+            // Truy vấn thông tin sản phẩm từ Firestore
+            db.collection("Products")
+                    .document(item.getCategory())
+                    .collection("Items")
+                    .document(item.getProductId())
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (!documentSnapshot.exists()) {
+                            Toast.makeText(context, "Không tìm thấy sản phẩm!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-            if (shouldDeleteOldItem) {
-                db.collection("Users")
-                        .document(userId)
-                        .collection("cart")
-                        .document(item.getId())
-                        .delete()
-                        .addOnSuccessListener(aVoid -> {
-                            cartItems.remove(position);
-                            notifyItemRemoved(position);
-                            notifyItemRangeChanged(position, cartItems.size());
-                        });
-            }
+                        Product product = Product.fromDocument(documentSnapshot);
 
-            // Tạo mục mới cho từng kích thước được chọn
-            for (String size : selectedSizes) {
-                if (size.equals(currentSize) && !shouldDeleteOldItem) {
-                    continue;
-                }
-
-                String cartItemId = item.getIdProducts() + "_" + size;
-                db.collection("Users")
-                        .document(userId)
-                        .collection("cart")
-                        .document(cartItemId)
-                        .get()
-                        .addOnSuccessListener(documentSnapshot -> {
-                            if (documentSnapshot.exists()) {
-                                // Cập nhật số lượng nếu mục đã tồn tại
-                                int currentQuantity = Integer.parseInt(documentSnapshot.getString("quantity"));
-                                db.collection("Users")
-                                        .document(userId)
-                                        .collection("cart")
-                                        .document(cartItemId)
-                                        .update("quantity", String.valueOf(currentQuantity + 1))
-                                        .addOnSuccessListener(aVoid -> {
-                                            if (listener != null) listener.onQuantityChanged();
-                                        });
-                            } else {
-                                // Tạo mục mới nếu chưa tồn tại
-                                CartItem newItem = new CartItem(
-                                        cartItemId,
-                                        item.getIdProducts(),
-                                        item.getName(),
-                                        size,
-                                        item.getPrice(),
-                                        "1",
-                                        item.getImage(),
-                                        item.getCategory()
-                                );
-                                db.collection("Users")
-                                        .document(userId)
-                                        .collection("cart")
-                                        .document(cartItemId)
-                                        .set(newItem)
-                                        .addOnSuccessListener(aVoid -> {
-                                            // Thêm mục mới vào danh sách cartItems
-                                            cartItems.add(newItem);
-                                            notifyItemInserted(cartItems.size() - 1);
-                                            if (listener != null) listener.onQuantityChanged();
-                                        });
+                        // Xóa mục cũ nếu không còn kích thước nào được chọn
+                        boolean shouldDeleteOldItem = true;
+                        for (String size : selectedSizes) {
+                            if (size.equals(item.getSize())) {
+                                shouldDeleteOldItem = false;
+                                break;
                             }
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(context, "Lỗi khi cập nhật kích thước: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        });
-            }
+                        }
+
+                        if (shouldDeleteOldItem) {
+                            db.collection("Users")
+                                    .document(userId)
+                                    .collection("cart")
+                                    .document(item.getId())
+                                    .delete()
+                                    .addOnSuccessListener(aVoid -> {
+                                        cartItems.remove(position);
+                                        notifyItemRemoved(position);
+                                        notifyItemRangeChanged(position, cartItems.size());
+                                    });
+                        }
+
+                        // Tạo mục mới cho từng kích thước được chọn
+                        for (String size : selectedSizes) {
+                            if (size.equals(item.getSize()) && !shouldDeleteOldItem) {
+                                continue;
+                            }
+
+                            // Lấy giá dựa trên kích thước
+                            String selectedPrice;
+                            if (size.equals("S")) {
+                                selectedPrice = product.getSPrice();
+                            } else if (size.equals("M")) {
+                                selectedPrice = product.getMPrice();
+                            } else {
+                                selectedPrice = product.getLPrice();
+                            }
+
+                            String cartItemId = item.getProductId() + "_" + size;
+                            db.collection("Users")
+                                    .document(userId)
+                                    .collection("cart")
+                                    .document(cartItemId)
+                                    .get()
+                                    .addOnSuccessListener(docSnapshot -> {
+                                        if (docSnapshot.exists()) {
+                                            // Cập nhật số lượng nếu mục đã tồn tại
+                                            int currentQuantity = docSnapshot.getLong("quantity").intValue();
+                                            db.collection("Users")
+                                                    .document(userId)
+                                                    .collection("cart")
+                                                    .document(cartItemId)
+                                                    .update("quantity", currentQuantity + 1)
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        if (listener != null) listener.onQuantityChanged();
+                                                    });
+                                        } else {
+                                            // Tạo mục mới nếu chưa tồn tại
+                                            Map<String, Object> cartItemData = new HashMap<>();
+                                            cartItemData.put("id", cartItemId);
+                                            cartItemData.put("productId", item.getProductId());
+                                            cartItemData.put("proName", product.getProName());
+                                            cartItemData.put("size", size);
+                                            cartItemData.put("price", selectedPrice);
+                                            cartItemData.put("quantity", 1);
+                                            cartItemData.put("image", product.getImage());
+                                            cartItemData.put("category", product.getCategory());
+
+                                            db.collection("Users")
+                                                    .document(userId)
+                                                    .collection("cart")
+                                                    .document(cartItemId)
+                                                    .set(cartItemData)
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        // Tạo CartItem mới để thêm vào danh sách
+                                                        CartItem newItem = new CartItem(
+                                                                cartItemId,
+                                                                item.getProductId(),
+                                                                product.getProName(),
+                                                                size,
+                                                                selectedPrice,
+                                                                "1",
+                                                                product.getImage(),
+                                                                product.getCategory()
+                                                        );
+                                                        cartItems.add(newItem);
+                                                        notifyItemInserted(cartItems.size() - 1);
+                                                        if (listener != null) listener.onQuantityChanged();
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Toast.makeText(context, "Lỗi khi cập nhật kích thước: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    });
+                                        }
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(context, "Lỗi khi kiểm tra giỏ hàng: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    });
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(context, "Lỗi khi lấy thông tin sản phẩm: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
         });
 
         builder.setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());

@@ -4,8 +4,8 @@ import android.util.Log;
 
 public class CartItem {
     private String id;
-    private String idProducts;
-    private String name;
+    private String productId;
+    private String proName;
     private String size;
     private String price;
     private String quantity;
@@ -16,16 +16,16 @@ public class CartItem {
         Log.d("CartItem", "Constructor rỗng được gọi");
     }
 
-    public CartItem(String id, String idProducts, String name, String size, String price, String quantity, String image, String category) {
+    public CartItem(String id, String productId, String proName, String size, String price, String quantity, String image, String category) {
         this.id = id;
-        this.idProducts = idProducts;
-        this.name = name;
+        this.productId = productId;
+        this.proName = proName;
         this.size = size;
         this.price = price;
         this.quantity = quantity;
         this.image = image;
         this.category = category;
-        Log.d("CartItem", "Constructor đầy đủ được gọi với: " + name);
+        Log.d("CartItem", "Constructor đầy đủ được gọi với: " + proName);
     }
 
     public String getId() {
@@ -36,28 +36,20 @@ public class CartItem {
         this.id = id;
     }
 
-    public String getCategory() {
-        return category;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
-    public String getIdProducts() {
-        return idProducts;
+    public String getProName() {
+        return proName;
     }
 
-    public void setIdProducts(String idProducts) {
-        this.idProducts = idProducts;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setProName(String proName) {
+        this.proName = proName;
     }
 
     public String getSize() {
@@ -90,5 +82,13 @@ public class CartItem {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

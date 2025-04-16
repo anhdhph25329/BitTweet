@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +30,7 @@ public class FragCart extends Fragment {
 
     private Button btnPay;
     private RecyclerView recyclerCart;
-    private TextView totalPriceText;
+    private TextView totalPriceText, tvEmptyCart;
     private AdapterCart cartAdapter;
     private CartDAO cartDAO;
     private List<CartItem> cartItemList = new ArrayList<>();
@@ -49,6 +50,7 @@ public class FragCart extends Fragment {
         btnPay = view.findViewById(R.id.btnPay);
         recyclerCart = view.findViewById(R.id.recyclerCart);
         totalPriceText = view.findViewById(R.id.total_price);
+        tvEmptyCart = view.findViewById(R.id.tvEmptyCart);
 
         recyclerCart.setLayoutManager(new LinearLayoutManager(getContext()));
         cartDAO = new CartDAO(requireContext());
@@ -56,8 +58,12 @@ public class FragCart extends Fragment {
         loadCartItems();
 
         btnPay.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ScreenPayment.class);
-            startActivity(intent);
+            if (cartItemList.isEmpty()) {
+                Toast.makeText(getContext(), "Giỏ hàng trống, vui lòng thêm sản phẩm!", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(getActivity(), ScreenPayment.class);
+                startActivity(intent);
+            }
         });
     }
 
@@ -69,28 +75,39 @@ public class FragCart extends Fragment {
             cartAdapter = new AdapterCart(getContext(), cartItemList);
             recyclerCart.setAdapter(cartAdapter);
 
-            updateTotalPrice();
+            updateUI();
 
-            // Khi số lượng thay đổi, cập nhật lại tổng tiền
-            cartAdapter.setOnQuantityChangedListener(this::updateTotalPrice);
+            // Khi số lượng thay đổi, cập nhật lại giao diện và tổng tiền
+            cartAdapter.setOnQuantityChangedListener(this::updateUI);
         });
     }
 
-    // Hàm tính và hiển thị tổng tiền
-    private void updateTotalPrice() {
-        int total = 0;
-        for (CartItem item : cartItemList) {
-            try {
-                int price = Integer.parseInt(item.getPrice());
-                int quantity = Integer.parseInt(item.getQuantity());
-                total += price * quantity;
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
+    // Hàm cập nhật giao diện và tổng tiền
+    private void updateUI() {
+        if (cartItemList.isEmpty()) {
+            tvEmptyCart.setVisibility(View.VISIBLE);
+            recyclerCart.setVisibility(View.GONE);
+            totalPriceText.setVisibility(View.GONE);
+        } else {
+            tvEmptyCart.setVisibility(View.GONE);
+            recyclerCart.setVisibility(View.VISIBLE);
+            totalPriceText.setVisibility(View.VISIBLE);
 
-        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
-        totalPriceText.setText("Tổng: \n" + formatter.format(total) + " VNĐ");
+            // Tính và hiển thị tổng tiền
+            int total = 0;
+            for (CartItem item : cartItemList) {
+                try {
+                    int price = Integer.parseInt(item.getPrice());
+                    int quantity = Integer.parseInt(item.getQuantity());
+                    total += price * quantity;
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+            totalPriceText.setText("Tổng:\n" + formatter.format(total) + " VNĐ");
+        }
     }
 
     @Override

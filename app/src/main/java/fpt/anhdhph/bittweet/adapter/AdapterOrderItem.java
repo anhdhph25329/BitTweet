@@ -46,7 +46,7 @@ public class AdapterOrderItem extends RecyclerView.Adapter<AdapterOrderItem.Orde
             holder.ivProductImage.setImageResource(R.drawable.sample_coffee);
         }
 
-        holder.tvProductName.setText(item.getName() != null ? item.getName() : "Không có tên");
+        holder.tvProductName.setText(item.getProName() != null ? item.getProName() : "Không có tên");
         holder.tvSize.setText("Kích thước: " + (item.getSize() != null ? item.getSize() : "N/A"));
 
         // Hiển thị số lượng và giá

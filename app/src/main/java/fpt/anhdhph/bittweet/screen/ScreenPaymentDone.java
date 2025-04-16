@@ -120,8 +120,8 @@ public class ScreenPaymentDone extends AppCompatActivity {
                         List<Map<String, Object>> items = new ArrayList<>();
                         for (CartItem item : cartItems) {
                             Map<String, Object> itemData = new HashMap<>();
-                            itemData.put("productId", item.getIdProducts());
-                            itemData.put("name", item.getName());
+                            itemData.put("productId", item.getProductId());
+                            itemData.put("name", item.getProName());
                             itemData.put("size", item.getSize());
                             itemData.put("price", item.getPrice());
                             itemData.put("quantity", item.getQuantity());

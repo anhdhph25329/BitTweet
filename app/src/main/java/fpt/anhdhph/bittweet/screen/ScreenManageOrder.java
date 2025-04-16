@@ -100,8 +100,8 @@ public class ScreenManageOrder extends AppCompatActivity {
                         if (itemsData != null) {
                             for (Map<String, Object> itemData : itemsData) {
                                 CartItem item = new CartItem();
-                                item.setIdProducts((String) itemData.get("productId"));
-                                item.setName((String) itemData.get("name"));
+                                item.setProductId((String) itemData.get("productId"));
+                                item.setProName((String) itemData.get("name"));
                                 item.setSize((String) itemData.get("size"));
                                 item.setPrice((String) itemData.get("price"));
                                 item.setQuantity((String) itemData.get("quantity"));

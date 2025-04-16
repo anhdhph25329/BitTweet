@@ -139,4 +139,9 @@ public class AdapterManageCli extends RecyclerView.Adapter<AdapterManageCli.User
         }
     }
 
+    public void updateList(List<User> newList) {
+        this.userList = newList;
+        notifyDataSetChanged(); // Cập nhật lại RecyclerView
+    }
+
 }

@@ -78,7 +78,7 @@ public class ScreenManageCli extends AppCompatActivity {
 
         // Sử dụng biến searchView đã khai báo ở lớp, không khai báo lại
         searchViewCli= findViewById(R.id.search_view_cli);
-        searchViewCli.setQueryHint("Tìm kiếm sản phẩm...");
+        searchViewCli.setQueryHint("Tìm kiếm khách hàng...");
         searchViewCli.setIconified(false);
 
         // Khởi tạo RecyclerView
@@ -103,7 +103,7 @@ public class ScreenManageCli extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.trim().isEmpty()) {
-                    adapterManageCli.updateList(allUsers); // Hiển thị lại toàn bộ
+                    adapterManageCli.updateList(allUsers);
                 } else {
                     searchByPhoneSuffix(newText.trim());
                 }

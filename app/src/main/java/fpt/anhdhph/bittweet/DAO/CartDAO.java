@@ -44,8 +44,8 @@ public class CartDAO {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         CartItem cartItem = new CartItem();
                         cartItem.setId(document.getId());
-                        cartItem.setIdProducts(document.getString("productId"));
-                        cartItem.setName(document.getString("proName"));
+                        cartItem.setProductId(document.getString("productId"));
+                        cartItem.setProName(document.getString("proName"));
                         cartItem.setImage(document.getString("image"));
                         cartItem.setSize(document.getString("size"));
                         cartItem.setPrice(document.getString("price"));
