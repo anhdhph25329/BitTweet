@@ -3,7 +3,6 @@ package fpt.anhdhph.bittweet.screen;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -115,6 +114,7 @@ public class ScreenLogin extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
+                        // Tìm thấy trong Users (email)
                         DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
                         checkPassword(document, pass);
                     } else {
@@ -124,6 +124,7 @@ public class ScreenLogin extends AppCompatActivity {
                                 .get()
                                 .addOnSuccessListener(phoneQuery -> {
                                     if (!phoneQuery.isEmpty()) {
+                                        // Tìm thấy trong Users (phone)
                                         DocumentSnapshot document = phoneQuery.getDocuments().get(0);
                                         checkPassword(document, pass);
                                     } else {
@@ -133,9 +134,11 @@ public class ScreenLogin extends AppCompatActivity {
                                                 .get()
                                                 .addOnSuccessListener(adminQuery -> {
                                                     if (!adminQuery.isEmpty()) {
+                                                        // Tìm thấy trong Admin (tele)
                                                         DocumentSnapshot document = adminQuery.getDocuments().get(0);
                                                         checkPassword(document, pass);
                                                     } else {
+                                                        // Không tìm thấy trong cả Users và Admin
                                                         Toast.makeText(ScreenLogin.this, "Tài khoản không tồn tại", Toast.LENGTH_SHORT).show();
                                                     }
                                                 })
@@ -154,44 +157,26 @@ public class ScreenLogin extends AppCompatActivity {
                 });
     }
 
-
     void checkPassword(DocumentSnapshot document, String inputPassword) {
-        // Lấy password từ Firestore (có thể là "password" hoặc "pass")
-        String storedPassword = document.getString("password");
-        if (storedPassword == null) {
-            storedPassword = document.getString("pass");
-        }
+        String storedPassword = document.getString("password") != null ? document.getString("password") : document.getString("pass");
 
-        // So sánh với password người dùng nhập vào
         if (storedPassword != null && storedPassword.equals(inputPassword)) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-
-            // Nếu tick vào checkbox nhớ mật khẩu
             if (cbRemember.isChecked()) {
                 editor.putString("tele", edtTele.getText().toString().trim());
                 editor.putString("pass", edtPass.getText().toString().trim());
             }
 
-            // Lấy thông tin người dùng từ document
             String documentId = document.getId();
+            String name = document.getString("name") != null ? document.getString("name") : "";
+            String gender = document.getString("gender") != null ? document.getString("gender") : "";
+            String birthdate = document.getString("birthdate") != null ? document.getString("birthdate") : "";
+            String phone = document.getString("phone") != null ? document.getString("phone") : document.getString("tele") != null ? document.getString("tele") : "";
+            String email = document.getString("email") != null ? document.getString("email") : document.getString("tele") != null ? document.getString("tele") : "";
+            String address = document.getString("address") != null ? document.getString("address") : "";
+            String password = storedPassword;
 
-            // Dùng hàm phụ để lấy dữ liệu an toàn
-            String name = getSafeField(document, "name");
-            String gender = getSafeField(document, "gender");
-            String birthdate = getSafeField(document, "birthdate");
-            String phone = getSafeField(document, "phone");
-            String email = getSafeField(document, "email");
-            String address = getSafeField(document, "address");
-
-            // Nếu thiếu phone hoặc email, dùng tele để fallback
-            String tele = getSafeField(document, "tele");
-            if (phone.isEmpty()) phone = tele;
-            if (email.isEmpty()) email = tele;
-
-            // Xác định vai trò dựa vào collection
-            String role = document.getReference().getParent().getId().equals("Admin") ? "admin" : "user";
-
-            // Lưu toàn bộ thông tin vào SharedPreferences
+            // Lưu thông tin cơ bản vào SharedPreferences LoginPref
             editor.putString("documentId", documentId);
             editor.putString("name", name);
             editor.putString("gender", gender);
@@ -199,16 +184,24 @@ public class ScreenLogin extends AppCompatActivity {
             editor.putString("phone", phone);
             editor.putString("email", email);
             editor.putString("address", address);
-            editor.putString("password", storedPassword);
-            editor.putString("role", role);
+            editor.putString("password", password);
             editor.putBoolean("isLoggedIn", true);
 
-            // ⚠️ Gọi apply sau cùng để lưu tất cả
+            // Kiểm tra vai trò
+            if (document.getReference().getParent().getId().equals("Admin")) {
+                editor.putString("role", "admin");
+            } else {
+                editor.putString("role", "user");
+            }
             editor.apply();
 
-            Log.d("Login", "✅ Đã lưu documentId và thông tin người dùng vào SharedPreferences: " + documentId);
+            // Lưu documentId vào MyAppPrefs làm user_id
+            SharedPreferences myAppPrefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor myAppEditor = myAppPrefs.edit();
+            myAppEditor.putString("user_id", documentId);
+            myAppEditor.apply();
 
-            // Chuyển sang màn hình chính
+            // Chuyển đến ScreenHome
             Intent intent = new Intent(ScreenLogin.this, ScreenHome.class);
             startActivity(intent);
             finish();
@@ -216,11 +209,4 @@ public class ScreenLogin extends AppCompatActivity {
             Toast.makeText(this, "Sai mật khẩu", Toast.LENGTH_SHORT).show();
         }
     }
-
-    // Hàm phụ để lấy field an toàn (tránh null)
-    private String getSafeField(DocumentSnapshot document, String key) {
-        String value = document.getString(key);
-        return value != null ? value : "";
-    }
-
 }

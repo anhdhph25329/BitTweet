@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,7 +29,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.adapter.ProductAdapter;
@@ -42,6 +42,7 @@ public class FragFavorite extends Fragment {
     private List<Product> favoriteProducts;
     private FirebaseFirestore db;
     private boolean isLoading = false;
+    private TextView tvEmptyFavorite;
 
     @Nullable
     @Override
@@ -55,6 +56,7 @@ public class FragFavorite extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         recyclerView = view.findViewById(R.id.rcFavorite);
+        tvEmptyFavorite = view.findViewById(R.id.tvEmptyFavorite);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         favoriteProducts = new ArrayList<>();
@@ -82,7 +84,10 @@ public class FragFavorite extends Fragment {
 
         String userId = getUserId();
         if (userId == null) {
-            Toast.makeText(getContext(), "Không thể xác định người dùng!", Toast.LENGTH_SHORT).show();
+            favoriteProducts.clear();
+            productAdapter.updateList(favoriteProducts);
+            tvEmptyFavorite.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
             isLoading = false;
             return;
         }
@@ -130,6 +135,8 @@ public class FragFavorite extends Fragment {
                     if (tasks.isEmpty()) {
                         Log.d("FragFavorite", "No favorite products found");
                         productAdapter.updateList(favoriteProducts);
+                        tvEmptyFavorite.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
                         isLoading = false;
                         return;
                     }
@@ -143,17 +150,29 @@ public class FragFavorite extends Fragment {
                                 favoriteProducts.addAll(uniqueProducts);
                                 Log.d("FragFavorite", "Loaded " + favoriteProducts.size() + " unique favorite products");
                                 productAdapter.updateList(favoriteProducts);
+
+                                if (favoriteProducts.isEmpty()) {
+                                    tvEmptyFavorite.setVisibility(View.VISIBLE);
+                                    recyclerView.setVisibility(View.GONE);
+                                } else {
+                                    tvEmptyFavorite.setVisibility(View.GONE);
+                                    recyclerView.setVisibility(View.VISIBLE);
+                                }
                                 isLoading = false;
                             })
                             .addOnFailureListener(e -> {
                                 Log.e("FragFavorite", "Error completing tasks: " + e.getMessage());
                                 productAdapter.updateList(favoriteProducts);
+                                tvEmptyFavorite.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
                                 isLoading = false;
                             });
                 })
                 .addOnFailureListener(e -> {
                     Log.e("FragFavorite", "Error loading favorites: " + e.getMessage());
                     productAdapter.updateList(favoriteProducts);
+                    tvEmptyFavorite.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                     isLoading = false;
                 });
     }
@@ -161,7 +180,6 @@ public class FragFavorite extends Fragment {
     private void toggleFavorite(Product product, boolean isFavorite) {
         String userId = getUserId();
         if (userId == null) {
-            Toast.makeText(getContext(), "Không thể xác định người dùng!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -206,8 +224,8 @@ public class FragFavorite extends Fragment {
         SharedPreferences prefs = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         String userId = prefs.getString("user_id", null);
         if (userId == null) {
-            userId = UUID.randomUUID().toString();
-            prefs.edit().putString("user_id", userId).apply();
+            Toast.makeText(getContext(), "Vui lòng đăng nhập để sử dụng tính năng yêu thích", Toast.LENGTH_SHORT).show();
+            return null;
         }
         return userId;
     }
@@ -215,6 +233,6 @@ public class FragFavorite extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-            loadFavoriteItems();
+        loadFavoriteItems();
     }
 }

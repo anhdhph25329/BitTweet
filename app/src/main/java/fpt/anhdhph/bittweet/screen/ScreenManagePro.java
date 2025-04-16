@@ -1,6 +1,5 @@
 package fpt.anhdhph.bittweet.screen;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -61,7 +60,7 @@ public class ScreenManagePro extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("LoginPref", MODE_PRIVATE);
         String role = sharedPreferences.getString("role", "user");
         if (!role.equals("admin")) {
-            Toast.makeText(this, "Bạn không có quyền truy cập ở đây", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Không có quyền truy cập", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }

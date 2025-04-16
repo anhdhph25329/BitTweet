@@ -32,6 +32,7 @@
             android:layout_marginRight="100dp">
 
             <TextView
+                android:textAlignment="center"
                 android:id="@+id/total_price"
                 android:textSize="20sp"
                 android:layout_width="wrap_content"

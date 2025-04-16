@@ -85,7 +85,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         public void bind(Product product) {
             tvName.setText(product.getProName());
-            tvPrice.setText(product.getMPrice() + " VND");
+            tvPrice.setText(product.getSPrice() + " VND");
 
             Glide.with(itemView.getContext())
                     .load(product.getImage())

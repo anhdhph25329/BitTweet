@@ -2,13 +2,11 @@ package fpt.anhdhph.bittweet.fragment;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +33,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.adapter.ProductAdapter;
@@ -68,7 +65,6 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
         setupTabs(view);
         setupSearchBar(view);
         loadCategories(() -> loadProductsFromFirebase());
-
 
     }
 
@@ -196,7 +192,7 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
     private void checkAllFavorites() {
         String userId = getUserId();
         if (userId == null) {
-            Toast.makeText(getContext(), "Không thể xác định người dùng!", Toast.LENGTH_SHORT).show();
+            filteredProducts.clear();
             adapter.updateList(filteredProducts);
             return;
         }
@@ -222,7 +218,7 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                     allProducts.clear();
                     allProducts.addAll(uniqueProducts);
                     filteredProducts.clear();
-                    filteredProducts.addAll(allProducts); // Cập nhật filteredProducts ban đầu
+                    filteredProducts.addAll(allProducts);
 
                     adapter.updateList(filteredProducts);
                 })
@@ -259,7 +255,6 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
     public void onFavoriteClick(Product product, boolean isFavorite) {
         String userId = getUserId();
         if (userId == null) {
-            Toast.makeText(getContext(), "Không thể xác định người dùng!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -318,8 +313,8 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
         SharedPreferences prefs = requireContext().getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String userId = prefs.getString("user_id", null);
         if (userId == null) {
-            userId = UUID.randomUUID().toString();
-            prefs.edit().putString("user_id", userId).apply();
+            Toast.makeText(getContext(), "Vui lòng đăng nhập để sử dụng tính năng yêu thích", Toast.LENGTH_SHORT).show();
+            return null;
         }
         return userId;
     }
@@ -327,6 +322,6 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
     @Override
     public void onResume() {
         super.onResume();
-        loadCategories(() -> loadProductsFromFirebase());
+        checkAllFavorites();
     }
 }

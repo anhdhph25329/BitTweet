@@ -21,7 +21,6 @@ import java.util.Locale;
 
 import fpt.anhdhph.bittweet.DAO.CartDAO;
 import fpt.anhdhph.bittweet.R;
-
 import fpt.anhdhph.bittweet.adapter.AdapterCart;
 import fpt.anhdhph.bittweet.model.CartItem;
 import fpt.anhdhph.bittweet.screen.ScreenPayment;
@@ -34,8 +33,8 @@ public class FragCart extends Fragment {
     private AdapterCart cartAdapter;
     private CartDAO cartDAO;
     private List<CartItem> cartItemList = new ArrayList<>();
-    public FragCart() {}
 
+    public FragCart() {}
 
     @Nullable
     @Override
@@ -47,16 +46,22 @@ public class FragCart extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Ánh xạ view
         btnPay = view.findViewById(R.id.btnPay);
         recyclerCart = view.findViewById(R.id.recyclerCart);
         totalPriceText = view.findViewById(R.id.total_price);
 
-        // Setup RecyclerView
         recyclerCart.setLayoutManager(new LinearLayoutManager(getContext()));
         cartDAO = new CartDAO(requireContext());
 
-        // Lấy dữ liệu từ Firestore
+        loadCartItems();
+
+        btnPay.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ScreenPayment.class);
+            startActivity(intent);
+        });
+    }
+
+    private void loadCartItems() {
         cartDAO.getCartItems(cartItems -> {
             cartItemList.clear();
             cartItemList.addAll(cartItems);
@@ -69,12 +74,6 @@ public class FragCart extends Fragment {
             // Khi số lượng thay đổi, cập nhật lại tổng tiền
             cartAdapter.setOnQuantityChangedListener(this::updateTotalPrice);
         });
-
-        // Sự kiện click nút thanh toán
-        btnPay.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ScreenPayment.class);
-            startActivity(intent);
-        });
     }
 
     // Hàm tính và hiển thị tổng tiền
@@ -84,16 +83,19 @@ public class FragCart extends Fragment {
             try {
                 int price = Integer.parseInt(item.getPrice());
                 int quantity = Integer.parseInt(item.getQuantity());
-
-                total += price * quantity; // Tính tổng
-            } catch (Exception e) {
-                e.printStackTrace(); // Log nếu có lỗi bất thường
+                total += price * quantity;
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
         }
 
-        // Format số tiền theo kiểu VNĐ
         NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
-        totalPriceText.setText("Tổng: " + formatter.format(total) + " VNĐ");
+        totalPriceText.setText("Tổng: \n" + formatter.format(total) + " VNĐ");
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadCartItems();
+    }
 }

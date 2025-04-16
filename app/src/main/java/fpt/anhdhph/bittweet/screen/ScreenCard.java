@@ -1,9 +1,7 @@
 package fpt.anhdhph.bittweet.screen;
 
-import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,10 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -30,11 +25,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
-import com.journeyapps.barcodescanner.ScanContract;
-import com.journeyapps.barcodescanner.ScanOptions;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
@@ -99,14 +90,13 @@ public class ScreenCard extends AppCompatActivity {
     }
 
     private void startCountdownTimer() {
-        new CountDownTimer(60000, 1000) { // 60 giây
+        new CountDownTimer(60000, 1000) {
             public void onTick(long millisUntilFinished) {
                 int seconds = (int) (millisUntilFinished / 1000);
                 tvCountDown.setText("Mã QR tồn tại trong: " + String.format("%02d:%02d", seconds / 60, seconds % 60));
             }
             public void onFinish() {
                 tvCountDown.setText("Mã QR đã hết hạn!");
-                Toast.makeText(ScreenCard.this, "Mã QR đã hết hạn!", Toast.LENGTH_SHORT).show();
                 qrCodeImg.setImageBitmap(null);
                 generatedQR = null;
             }
@@ -135,16 +125,6 @@ public class ScreenCard extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(this, "Lưu thất bại!", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
-        }
-    }
-
-    public void checkQRCode(String scannedCode) {
-        if (scannedCode != null && scannedCode.equals(generatedQR)) {
-            Intent successIntent = new Intent(this, ScreenPaymentDone.class);
-            startActivity(successIntent);
-            finish();
-        } else {
-            Toast.makeText(this, "Mã QR không hợp lệ hoặc đã hết hạn!", Toast.LENGTH_SHORT).show();
         }
     }
 

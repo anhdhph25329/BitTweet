@@ -93,14 +93,17 @@
             android:paddingHorizontal="24dp"
             android:textStyle="bold"/>
         <TextView
+            android:textAlignment="center"
             android:id="@+id/tv_doanhthu"
             android:layout_marginTop="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="18dp"
+            android:layout_gravity="center_horizontal"
+            android:padding="8dp"
+            android:textColor="#1976D2"
+            android:textSize="24sp"
             android:textStyle="bold"
-            android:text="Doanh thu: "/>
+            android:text="Doanh thu:"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -2,8 +2,6 @@ package fpt.anhdhph.bittweet.screen;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -15,19 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import fpt.anhdhph.bittweet.R;
-import fpt.anhdhph.bittweet.model.Order;
-import fpt.anhdhph.bittweet.model.OrderDetail;
 import fpt.anhdhph.bittweet.model.Product;
-import fpt.anhdhph.bittweet.model.CartItem;
 
 public class ScreenDetail extends AppCompatActivity {
 
@@ -63,7 +56,6 @@ public class ScreenDetail extends AppCompatActivity {
 
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        // Lấy thông tin sản phẩm từ Intent
         product = (Product) getIntent().getSerializableExtra("product");
         getSupportActionBar().setTitle(product.getProName());
 
@@ -78,11 +70,9 @@ public class ScreenDetail extends AppCompatActivity {
                     .load(product.getImage())
                     .into(imgProduct);
 
-            // Mặc định chọn size S
             rgSize.check(rbSizeS.getId());
             price.setText(product.getSPrice() + "đ");
 
-            // Lắng nghe sự thay đổi size để cập nhật giá
             rgSize.setOnCheckedChangeListener((group, checkedId) -> {
                 if (checkedId == rbSizeS.getId()) {
                     price.setText(product.getSPrice() + "đ");
@@ -95,12 +85,10 @@ public class ScreenDetail extends AppCompatActivity {
         }
     }
 
-    // Hàm thêm sản phẩm vào giỏ hàng
     void themGioHang() {
-
         btnAddToCart.setOnClickListener(v -> {
             String selectedSize;
-            String selectedPrice = product.getSPrice(); // mặc định là S
+            String selectedPrice;
 
             if (rgSize.getCheckedRadioButtonId() == rbSizeM.getId()) {
                 selectedSize = "M";
@@ -110,41 +98,57 @@ public class ScreenDetail extends AppCompatActivity {
                 selectedPrice = product.getLPrice();
             } else {
                 selectedSize = "S";
+                selectedPrice = product.getSPrice();
             }
 
-            SharedPreferences prefs = getSharedPreferences("MyApp", MODE_PRIVATE);
-            String userId = prefs.getString("documentId", null);
+            SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+            String userId = prefs.getString("user_id", null);
 
             if (userId == null) {
-                Log.e("ScreenDetail", "Người dùng chưa đăng nhập!");
+                Toast.makeText(ScreenDetail.this, "Vui lòng đăng nhập!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            OrderDetail orderDetail = new OrderDetail(
-                    null,
-                    product.getId(),
-                    product.getProName(),
-                    product.getImage(),
-                    selectedSize,
-                    selectedPrice,
-                    1,
-                    userId
-            );
+            String cartItemId = product.getId() + "_" + selectedSize;
 
-            db.collection("OrdersDetail")
-                    .add(orderDetail)
-                    .addOnSuccessListener(documentReference -> {
-                        Log.d("ScreenDetail", "Thêm vào Firestore thành công, id: " + documentReference.getId());
-                        Toast.makeText(ScreenDetail.this, "Đã thêm vào giỏ hàng!", Toast.LENGTH_SHORT).show();
-                        finish();
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("ScreenDetail", "Lỗi khi thêm vào Firestore: " + e.getMessage());
-                        Toast.makeText(ScreenDetail.this, "Thêm vào giỏ hàng thất bại!", Toast.LENGTH_SHORT).show();
-                    });
+            DocumentReference cartItemRef = db.collection("Users")
+                    .document(userId)
+                    .collection("cart")
+                    .document(cartItemId);
+
+            cartItemRef.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    int currentQuantity = documentSnapshot.getLong("quantity").intValue();
+                    cartItemRef.update("quantity", currentQuantity + 1)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(ScreenDetail.this, "Đã cập nhật số lượng trong giỏ hàng!", Toast.LENGTH_SHORT).show();
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(ScreenDetail.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                } else {
+                    Map<String, Object> cartItem = new HashMap<>();
+                    cartItem.put("productId", product.getId());
+                    cartItem.put("category", product.getCategory());
+                    cartItem.put("size", selectedSize);
+                    cartItem.put("quantity", 1);
+                    cartItem.put("price", selectedPrice);
+                    cartItem.put("proName", product.getProName());
+                    cartItem.put("image", product.getImage());
+
+                    cartItemRef.set(cartItem)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(ScreenDetail.this, "Đã thêm vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(ScreenDetail.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                }
+            }).addOnFailureListener(e -> {
+                Toast.makeText(ScreenDetail.this, "Lỗi khi kiểm tra giỏ hàng: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
         });
-
-
     }
-
 }

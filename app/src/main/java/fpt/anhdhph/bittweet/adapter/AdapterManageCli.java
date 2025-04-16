@@ -27,7 +27,7 @@ public class AdapterManageCli extends RecyclerView.Adapter<AdapterManageCli.User
     private final ReloadCallback reloadCallback;
 
     public interface ReloadCallback {
-        void reload(); // Callback cho việc load lại dữ liệu
+        void reload();
     }
     public AdapterManageCli(Context context, List<User> userList, ReloadCallback reloadCallback) {
         this.context = context;
@@ -137,10 +137,6 @@ public class AdapterManageCli extends RecyclerView.Adapter<AdapterManageCli.User
             tvSdt = itemView.findViewById(R.id.tvSdt);
             btnEdit = itemView.findViewById(R.id.btnEdit);
         }
-    }
-    public void updateList(List<User> newList) {
-        this.userList = newList;
-        notifyDataSetChanged(); // Cập nhật lại RecyclerView
     }
 
 }

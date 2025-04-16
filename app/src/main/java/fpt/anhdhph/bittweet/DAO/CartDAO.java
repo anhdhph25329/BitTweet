@@ -13,75 +13,81 @@ import java.util.List;
 import fpt.anhdhph.bittweet.model.CartItem;
 
 public class CartDAO {
-
-    private final FirebaseFirestore db;
-    private final Context context;
+    private FirebaseFirestore db;
+    private Context context;
 
     public CartDAO(Context context) {
-        this.context = context.getApplicationContext(); // 🔁 Luôn nên dùng getApplicationContext() để tránh memory leak
-        db = FirebaseFirestore.getInstance();
+        this.context = context;
+        this.db = FirebaseFirestore.getInstance();
     }
 
-    // ✅ Thêm sản phẩm vào giỏ hàng (dùng idOrders từ SharedPreferences)
-    public void addToCart(CartItem item) {
-        SharedPreferences prefs = context.getSharedPreferences("MyApp", Context.MODE_PRIVATE);
-        String userId = prefs.getString("documentId", null);
+    public interface CartItemsCallback {
+        void onCartItemsLoaded(List<CartItem> cartItems);
+    }
+
+    public void getCartItems(CartItemsCallback callback) {
+        SharedPreferences prefs = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        String userId = prefs.getString("user_id", null);
 
         if (userId == null) {
-            Log.e("CartDAO", "❌ Không tìm thấy documentId trong SharedPreferences");
+            Log.e("CartDAO", "Người dùng chưa đăng nhập!");
+            callback.onCartItemsLoaded(new ArrayList<>());
             return;
         }
 
-        String cartId = "cart_" + userId;
-        item.setIdOrders(cartId); // Gán đúng ID đơn hàng
-
-        db.collection("OrdersDetail")
-                .add(item)
-                .addOnSuccessListener(documentReference ->
-                        Log.d("CartDAO", "✅ Thêm vào giỏ hàng thành công: " + item.getName() + " - size: " + item.getSize()))
-                .addOnFailureListener(e ->
-                        Log.e("CartDAO", "❌ Lỗi khi thêm vào giỏ hàng", e));
-    }
-
-    // ✅ Lấy danh sách giỏ hàng
-    public void getCartItems(OnCartItemsLoadedListener listener) {
-        SharedPreferences prefs = context.getSharedPreferences("MyApp", Context.MODE_PRIVATE);
-        String userId = prefs.getString("documentId", null);
-        Log.d("CartDAO", "🧾 userId từ SharedPreferences = " + userId);
-
-        if (userId == null) {
-            Log.e("CartDAO", "❌ Không tìm thấy documentId trong SharedPreferences");
-            listener.onCartItemsLoaded(new ArrayList<>());
-            return;
-        }
-
-        String cartId = "cart_" + userId;
-        Log.d("CartDAO", "📥 Đang lấy giỏ hàng với idOrders = " + cartId);
-
-        db.collection("OrdersDetail")
-                .whereEqualTo("idOrders", cartId)
+        db.collection("Users")
+                .document(userId)
+                .collection("cart")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<CartItem> cartItems = new ArrayList<>();
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        try {
-                            CartItem item = doc.toObject(CartItem.class);
-                            Log.d("CartDAO", "📦 Đã lấy item: " + item.getName() + " - size: " + item.getSize());
-                            cartItems.add(item);
-                        } catch (Exception e) {
-                            Log.e("CartDAO", "❌ Lỗi khi convert document thành CartItem", e);
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        CartItem cartItem = new CartItem();
+                        cartItem.setId(document.getId());
+                        cartItem.setIdProducts(document.getString("productId"));
+                        cartItem.setName(document.getString("proName"));
+                        cartItem.setImage(document.getString("image"));
+                        cartItem.setSize(document.getString("size"));
+                        cartItem.setPrice(document.getString("price"));
+                        // Xử lý quantity linh hoạt
+                        Object quantityObj = document.get("quantity");
+                        if (quantityObj instanceof String) {
+                            cartItem.setQuantity((String) quantityObj);
+                        } else if (quantityObj instanceof Number) {
+                            cartItem.setQuantity(String.valueOf(((Number) quantityObj).intValue()));
+                        } else {
+                            cartItem.setQuantity("1");
                         }
+                        cartItem.setCategory(document.getString("category"));
+                        cartItems.add(cartItem);
                     }
-                    listener.onCartItemsLoaded(cartItems);
+                    callback.onCartItemsLoaded(cartItems);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("CartDAO", "❌ Lỗi khi lấy giỏ hàng", e);
-                    listener.onCartItemsLoaded(new ArrayList<>());
+                    Log.e("CartDAO", "Lỗi khi lấy giỏ hàng: " + e.getMessage());
+                    callback.onCartItemsLoaded(new ArrayList<>());
                 });
     }
 
-    // ✅ Interface callback để xử lý danh sách giỏ hàng sau khi lấy
-    public interface OnCartItemsLoadedListener {
-        void onCartItemsLoaded(List<CartItem> cartItems);
+    public void updateQuantity(String cartItemId, int newQuantity, Runnable onSuccess, Runnable onFailure) {
+        SharedPreferences prefs = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        String userId = prefs.getString("user_id", null);
+
+        if (userId == null) {
+            Log.e("CartDAO", "Người dùng chưa đăng nhập!");
+            onFailure.run();
+            return;
+        }
+
+        db.collection("Users")
+                .document(userId)
+                .collection("cart")
+                .document(cartItemId)
+                .update("quantity", String.valueOf(newQuantity))
+                .addOnSuccessListener(aVoid -> onSuccess.run())
+                .addOnFailureListener(e -> {
+                    Log.e("CartDAO", "Lỗi khi cập nhật số lượng: " + e.getMessage());
+                    onFailure.run();
+                });
     }
 }
