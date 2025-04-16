@@ -42,22 +42,13 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.OrderViewHol
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         Order order = orders.get(position);
 
-        // Hiển thị tên khách hàng
         holder.tvCustomerName.setText("Khách hàng: " + (order.getCustomerName() != null ? order.getCustomerName() : "N/A"));
-
-        // Hiển thị số điện thoại
         holder.tvPhoneNumber.setText("Số điện thoại: " + (order.getPhoneNumber() != null ? order.getPhoneNumber() : "N/A"));
-
-        // Hiển thị địa chỉ
         holder.tvAddress.setText("Địa chỉ: " + (order.getAddress() != null ? order.getAddress() : "N/A"));
-
-        // Hiển thị ngày đặt hàng
         holder.tvOrderDate.setText("Ngày đặt: " + (order.getOrderDate() != null ? order.getOrderDate() : "N/A"));
-
-        // Hiển thị tổng tiền
         holder.tvTotalPrice.setText("Tổng tiền: " + (order.getTotalPrice() != null ? order.getTotalPrice() + " VNĐ" : "0 VNĐ"));
 
-        // Thiết lập RecyclerView con để hiển thị danh sách sản phẩm
+        // Hiển thị danh sách sản phẩm trong đơn hàng
         AdapterOrderItem adapterOrderItem = new AdapterOrderItem(context, order.getItems());
         holder.rvOrderItems.setLayoutManager(new LinearLayoutManager(context));
         holder.rvOrderItems.setAdapter(adapterOrderItem);

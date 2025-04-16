@@ -56,7 +56,7 @@ public class CartDAO {
                         } else if (quantityObj instanceof Number) {
                             cartItem.setQuantity(String.valueOf(((Number) quantityObj).intValue()));
                         } else {
-                            cartItem.setQuantity("1"); // Giá trị mặc định nếu quantity không hợp lệ
+                            cartItem.setQuantity("1");
                         }
                         cartItem.setCategory(document.getString("category"));
                         cartItems.add(cartItem);

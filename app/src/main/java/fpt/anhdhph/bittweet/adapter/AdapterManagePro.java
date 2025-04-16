@@ -42,16 +42,7 @@ public class AdapterManagePro extends RecyclerView.Adapter<AdapterManagePro.Mana
         this.db = FirebaseFirestore.getInstance();
     }
 
-    public AdapterManagePro(Context context, List<Product> productList, Runnable refreshCallback) {
-        this.context = context;
-        this.productList = productList;
-        this.refreshCallback = refreshCallback;
-        this.productDAO = new ProductDAO();
-        this.db = FirebaseFirestore.getInstance();
-    }
-
     public void setRefreshCallback(Runnable refreshCallback) {
-        // Nếu cần thiết, bạn có thể thêm phương thức này để cập nhật callback sau khi adapter được tạo
     }
 
     @NonNull

@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -146,13 +145,11 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.CartViewHolder
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Chọn kích thước");
 
-        // Tạo layout cho dialog
         View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_select_size, null);
         CheckBox cbSizeS = dialogView.findViewById(R.id.cb_size_s);
         CheckBox cbSizeM = dialogView.findViewById(R.id.cb_size_m);
         CheckBox cbSizeL = dialogView.findViewById(R.id.cb_size_l);
 
-        // Khởi tạo trạng thái checkbox dựa trên kích thước hiện tại
         String currentSize = item.getSize();
         if (currentSize != null) {
             cbSizeS.setChecked(currentSize.contains("S"));
@@ -216,7 +213,7 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.CartViewHolder
                         .get()
                         .addOnSuccessListener(documentSnapshot -> {
                             if (documentSnapshot.exists()) {
-                                // Nếu đã có sản phẩm với kích thước này, tăng số lượng
+                                // Cập nhật số lượng nếu mục đã tồn tại
                                 int currentQuantity = Integer.parseInt(documentSnapshot.getString("quantity"));
                                 db.collection("Users")
                                         .document(userId)
@@ -227,7 +224,7 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.CartViewHolder
                                             if (listener != null) listener.onQuantityChanged();
                                         });
                             } else {
-                                // Nếu chưa có, thêm mới
+                                // Tạo mục mới nếu chưa tồn tại
                                 CartItem newItem = new CartItem(
                                         cartItemId,
                                         item.getIdProducts(),

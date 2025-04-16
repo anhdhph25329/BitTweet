@@ -3,7 +3,7 @@ package fpt.anhdhph.bittweet.model;
 import android.util.Log;
 
 public class CartItem {
-    private String id; // Thêm trường id để lưu documentId
+    private String id;
     private String idProducts;
     private String name;
     private String size;
@@ -28,7 +28,6 @@ public class CartItem {
         Log.d("CartItem", "Constructor đầy đủ được gọi với: " + name);
     }
 
-    // Getter và Setter cho id
     public String getId() {
         return id;
     }
@@ -37,7 +36,6 @@ public class CartItem {
         this.id = id;
     }
 
-    // Getter và Setter cho category
     public String getCategory() {
         return category;
     }
@@ -46,7 +44,6 @@ public class CartItem {
         this.category = category;
     }
 
-    // Các getter/setter khác
     public String getIdProducts() {
         return idProducts;
     }
@@ -93,17 +90,5 @@ public class CartItem {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public void logCartItem() {
-        Log.d("CartItem", "Thông tin sản phẩm: " +
-                "\n- ID: " + id +
-                "\n- ID Product: " + idProducts +
-                "\n- Tên: " + name +
-                "\n- Size: " + size +
-                "\n- Giá: " + price +
-                "\n- Số lượng: " + quantity +
-                "\n- Ảnh: " + image +
-                "\n- Category: " + category);
     }
 }

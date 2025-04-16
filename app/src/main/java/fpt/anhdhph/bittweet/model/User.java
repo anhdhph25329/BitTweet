@@ -1,10 +1,5 @@
 package fpt.anhdhph.bittweet.model;
 
-import com.google.firebase.firestore.DocumentSnapshot;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class User {
     private String id;
     private String name;
@@ -25,38 +20,59 @@ public class User {
         this.phone = phone;
     }
 
-    public static User fromDocument(DocumentSnapshot doc) {
-        User user = doc.toObject(User.class);
-        if (user != null) user.setId(doc.getId());
-        return user;
+    public String getId() {
+        return id;
     }
 
-    public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", name);
-        map.put("address", address);
-        map.put("birthdate", birthdate);
-        map.put("email", email);
-        map.put("gender", gender);
-        map.put("phone", phone);
-        return map;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    // Getter & Setter...
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public String getName() {
+        return name;
+    }
 
-    public String getName() { return name; }
-    public String getAddress() { return address; }
-    public String getBirthdate() { return birthdate; }
-    public String getEmail() { return email; }
-    public String getGender() { return gender; }
-    public String getPhone() { return phone; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public void setName(String name) { this.name = name; }
-    public void setAddress(String address) { this.address = address; }
-    public void setBirthdate(String birthdate) { this.birthdate = birthdate; }
-    public void setEmail(String email) { this.email = email; }
-    public void setGender(String gender) { this.gender = gender; }
-    public void setPhone(String phone) { this.phone = phone; }
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }

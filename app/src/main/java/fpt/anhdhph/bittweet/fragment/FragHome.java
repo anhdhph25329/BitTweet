@@ -2,13 +2,11 @@ package fpt.anhdhph.bittweet.fragment;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +33,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.adapter.ProductAdapter;
@@ -221,7 +218,7 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                     allProducts.clear();
                     allProducts.addAll(uniqueProducts);
                     filteredProducts.clear();
-                    filteredProducts.addAll(allProducts); // Cập nhật filteredProducts ban đầu
+                    filteredProducts.addAll(allProducts);
 
                     adapter.updateList(filteredProducts);
                 })

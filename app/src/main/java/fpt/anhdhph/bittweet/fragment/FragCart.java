@@ -46,19 +46,15 @@ public class FragCart extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Ánh xạ view
         btnPay = view.findViewById(R.id.btnPay);
         recyclerCart = view.findViewById(R.id.recyclerCart);
         totalPriceText = view.findViewById(R.id.total_price);
 
-        // Setup RecyclerView
         recyclerCart.setLayoutManager(new LinearLayoutManager(getContext()));
         cartDAO = new CartDAO(requireContext());
 
-        // Lấy dữ liệu từ Firestore
         loadCartItems();
 
-        // Sự kiện click nút thanh toán
         btnPay.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ScreenPayment.class);
             startActivity(intent);
@@ -100,6 +96,6 @@ public class FragCart extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadCartItems(); // Làm mới giỏ hàng khi quay lại
+        loadCartItems();
     }
 }

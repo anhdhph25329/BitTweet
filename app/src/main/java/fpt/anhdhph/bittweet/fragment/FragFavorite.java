@@ -150,7 +150,7 @@ public class FragFavorite extends Fragment {
                                 favoriteProducts.addAll(uniqueProducts);
                                 Log.d("FragFavorite", "Loaded " + favoriteProducts.size() + " unique favorite products");
                                 productAdapter.updateList(favoriteProducts);
-                                // Cập nhật visibility của tvEmptyFavorite và recyclerView
+
                                 if (favoriteProducts.isEmpty()) {
                                     tvEmptyFavorite.setVisibility(View.VISIBLE);
                                     recyclerView.setVisibility(View.GONE);

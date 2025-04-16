@@ -61,7 +61,6 @@ public class ScreenManageCli extends AppCompatActivity {
 
         // Ánh xạ view
         rvCli = findViewById(R.id.rvCli);
-
         userDAO = new UserDAO();
 
         // Khởi tạo RecyclerView

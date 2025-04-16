@@ -17,7 +17,6 @@ public class Product implements Serializable {
     private String image;
     private boolean isFavorite;
 
-    // Constructor rỗng cho Firestore
     public Product() {}
 
     public Product(String proName, String des, String sPrice, String mPrice, String lPrice, String category, String image) {
@@ -30,7 +29,6 @@ public class Product implements Serializable {
         this.image = image;
     }
 
-    // Getters và setters
     public String getId() {
         return id;
     }
@@ -103,7 +101,6 @@ public class Product implements Serializable {
         isFavorite = favorite;
     }
 
-    // Chuyển dữ liệu thành Map để đẩy lên Firestore
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("proName", proName != null ? proName : "");
@@ -113,7 +110,6 @@ public class Product implements Serializable {
         map.put("lPrice", lPrice != null ? lPrice : "");
         map.put("category", category != null ? category : "");
         map.put("image", image != null ? image : "");
-        // Không lưu isFavorite vì nó được quản lý trong collection Favorites
         return map;
     }
 
