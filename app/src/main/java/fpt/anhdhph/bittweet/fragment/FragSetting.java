@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class FragSetting extends Fragment {
 
     SharedPreferences sharedPreferences;
     LinearLayout btnProfile, btnManageCli, btnManagePro, btnManageIncome, btnManageOrder, btnLogOut;
+    ImageView lock1, lock2, lock3, lock4;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,10 +45,30 @@ public class FragSetting extends Fragment {
         btnManageIncome = view.findViewById(R.id.btnManageIncome);
         btnManageOrder = view.findViewById(R.id.btnManageOrder);
         btnLogOut = view.findViewById(R.id.btnLogOut);
+        lock1 = view.findViewById(R.id.lock1);
+        lock2 = view.findViewById(R.id.lock2);
+        lock3 = view.findViewById(R.id.lock3);
+        lock4 = view.findViewById(R.id.lock4);
 
         sharedPreferences = requireActivity().getSharedPreferences("LoginPref", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
+        String role = sharedPreferences.getString("role", "user");
+        if (!role.equals("admin")) {
+            lock1.setVisibility(View.VISIBLE);
+            lock2.setVisibility(View.VISIBLE);
+            lock3.setVisibility(View.VISIBLE);
+            lock4.setVisibility(View.VISIBLE);
+            btnManageCli.setClickable(false);
+            btnManagePro.setClickable(false);
+            btnManageIncome.setClickable(false);
+            btnManageOrder.setClickable(false);
+        }else {
+            lock1.setVisibility(View.GONE);
+            lock2.setVisibility(View.GONE);
+            lock3.setVisibility(View.GONE);
+            lock4.setVisibility(View.GONE);
+        }
 
         if (isLoggedIn) {
             btnProfile.setOnClickListener(v -> {
@@ -60,12 +82,13 @@ public class FragSetting extends Fragment {
             requireActivity().finish();
         }
 
+
+
         btnManageCli.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ScreenManageCli.class);
                 startActivity(intent);
-
             }
         });
 

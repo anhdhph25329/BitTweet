@@ -55,7 +55,6 @@ public class ScreenManageIncome extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("LoginPref", MODE_PRIVATE);
         String role = sharedPreferences.getString("role", "user");
         if (!role.equals("admin")) {
-            Toast.makeText(this, "Không có quyền truy cập", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
