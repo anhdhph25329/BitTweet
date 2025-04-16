@@ -8,6 +8,7 @@
     tools:context=".screen.ScreenRecover1"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="#FFFFFF"
     android:layout_marginHorizontal="16dp"
     >
     <ImageView
