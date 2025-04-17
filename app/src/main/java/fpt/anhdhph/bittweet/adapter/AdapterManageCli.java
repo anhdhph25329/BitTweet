@@ -24,15 +24,10 @@ public class AdapterManageCli extends RecyclerView.Adapter<AdapterManageCli.User
     private Context context;
     private List<User> userList;
     private UserDAO userDAO;
-    private final ReloadCallback reloadCallback;
 
-    public interface ReloadCallback {
-        void reload();
-    }
-    public AdapterManageCli(Context context, List<User> userList, ReloadCallback reloadCallback) {
+    public AdapterManageCli(Context context, List<User> userList) {
         this.context = context;
         this.userList = userList;
-        this.reloadCallback = reloadCallback;
         this.userDAO = new UserDAO();
     }
 
@@ -55,7 +50,7 @@ public class AdapterManageCli extends RecyclerView.Adapter<AdapterManageCli.User
         holder.tvEmail.setText("Email: " + user.getEmail());
         holder.tvSdt.setText("SDT: " + user.getPhone());
 
-        holder.btnEdit.setOnClickListener(v -> showEditDialog(user, position));
+        holder.btnEdit.setOnClickListener(v -> showEditDialog(user));
         holder.itemView.setOnLongClickListener(v -> {
             new AlertDialog.Builder(context)
                     .setTitle("Xác nhận xoá")
@@ -64,8 +59,7 @@ public class AdapterManageCli extends RecyclerView.Adapter<AdapterManageCli.User
                         userDAO.deleteUser(user.getId(),
                                 () -> {
                                     Toast.makeText(context, "Đã xoá người dùng", Toast.LENGTH_SHORT).show();
-                                    userList.remove(position);
-                                    notifyItemRemoved(position);
+                                    // Snapshot listener trong ScreenManageCli sẽ tự động cập nhật
                                 },
                                 e -> Toast.makeText(context, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show()
                         );
@@ -76,7 +70,7 @@ public class AdapterManageCli extends RecyclerView.Adapter<AdapterManageCli.User
         });
     }
 
-    private void showEditDialog(User user, int position) {
+    private void showEditDialog(User user) {
         View dialogView = LayoutInflater.from(context).inflate(R.layout.layout_dialog_add_user, null);
         EditText edtName = dialogView.findViewById(R.id.edtName);
         EditText edtAddress = dialogView.findViewById(R.id.edtAddress);
@@ -108,7 +102,7 @@ public class AdapterManageCli extends RecyclerView.Adapter<AdapterManageCli.User
                     userDAO.updateUser(user.getId(), user,
                             () -> {
                                 Toast.makeText(context, "Đã cập nhật người dùng", Toast.LENGTH_SHORT).show();
-                                notifyItemChanged(position);
+                                // Snapshot listener trong ScreenManageCli sẽ tự động cập nhật
                             },
                             e -> Toast.makeText(context, "Lỗi cập nhật: " + e.getMessage(), Toast.LENGTH_SHORT).show()
                     );
@@ -123,7 +117,6 @@ public class AdapterManageCli extends RecyclerView.Adapter<AdapterManageCli.User
     }
 
     public static class UserViewHolder extends RecyclerView.ViewHolder {
-
         TextView tvTen, tvDiaChi, tvNgaySinh, tvGioiTinh, tvEmail, tvSdt;
         ImageView btnEdit;
 
@@ -138,14 +131,9 @@ public class AdapterManageCli extends RecyclerView.Adapter<AdapterManageCli.User
             btnEdit = itemView.findViewById(R.id.btnEdit);
         }
     }
-    public void updateList(List<User> newList) {
-        this.userList = newList;
-        notifyDataSetChanged(); // Cập nhật lại RecyclerView
-    }
 
     public void updateList(List<User> newList) {
         this.userList = newList;
-        notifyDataSetChanged(); // Cập nhật lại RecyclerView
+        notifyDataSetChanged();
     }
-
 }

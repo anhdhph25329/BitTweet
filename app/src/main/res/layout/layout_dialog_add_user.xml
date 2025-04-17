@@ -62,14 +62,5 @@
             android:inputType="phone"
             android:layout_marginTop="8dp"/>
 
-        <!-- Nút xác nhận -->
-        <Button
-            android:id="@+id/btnSubmitUser"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Lưu"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="#8e451c"
-            android:textColor="@android:color/white" />
     </LinearLayout>
 </ScrollView>

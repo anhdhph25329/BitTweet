@@ -1,17 +1,20 @@
 package fpt.anhdhph.bittweet.screen;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -23,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -37,12 +41,15 @@ public class ScreenManagePro extends AppCompatActivity {
 
     Toolbar toolbar;
     RecyclerView rvPro;
+    SearchView searchViewPro;
     AdapterManagePro adapterManagePro;
     List<Product> productList = new ArrayList<>();
+    List<Product> allProducts = new ArrayList<>(); // Danh sách gốc để lưu toàn bộ sản phẩm
     FirebaseFirestore db;
     ProductDAO productDAO;
     List<String> categoryList = new ArrayList<>();
     SharedPreferences sharedPreferences;
+    private List<ListenerRegistration> productListeners = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +75,7 @@ public class ScreenManagePro extends AppCompatActivity {
             getData();
             setupRealTimeUpdates();
             themSanPham();
+            setupSearchView();
         });
     }
 
@@ -81,6 +89,7 @@ public class ScreenManagePro extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         rvPro = findViewById(R.id.rvPro);
+        searchViewPro = findViewById(R.id.search_view_pro); // Ánh xạ SearchView
 
         db = FirebaseFirestore.getInstance();
         productDAO = new ProductDAO();
@@ -91,6 +100,45 @@ public class ScreenManagePro extends AppCompatActivity {
         adapterManagePro = new AdapterManagePro(this, productList);
         adapterManagePro.setRefreshCallback(this::getData);
         rvPro.setAdapter(adapterManagePro);
+    }
+
+    void setupSearchView() {
+        EditText searchEditText = searchViewPro.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchEditText.setHintTextColor(Color.GRAY);
+        searchViewPro.setQueryHint("Nhập tên sản phẩm...");
+        searchViewPro.setIconified(false);
+
+        searchViewPro.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchByProductName(query.trim());
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.trim().isEmpty()) {
+                    productList.clear();
+                    productList.addAll(allProducts);
+                    adapterManagePro.notifyDataSetChanged();
+                } else {
+                    searchByProductName(newText.trim());
+                }
+                return true;
+            }
+        });
+    }
+
+    void searchByProductName(String query) {
+        List<Product> filtered = new ArrayList<>();
+        for (Product product : allProducts) {
+            if (product.getProName() != null && product.getProName().toLowerCase().contains(query.toLowerCase())) {
+                filtered.add(product);
+            }
+        }
+        productList.clear();
+        productList.addAll(filtered);
+        adapterManagePro.notifyDataSetChanged();
     }
 
     void loadCategories(Runnable onComplete) {
@@ -115,10 +163,11 @@ public class ScreenManagePro extends AppCompatActivity {
     }
 
     void getData() {
-        List<Product> allProducts = new ArrayList<>();
+        List<Product> tempProducts = new ArrayList<>();
         List<Task<?>> tasks = new ArrayList<>();
 
         if (categoryList.isEmpty()) {
+            allProducts.clear();
             productList.clear();
             if (adapterManagePro != null) {
                 adapterManagePro.notifyDataSetChanged();
@@ -136,7 +185,7 @@ public class ScreenManagePro extends AppCompatActivity {
                             Product p = Product.fromDocument(itemDoc);
                             p.setId(itemDoc.getId());
                             p.setCategory(categoryName);
-                            allProducts.add(p);
+                            tempProducts.add(p);
                         }
                     })
                     .addOnFailureListener(e -> {
@@ -148,10 +197,18 @@ public class ScreenManagePro extends AppCompatActivity {
 
         Tasks.whenAllComplete(tasks)
                 .addOnSuccessListener(results -> {
-                    productList.clear();
-                    productList.addAll(allProducts);
-                    if (adapterManagePro != null) {
-                        adapterManagePro.notifyDataSetChanged();
+                    synchronized (allProducts) {
+                        allProducts.clear();
+                        allProducts.addAll(tempProducts);
+                        if (searchViewPro.getQuery().toString().trim().isEmpty()) {
+                            productList.clear();
+                            productList.addAll(allProducts);
+                        } else {
+                            searchByProductName(searchViewPro.getQuery().toString().trim());
+                        }
+                        if (adapterManagePro != null) {
+                            adapterManagePro.notifyDataSetChanged();
+                        }
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -162,8 +219,14 @@ public class ScreenManagePro extends AppCompatActivity {
     void setupRealTimeUpdates() {
         if (categoryList.isEmpty()) return;
 
+        // Hủy các listener cũ nếu có
+        for (ListenerRegistration listener : productListeners) {
+            listener.remove();
+        }
+        productListeners.clear();
+
         for (String categoryName : categoryList) {
-            db.collection("Products")
+            ListenerRegistration listener = db.collection("Products")
                     .document(categoryName)
                     .collection("Items")
                     .addSnapshotListener((value, error) -> {
@@ -180,11 +243,20 @@ public class ScreenManagePro extends AppCompatActivity {
                                 p.setCategory(categoryName);
                                 updatedProducts.add(p);
                             }
-                            productList.clear();
-                            productList.addAll(updatedProducts);
-                            adapterManagePro.notifyDataSetChanged();
+                            synchronized (allProducts) {
+                                allProducts.clear();
+                                allProducts.addAll(updatedProducts);
+                                if (searchViewPro.getQuery().toString().trim().isEmpty()) {
+                                    productList.clear();
+                                    productList.addAll(allProducts);
+                                } else {
+                                    searchByProductName(searchViewPro.getQuery().toString().trim());
+                                }
+                                adapterManagePro.notifyDataSetChanged();
+                            }
                         }
                     });
+            productListeners.add(listener);
         }
     }
 
@@ -242,7 +314,7 @@ public class ScreenManagePro extends AppCompatActivity {
                         .addOnSuccessListener(ref -> {
                             Toast.makeText(ScreenManagePro.this, "Thêm sản phẩm thành công!", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
-                            getData(); // Vẫn giữ getData cho tính nhất quán
+                            // Snapshot listener sẽ tự động cập nhật
                         })
                         .addOnFailureListener(e -> {
                             Toast.makeText(ScreenManagePro.this, "Lỗi khi thêm sản phẩm: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -251,5 +323,14 @@ public class ScreenManagePro extends AppCompatActivity {
 
             dialog.show();
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        for (ListenerRegistration listener : productListeners) {
+            listener.remove();
+        }
+        productListeners.clear();
     }
 }

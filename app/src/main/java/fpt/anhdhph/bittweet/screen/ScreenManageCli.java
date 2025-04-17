@@ -18,9 +18,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,6 @@ import java.util.List;
 import fpt.anhdhph.bittweet.DAO.UserDAO;
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.adapter.AdapterManageCli;
-
 import fpt.anhdhph.bittweet.model.User;
 
 public class ScreenManageCli extends AppCompatActivity {
@@ -40,9 +38,9 @@ public class ScreenManageCli extends AppCompatActivity {
     UserDAO userDAO;
     SharedPreferences sharedPreferences;
     private List<User> allUsers = new ArrayList<>();
-    private androidx.appcompat.widget.SearchView searchViewCli;
+    private SearchView searchViewCli;
     private FirebaseFirestore db;
-
+    private ListenerRegistration userListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +61,9 @@ public class ScreenManageCli extends AppCompatActivity {
             return;
         }
 
+        // Khởi tạo Firestore
+        db = FirebaseFirestore.getInstance();
+
         // Setup toolbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -72,30 +73,26 @@ public class ScreenManageCli extends AppCompatActivity {
 
         // Ánh xạ view
         rvCli = findViewById(R.id.rvCli);
+        searchViewCli = findViewById(R.id.search_view_cli);
+        searchViewCli.setQueryHint("Nhập 3 số cuối khách hàng...");
+        searchViewCli.setIconified(false);
 
         userDAO = new UserDAO();
 
-        // Sử dụng biến searchView đã khai báo ở lớp, không khai báo lại
-        searchViewCli= findViewById(R.id.search_view_cli);
-        searchViewCli.setQueryHint("Tìm kiếm khách hàng...");
-        searchViewCli.setIconified(false);
-
         // Khởi tạo RecyclerView
         setupRecyclerView();
-        getData();
+        setupRealTimeUpdates();
         setupSearchView();
-
-
     }
+
     private void setupSearchView() {
-        // Đổi màu hint nếu cần
         EditText searchEditText = searchViewCli.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setHintTextColor(Color.GRAY);
 
         searchViewCli.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchByPhoneSuffix(query.trim());
+                searchUsers(query.trim());
                 return true;
             }
 
@@ -104,61 +101,71 @@ public class ScreenManageCli extends AppCompatActivity {
                 if (newText.trim().isEmpty()) {
                     adapterManageCli.updateList(allUsers);
                 } else {
-                    searchByPhoneSuffix(newText.trim());
+                    searchUsers(newText.trim());
                 }
                 return true;
             }
         });
     }
 
-    private void searchByPhoneSuffix(String suffix) {
+    private void searchUsers(String query) {
         List<User> filtered = new ArrayList<>();
         for (User user : allUsers) {
-            if (user.getPhone() != null && user.getPhone().endsWith(suffix)) {
+            if ((user.getPhone() != null && user.getPhone().toLowerCase().contains(query.toLowerCase())) ||
+                    (user.getName() != null && user.getName().toLowerCase().contains(query.toLowerCase())) ||
+                    (user.getEmail() != null && user.getEmail().toLowerCase().contains(query.toLowerCase()))) {
                 filtered.add(user);
             }
         }
-        adapterManageCli.updateList(filtered);
+        userList.clear();
+        userList.addAll(filtered);
+        adapterManageCli.notifyDataSetChanged();
     }
-
-    private void fetchAllUsers() {
-        db.collection("Users")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    allUsers.clear();
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        User user = doc.toObject(User.class);
-                        allUsers.add(user);
-                    }
-                    adapterManageCli.updateList(allUsers);
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Lỗi khi tải danh sách khách hàng", Toast.LENGTH_SHORT).show()
-                );
-    }
-
 
     private void setupRecyclerView() {
         rvCli.setLayoutManager(new LinearLayoutManager(this));
-        adapterManageCli = new AdapterManageCli(this, userList, this::getData); // callback reload
+        adapterManageCli = new AdapterManageCli(this, userList); // Bỏ callback
         rvCli.setAdapter(adapterManageCli);
     }
 
-    private void getData() {
-        userDAO.getAllUsers(new UserDAO.UserCallback() {
-            @Override
-            public void onSuccess(List<User> users) {
-                userList.clear();
-                userList.addAll(users);
-                allUsers.clear();         // <--- Thêm dòng này
-                allUsers.addAll(users);   // <--- Và dòng này
-                adapterManageCli.notifyDataSetChanged();
-            }
+    private void setupRealTimeUpdates() {
+        if (userListener != null) {
+            userListener.remove();
+        }
 
-            @Override
-            public void onError(Exception e) {
-                Toast.makeText(ScreenManageCli.this, "Lỗi khi tải khách hàng: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        userListener = db.collection("Users")
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        Toast.makeText(this, "Lỗi khi tải danh sách khách hàng: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (value != null) {
+                        List<User> updatedUsers = new ArrayList<>();
+                        for (var doc : value.getDocuments()) {
+                            User user = doc.toObject(User.class);
+                            user.setId(doc.getId());
+                            updatedUsers.add(user);
+                        }
+                        synchronized (allUsers) {
+                            allUsers.clear();
+                            allUsers.addAll(updatedUsers);
+                            if (searchViewCli.getQuery().toString().trim().isEmpty()) {
+                                userList.clear();
+                                userList.addAll(allUsers);
+                            } else {
+                                searchUsers(searchViewCli.getQuery().toString().trim());
+                            }
+                            adapterManageCli.notifyDataSetChanged();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (userListener != null) {
+            userListener.remove();
+        }
     }
 }
