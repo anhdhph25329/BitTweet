@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -38,7 +37,6 @@ public class ScreenManagePro extends AppCompatActivity {
 
     Toolbar toolbar;
     RecyclerView rvPro;
-    FloatingActionButton btnAddPro;
     AdapterManagePro adapterManagePro;
     List<Product> productList = new ArrayList<>();
     FirebaseFirestore db;
@@ -68,6 +66,7 @@ public class ScreenManagePro extends AppCompatActivity {
         setupRecyclerView();
         loadCategories(() -> {
             getData();
+            setupRealTimeUpdates();
             themSanPham();
         });
     }
@@ -81,7 +80,6 @@ public class ScreenManagePro extends AppCompatActivity {
         }
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        btnAddPro = findViewById(R.id.btnAddPro);
         rvPro = findViewById(R.id.rvPro);
 
         db = FirebaseFirestore.getInstance();
@@ -142,7 +140,8 @@ public class ScreenManagePro extends AppCompatActivity {
                         }
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(this, "Lỗi khi tải sản phẩm từ danh mục " + categoryName, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Lỗi khi tải sản phẩm từ danh mục " + categoryName,
+                                Toast.LENGTH_SHORT).show();
                     });
             tasks.add(task);
         }
@@ -160,8 +159,37 @@ public class ScreenManagePro extends AppCompatActivity {
                 });
     }
 
+    void setupRealTimeUpdates() {
+        if (categoryList.isEmpty()) return;
+
+        for (String categoryName : categoryList) {
+            db.collection("Products")
+                    .document(categoryName)
+                    .collection("Items")
+                    .addSnapshotListener((value, error) -> {
+                        if (error != null) {
+                            Toast.makeText(this, "Lỗi khi theo dõi thay đổi: " + error.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if (value != null) {
+                            List<Product> updatedProducts = new ArrayList<>();
+                            for (var doc : value.getDocuments()) {
+                                Product p = Product.fromDocument(doc);
+                                p.setId(doc.getId());
+                                p.setCategory(categoryName);
+                                updatedProducts.add(p);
+                            }
+                            productList.clear();
+                            productList.addAll(updatedProducts);
+                            adapterManagePro.notifyDataSetChanged();
+                        }
+                    });
+        }
+    }
+
     void themSanPham() {
-        btnAddPro.setOnClickListener(v -> {
+        findViewById(R.id.btnAddPro).setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(ScreenManagePro.this);
             LayoutInflater inflater = getLayoutInflater();
             View dialogView = inflater.inflate(R.layout.layout_dialog_add_pro, null);
@@ -214,7 +242,7 @@ public class ScreenManagePro extends AppCompatActivity {
                         .addOnSuccessListener(ref -> {
                             Toast.makeText(ScreenManagePro.this, "Thêm sản phẩm thành công!", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
-                            getData();
+                            getData(); // Vẫn giữ getData cho tính nhất quán
                         })
                         .addOnFailureListener(e -> {
                             Toast.makeText(ScreenManagePro.this, "Lỗi khi thêm sản phẩm: " + e.getMessage(), Toast.LENGTH_SHORT).show();
