@@ -1,5 +1,7 @@
 package fpt.anhdhph.bittweet.model;
 
+import com.google.firebase.firestore.DocumentReference;
+
 import java.util.List;
 
 public class Order {
@@ -11,7 +13,9 @@ public class Order {
     private String phoneNumber;
     private String address;
     private List<CartItem> items;
-
+    private DocumentReference reference;
+    public void setReference(DocumentReference reference) { this.reference = reference; }
+    public DocumentReference getReference() { return reference; }
     public Order() {
     }
 

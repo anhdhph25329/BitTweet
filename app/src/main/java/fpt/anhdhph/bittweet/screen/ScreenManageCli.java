@@ -78,7 +78,7 @@ public class ScreenManageCli extends AppCompatActivity {
 
         // Sử dụng biến searchView đã khai báo ở lớp, không khai báo lại
         searchViewCli= findViewById(R.id.search_view_cli);
-        searchViewCli.setQueryHint("Tìm kiếm sản phẩm...");
+        searchViewCli.setQueryHint("Tìm kiếm khách hàng theo SDT...");
         searchViewCli.setIconified(false);
 
         // Khởi tạo RecyclerView

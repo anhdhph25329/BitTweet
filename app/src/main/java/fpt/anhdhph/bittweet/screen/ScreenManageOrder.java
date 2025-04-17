@@ -1,14 +1,18 @@
 package fpt.anhdhph.bittweet.screen;
 
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -22,10 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import fpt.anhdhph.bittweet.DAO.UserDAO;
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.adapter.AdapterOrder;
 import fpt.anhdhph.bittweet.model.CartItem;
 import fpt.anhdhph.bittweet.model.Order;
+import fpt.anhdhph.bittweet.model.User;
 
 public class ScreenManageOrder extends AppCompatActivity {
 
@@ -35,6 +41,10 @@ public class ScreenManageOrder extends AppCompatActivity {
     private RecyclerView rvOrders;
     private AdapterOrder adapterOrder;
     private FirebaseFirestore db;
+    private androidx.appcompat.widget.SearchView searchViewOrd;
+    List<Order> allOrders = new ArrayList<>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +86,77 @@ public class ScreenManageOrder extends AppCompatActivity {
 
         // Lấy danh sách đơn hàng từ Firestore
         loadOrders();
+        // Sử dụng biến searchView đã khai báo ở lớp, không khai báo lại
+        searchViewOrd= findViewById(R.id.search_view_ord);
+        searchViewOrd.setQueryHint("Tìm kiếm đơn hàng theo SDT user... ");
+        searchViewOrd.setIconified(false);
+        setupSearchView();
+        //Thêm sự kiện long click để xóa đơn hàng
+        adapterOrder.setOnOrderLongClickListener((order, position) -> {
+            new AlertDialog.Builder(ScreenManageOrder.this)
+                    .setTitle("Xóa đơn hàng")
+                    .setMessage("Bạn có chắc muốn xóa đơn hàng này?")
+                    .setPositiveButton("Xóa", (dialog, which) -> {
+                        if (order.getReference() != null) {
+                            order.getReference()
+                                    .delete()
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(ScreenManageOrder.this, "Đã xóa đơn hàng", Toast.LENGTH_SHORT).show();
+                                        allOrders.remove(position);
+                                        adapterOrder.setOrders(new ArrayList<>(allOrders));
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(ScreenManageOrder.this, "Xóa thất bại", Toast.LENGTH_SHORT).show();
+                                    });
+                        } else {
+                            Toast.makeText(ScreenManageOrder.this, "Không tìm thấy tài liệu để xóa", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("Hủy", null)
+                    .show();
+        });
+
+
+
+    }
+    private void setupSearchView() {
+        // Đổi màu hint nếu cần
+        EditText searchEditText = searchViewOrd.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchEditText.setHintTextColor(Color.GRAY);
+
+        searchViewOrd.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchByPhoneSuffix(query.trim());
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.trim().isEmpty()) {
+                    adapterOrder.setOrders(allOrders); // Hiển thị lại toàn bộ đơn hàng
+                } else {
+                    searchByPhoneSuffix(newText.trim());
+                }
+                return true;
+            }
+        });
+    }
+
+    private void searchByPhoneSuffix(String suffix) {
+        List<Order> filtered = new ArrayList<>();
+        for (Order order : allOrders) {
+            if (order.getPhoneNumber() != null && order.getPhoneNumber().endsWith(suffix)) {
+                filtered.add(order);
+            }
+        }
+        adapterOrder.setOrders(filtered);
     }
 
     private void loadOrders() {
         // Lấy tất cả đơn hàng từ tất cả người dùng (dành cho admin)
-        List<Order> allOrders = new ArrayList<>();
+
+        allOrders.clear();
         db.collectionGroup("Orders")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -93,6 +169,9 @@ public class ScreenManageOrder extends AppCompatActivity {
                         order.setCustomerName(document.getString("customerName"));
                         order.setPhoneNumber(document.getString("phoneNumber"));
                         order.setAddress(document.getString("address"));
+
+                        // ✅ Gán thêm DocumentReference để dùng khi xóa
+                        order.setReference(document.getReference());
 
                         // Lấy danh sách sản phẩm trong đơn hàng
                         List<CartItem> items = new ArrayList<>();
@@ -112,6 +191,7 @@ public class ScreenManageOrder extends AppCompatActivity {
                         }
                         order.setItems(items);
                         allOrders.add(order);
+
                     }
 
                     // Xử lý hiển thị
@@ -131,4 +211,5 @@ public class ScreenManageOrder extends AppCompatActivity {
                     rvOrders.setVisibility(View.GONE);
                 });
     }
+
 }

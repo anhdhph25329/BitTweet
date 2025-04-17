@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -24,6 +25,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ public class ScreenManagePro extends AppCompatActivity {
     ProductDAO productDAO;
     List<String> categoryList = new ArrayList<>();
     SharedPreferences sharedPreferences;
+    private SearchView searchViewPro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +71,13 @@ public class ScreenManagePro extends AppCompatActivity {
         anhXa();
         setupRecyclerView();
         loadCategories(() -> {
-            getData();
-            themSanPham();
+            getData(""); // tải dữ liệu ban đầu
+            themSanPham(); // cài đặt nút thêm
         });
+        searchViewPro = findViewById(R.id.search_view_pro);
+        searchViewPro.setQueryHint("Tìm kiếm sản phẩm theo danh mục");
+        searchViewPro.setIconified(false);
+        setupSearchView();
     }
 
     void anhXa() {
@@ -96,6 +103,26 @@ public class ScreenManagePro extends AppCompatActivity {
         rvPro.setAdapter(adapterManagePro);
     }
 
+    void setupSearchView() {
+        searchViewPro.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                getData(query.trim());
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.trim().isEmpty()) {
+                    getData(""); // Tải tất cả nếu không có gì
+                } else {
+                    getData(newText.trim());
+                }
+                return true;
+            }
+        });
+    }
+
     void loadCategories(Runnable onComplete) {
         db.collection("Categories").get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -106,9 +133,6 @@ public class ScreenManagePro extends AppCompatActivity {
                             categoryList.add(categoryName);
                         }
                     }
-                    if (categoryList.isEmpty()) {
-                        Toast.makeText(this, "Không có danh mục nào!", Toast.LENGTH_SHORT).show();
-                    }
                     onComplete.run();
                 })
                 .addOnFailureListener(e -> {
@@ -118,6 +142,10 @@ public class ScreenManagePro extends AppCompatActivity {
     }
 
     void getData() {
+        getData("");
+    }
+
+    void getData(String searchText) {
         List<Product> allProducts = new ArrayList<>();
         List<Task<?>> tasks = new ArrayList<>();
 
@@ -129,7 +157,24 @@ public class ScreenManagePro extends AppCompatActivity {
             return;
         }
 
-        for (String categoryName : categoryList) {
+        // Lọc các danh mục có chứa searchText
+        List<String> filteredCategories = new ArrayList<>();
+        for (String category : categoryList) {
+            if (category.toLowerCase().contains(searchText.toLowerCase())) {
+                filteredCategories.add(category);
+            }
+        }
+
+        if (filteredCategories.isEmpty()) {
+            productList.clear();
+            if (adapterManagePro != null) {
+                adapterManagePro.notifyDataSetChanged();
+            }
+            Toast.makeText(this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        for (String categoryName : filteredCategories) {
             Task<QuerySnapshot> task = db.collection("Products")
                     .document(categoryName)
                     .collection("Items")
@@ -141,9 +186,6 @@ public class ScreenManagePro extends AppCompatActivity {
                             p.setCategory(categoryName);
                             allProducts.add(p);
                         }
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(this, "Lỗi khi tải sản phẩm từ danh mục " + categoryName, Toast.LENGTH_SHORT).show();
                     });
             tasks.add(task);
         }

@@ -15,11 +15,13 @@ import java.util.List;
 
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.model.Order;
+import fpt.anhdhph.bittweet.model.User;
 
 public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.OrderViewHolder> {
 
     private Context context;
     private List<Order> orders;
+
 
     public AdapterOrder(Context context, List<Order> orders) {
         this.context = context;
@@ -52,6 +54,13 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.OrderViewHol
         AdapterOrderItem adapterOrderItem = new AdapterOrderItem(context, order.getItems());
         holder.rvOrderItems.setLayoutManager(new LinearLayoutManager(context));
         holder.rvOrderItems.setAdapter(adapterOrderItem);
+
+        holder.itemView.setOnLongClickListener(v -> {
+            if (longClickListener != null) {
+                longClickListener.onOrderLongClicked(order, position);
+            }
+            return true;
+        });
     }
 
     @Override
@@ -73,4 +82,15 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.OrderViewHol
             rvOrderItems = itemView.findViewById(R.id.rv_order_items);
         }
     }
+    // Thêm interface callback
+    public interface OnOrderLongClickListener {
+        void onOrderLongClicked(Order order, int position);
+    }
+
+    private OnOrderLongClickListener longClickListener;
+
+    public void setOnOrderLongClickListener(OnOrderLongClickListener listener) {
+        this.longClickListener = listener;
+    }
+
 }
