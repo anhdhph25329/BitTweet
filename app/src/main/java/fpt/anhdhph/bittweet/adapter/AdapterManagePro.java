@@ -83,6 +83,7 @@ public class AdapterManagePro extends RecyclerView.Adapter<AdapterManagePro.Mana
                         productDAO.deleteProduct(product.getCategory(), product.getId(), new ProductDAO.OnProductLoadListener() {
                             @Override
                             public void onSuccess(List<Product> productList) {
+
                                 Toast.makeText(context, "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
                                 refreshCallback.run();
                             }
@@ -173,6 +174,7 @@ public class AdapterManagePro extends RecyclerView.Adapter<AdapterManagePro.Mana
             productDAO.updateProduct(category, updatedProduct, new ProductDAO.OnProductLoadListener() {
                 @Override
                 public void onSuccess(List<Product> list) {
+
                     Toast.makeText(context, "Đã cập nhật sản phẩm", Toast.LENGTH_SHORT).show();
                     refreshCallback.run();
                     dialog.dismiss();
@@ -209,4 +211,6 @@ public class AdapterManagePro extends RecyclerView.Adapter<AdapterManagePro.Mana
             btnEdit = itemView.findViewById(R.id.btnEdit);
         }
     }
+
+
 }
