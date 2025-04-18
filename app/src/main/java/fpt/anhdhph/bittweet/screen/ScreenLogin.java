@@ -114,31 +114,26 @@ public class ScreenLogin extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
-                        // Tìm thấy trong Users (email)
                         DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
                         checkPassword(document, pass);
                     } else {
-                        // Không tìm thấy qua email, kiểm tra qua phone trong Users
                         db.collection("Users")
                                 .whereEqualTo("phone", tele)
                                 .get()
                                 .addOnSuccessListener(phoneQuery -> {
                                     if (!phoneQuery.isEmpty()) {
-                                        // Tìm thấy trong Users (phone)
                                         DocumentSnapshot document = phoneQuery.getDocuments().get(0);
                                         checkPassword(document, pass);
                                     } else {
-                                        // Không tìm thấy trong Users, kiểm tra trong Admin
+                                        // Nếu không tìm thấy trong collection Users, kiểm tra trong collection Admin
                                         db.collection("Admin")
                                                 .whereEqualTo("tele", tele)
                                                 .get()
                                                 .addOnSuccessListener(adminQuery -> {
                                                     if (!adminQuery.isEmpty()) {
-                                                        // Tìm thấy trong Admin (tele)
                                                         DocumentSnapshot document = adminQuery.getDocuments().get(0);
                                                         checkPassword(document, pass);
                                                     } else {
-                                                        // Không tìm thấy trong cả Users và Admin
                                                         Toast.makeText(ScreenLogin.this, "Tài khoản không tồn tại", Toast.LENGTH_SHORT).show();
                                                     }
                                                 })
@@ -201,7 +196,6 @@ public class ScreenLogin extends AppCompatActivity {
             myAppEditor.putString("user_id", documentId);
             myAppEditor.apply();
 
-            // Chuyển đến ScreenHome
             Intent intent = new Intent(ScreenLogin.this, ScreenHome.class);
             startActivity(intent);
             finish();

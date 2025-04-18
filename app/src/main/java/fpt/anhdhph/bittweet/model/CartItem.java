@@ -1,7 +1,5 @@
 package fpt.anhdhph.bittweet.model;
 
-import android.util.Log;
-
 public class CartItem {
     private String id;
     private String productId;
@@ -13,7 +11,6 @@ public class CartItem {
     private String category;
 
     public CartItem() {
-        Log.d("CartItem", "Constructor rỗng được gọi");
     }
 
     public CartItem(String id, String productId, String proName, String size, String price, String quantity, String image, String category) {
@@ -25,7 +22,6 @@ public class CartItem {
         this.quantity = quantity;
         this.image = image;
         this.category = category;
-        Log.d("CartItem", "Constructor đầy đủ được gọi với: " + proName);
     }
 
     public String getId() {

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import fpt.anhdhph.bittweet.DAO.CartDAO;
 import fpt.anhdhph.bittweet.R;
@@ -109,11 +110,14 @@ public class ScreenPaymentDone extends AppCompatActivity {
                         // Tạo thông tin đơn hàng
                         Map<String, Object> orderData = new HashMap<>();
                         orderData.put("userId", userId);
-                        orderData.put("orderDate", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                                Locale.getDefault()).format(new Date()));
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
+                        String orderDate = sdf.format(new Date());
+                        orderData.put("orderDate", orderDate);
                         orderData.put("customerName", customerName);
                         orderData.put("phoneNumber", phoneNumber);
                         orderData.put("address", address);
+                        orderData.put("status", "Chờ xác nhận"); // Thêm trạng thái mặc định
 
                         // Tính tổng tiền
                         double totalPrice = 0;
@@ -147,7 +151,7 @@ public class ScreenPaymentDone extends AppCompatActivity {
                                 .collection("Orders")
                                 .add(orderData)
                                 .addOnSuccessListener(documentReference -> {
-                                    Log.d("ScreenPaymentDone", "Đơn hàng đã được lưu: " + documentReference.getId());
+                                    Log.d("ScreenPaymentDone", "Đơn hàng đã được lưu: " + documentReference.getId() + ", orderDate: " + orderDate);
                                     // Xóa giỏ hàng sau khi lưu đơn hàng thành công
                                     clearCart(userId);
                                 })

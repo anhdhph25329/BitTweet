@@ -1,10 +1,8 @@
 package fpt.anhdhph.bittweet.screen;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -74,7 +72,7 @@ public class ScreenManageCli extends AppCompatActivity {
         // Ánh xạ view
         rvCli = findViewById(R.id.rvCli);
         searchViewCli = findViewById(R.id.search_view_cli);
-        searchViewCli.setQueryHint("Nhập 3 số cuối khách hàng...");
+        searchViewCli.setQueryHint("Nhập 3 số SĐT cuối của khách hàng...");
         searchViewCli.setIconified(false);
 
         userDAO = new UserDAO();
@@ -124,7 +122,7 @@ public class ScreenManageCli extends AppCompatActivity {
 
     private void setupRecyclerView() {
         rvCli.setLayoutManager(new LinearLayoutManager(this));
-        adapterManageCli = new AdapterManageCli(this, userList); // Bỏ callback
+        adapterManageCli = new AdapterManageCli(this, userList);
         rvCli.setAdapter(adapterManageCli);
     }
 
@@ -136,7 +134,8 @@ public class ScreenManageCli extends AppCompatActivity {
         userListener = db.collection("Users")
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        Toast.makeText(this, "Lỗi khi tải danh sách khách hàng: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Lỗi khi tải danh sách khách hàng: " + error.getMessage(),
+                                Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (value != null) {

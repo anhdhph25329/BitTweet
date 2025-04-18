@@ -1,6 +1,7 @@
 package fpt.anhdhph.bittweet.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +16,15 @@ import java.util.List;
 
 import fpt.anhdhph.bittweet.R;
 import fpt.anhdhph.bittweet.model.Order;
-import fpt.anhdhph.bittweet.model.User;
 
-public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.OrderViewHolder> {
+public class AdapterManageOrder extends RecyclerView.Adapter<AdapterManageOrder.OrderViewHolder> {
 
     private Context context;
     private List<Order> orders;
+    private OnOrderLongClickListener longClickListener;
+    private OnOrderClickListener clickListener;
 
-
-    public AdapterOrder(Context context, List<Order> orders) {
+    public AdapterManageOrder(Context context, List<Order> orders) {
         this.context = context;
         this.orders = orders != null ? orders : new ArrayList<>();
     }
@@ -33,10 +34,26 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.OrderViewHol
         notifyDataSetChanged();
     }
 
+    public interface OnOrderLongClickListener {
+        void onOrderLongClicked(Order order, int position);
+    }
+
+    public interface OnOrderClickListener {
+        void onOrderClicked(Order order, int position);
+    }
+
+    public void setOnOrderLongClickListener(OnOrderLongClickListener listener) {
+        this.longClickListener = listener;
+    }
+
+    public void setOnOrderClickListener(OnOrderClickListener listener) {
+        this.clickListener = listener;
+    }
+
     @NonNull
     @Override
     public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.layout_item_order, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_item_manage_order, parent, false);
         return new OrderViewHolder(view);
     }
 
@@ -49,6 +66,30 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.OrderViewHol
         holder.tvAddress.setText("Địa chỉ: " + (order.getAddress() != null ? order.getAddress() : "N/A"));
         holder.tvOrderDate.setText("Ngày đặt: " + (order.getOrderDate() != null ? order.getOrderDate() : "N/A"));
         holder.tvTotalPrice.setText("Tổng tiền: " + (order.getTotalPrice() != null ? order.getTotalPrice() + " VNĐ" : "0 VNĐ"));
+        holder.tvStatus.setText("Trạng thái: " + (order.getStatus() != null ? order.getStatus() : "Chờ xác nhận"));
+
+        // Đặt màu sắc cho trạng thái
+        String status = order.getStatus() != null ? order.getStatus() : "Chờ xác nhận";
+        switch (status) {
+            case "Chờ xác nhận":
+                holder.tvStatus.setTextColor(Color.parseColor("#FFA500"));
+                break;
+            case "Đang pha chế":
+                holder.tvStatus.setTextColor(Color.parseColor("#1E90FF"));
+                break;
+            case "Hoàn tất":
+                holder.tvStatus.setTextColor(Color.parseColor("#008000"));
+                break;
+            case "Đã nhận":
+                holder.tvStatus.setTextColor(Color.parseColor("#008000"));
+                break;
+            case "Đã hủy":
+                holder.tvStatus.setTextColor(Color.parseColor("#FF0000"));
+                break;
+            default:
+                holder.tvStatus.setTextColor(Color.parseColor("#000000"));
+                break;
+        }
 
         // Hiển thị danh sách sản phẩm trong đơn hàng
         AdapterOrderItem adapterOrderItem = new AdapterOrderItem(context, order.getItems());
@@ -61,6 +102,12 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.OrderViewHol
             }
             return true;
         });
+
+        holder.itemView.setOnClickListener(v -> {
+            if (clickListener != null) {
+                clickListener.onOrderClicked(order, position);
+            }
+        });
     }
 
     @Override
@@ -69,7 +116,7 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.OrderViewHol
     }
 
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCustomerName, tvPhoneNumber, tvAddress, tvOrderDate, tvTotalPrice;
+        TextView tvCustomerName, tvPhoneNumber, tvAddress, tvOrderDate, tvTotalPrice, tvStatus;
         RecyclerView rvOrderItems;
 
         public OrderViewHolder(@NonNull View itemView) {
@@ -79,18 +126,8 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.OrderViewHol
             tvAddress = itemView.findViewById(R.id.tv_address);
             tvOrderDate = itemView.findViewById(R.id.tv_order_date);
             tvTotalPrice = itemView.findViewById(R.id.tv_total_price);
+            tvStatus = itemView.findViewById(R.id.tv_status);
             rvOrderItems = itemView.findViewById(R.id.rv_order_items);
         }
     }
-    // Thêm interface callback
-    public interface OnOrderLongClickListener {
-        void onOrderLongClicked(Order order, int position);
-    }
-
-    private OnOrderLongClickListener longClickListener;
-
-    public void setOnOrderLongClickListener(OnOrderLongClickListener listener) {
-        this.longClickListener = listener;
-    }
-
 }

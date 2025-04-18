@@ -59,7 +59,6 @@ public class AdapterManageCli extends RecyclerView.Adapter<AdapterManageCli.User
                         userDAO.deleteUser(user.getId(),
                                 () -> {
                                     Toast.makeText(context, "Đã xoá người dùng", Toast.LENGTH_SHORT).show();
-                                    // Snapshot listener trong ScreenManageCli sẽ tự động cập nhật
                                 },
                                 e -> Toast.makeText(context, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show()
                         );
@@ -102,7 +101,6 @@ public class AdapterManageCli extends RecyclerView.Adapter<AdapterManageCli.User
                     userDAO.updateUser(user.getId(), user,
                             () -> {
                                 Toast.makeText(context, "Đã cập nhật người dùng", Toast.LENGTH_SHORT).show();
-                                // Snapshot listener trong ScreenManageCli sẽ tự động cập nhật
                             },
                             e -> Toast.makeText(context, "Lỗi cập nhật: " + e.getMessage(), Toast.LENGTH_SHORT).show()
                     );

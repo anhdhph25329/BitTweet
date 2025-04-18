@@ -42,7 +42,8 @@ public class ScreenRecover1 extends AppCompatActivity {
 
                 String input = edtTele.getText().toString().trim();
                 if (input.isEmpty()) {
-                    Toast.makeText(ScreenRecover1.this, "Vui lòng nhập email hoặc số điện thoại", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ScreenRecover1.this, "Vui lòng nhập email hoặc số điện thoại",
+                            Toast.LENGTH_SHORT).show();
                     return;
                 }
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -61,12 +62,15 @@ public class ScreenRecover1 extends AppCompatActivity {
                                         .get()
                                         .addOnCompleteListener(task2 -> {
                                             if (task2.isSuccessful() && !task2.getResult().isEmpty()) {
-                                                Intent intent = new Intent(ScreenRecover1.this, ScreenRecover2.class);
-                                                intent.putExtra("userId", task2.getResult().getDocuments().get(0).getId());
+                                                Intent intent = new Intent(ScreenRecover1.this,
+                                                        ScreenRecover2.class);
+                                                intent.putExtra("userId",
+                                                        task2.getResult().getDocuments().get(0).getId());
                                                 startActivity(intent);
                                                 finish();
                                             } else {
-                                                Toast.makeText(ScreenRecover1.this, "Tài khoản không tồn tại", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(ScreenRecover1.this, "Tài khoản không tồn tại",
+                                                        Toast.LENGTH_SHORT).show();
                                             }
                                         });
                             }

@@ -18,17 +18,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/imgProduct"
             android:layout_width="match_parent"
-            android:layout_height="256dp"
+            android:layout_height="350dp"
             android:scaleType="centerCrop"
             android:background="#EEEEEE" />
 
         <LinearLayout
+            android:layout_marginHorizontal="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -60,6 +60,7 @@
         </LinearLayout>
 
         <TextView
+            android:layout_marginHorizontal="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Mô tả:"
@@ -68,6 +69,7 @@
             android:layout_marginTop="16dp" />
 
         <TextView
+            android:layout_marginHorizontal="16dp"
             android:id="@+id/tvDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,6 +79,7 @@
             android:lineSpacingExtra="4dp" />
 
         <TextView
+            android:layout_marginHorizontal="16dp"
             android:id="@+id/tvCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,6 +88,7 @@
             android:layout_marginTop="8dp" />
 
         <TextView
+            android:layout_marginHorizontal="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Chọn Size:"
@@ -93,6 +97,7 @@
             android:layout_marginTop="16dp" />
 
         <RadioGroup
+            android:layout_marginHorizontal="16dp"
             android:id="@+id/rgSize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -119,10 +124,11 @@
         </RadioGroup>
 
         <LinearLayout
+            android:layout_marginHorizontal="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:gravity="center_vertical">
 
             <LinearLayout
@@ -132,14 +138,14 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Giá"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tvPrice"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="0đ"
                     android:textSize="20sp"
@@ -152,9 +158,7 @@
                 android:layout_height="48dp"
                 android:text="Thêm vào giỏ"
                 android:backgroundTint="@color/orange"
-                android:textColor="@android:color/white"
-                android:paddingHorizontal="24dp"
-                android:textAllCaps="false" />
+                android:textColor="@android:color/white"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

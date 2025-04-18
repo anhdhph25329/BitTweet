@@ -17,7 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import fpt.anhdhph.bittweet.R;
-import fpt.anhdhph.bittweet.screen.ScreenHistory;
+import fpt.anhdhph.bittweet.screen.ScreenOrderHistory;
 import fpt.anhdhph.bittweet.screen.ScreenLogin;
 import fpt.anhdhph.bittweet.screen.ScreenManageCli;
 import fpt.anhdhph.bittweet.screen.ScreenManageIncome;
@@ -87,7 +87,7 @@ public class FragSetting extends Fragment {
         btnHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ScreenHistory.class);
+                Intent intent = new Intent(getActivity(), ScreenOrderHistory.class);
                 startActivity(intent);
             }
         });

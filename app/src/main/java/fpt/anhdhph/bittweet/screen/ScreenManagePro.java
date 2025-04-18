@@ -44,7 +44,7 @@ public class ScreenManagePro extends AppCompatActivity {
     SearchView searchViewPro;
     AdapterManagePro adapterManagePro;
     List<Product> productList = new ArrayList<>();
-    List<Product> allProducts = new ArrayList<>(); // Danh sách gốc để lưu toàn bộ sản phẩm
+    List<Product> allProducts = new ArrayList<>();
     FirebaseFirestore db;
     ProductDAO productDAO;
     List<String> categoryList = new ArrayList<>();
@@ -77,6 +77,7 @@ public class ScreenManagePro extends AppCompatActivity {
             themSanPham();
             setupSearchView();
         });
+
     }
 
     void anhXa() {
@@ -89,7 +90,7 @@ public class ScreenManagePro extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         rvPro = findViewById(R.id.rvPro);
-        searchViewPro = findViewById(R.id.search_view_pro); // Ánh xạ SearchView
+        searchViewPro = findViewById(R.id.search_view_pro);
 
         db = FirebaseFirestore.getInstance();
         productDAO = new ProductDAO();
@@ -212,7 +213,8 @@ public class ScreenManagePro extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Lỗi khi tải dữ liệu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Lỗi khi tải dữ liệu: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
                 });
     }
 

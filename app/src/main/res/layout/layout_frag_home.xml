@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
                 android:padding="8dp"/>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
 </androidx.drawerlayout.widget.DrawerLayout>

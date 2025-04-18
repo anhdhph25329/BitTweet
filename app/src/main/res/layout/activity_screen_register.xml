@@ -8,7 +8,6 @@
     tools:context=".screen.ScreenRegister"
     android:orientation="vertical"
     android:background="#FFFFFF"
-
     android:gravity="center_horizontal"
     android:layout_marginHorizontal="16dp">
 
@@ -156,6 +155,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Bạn đã có tài khoản?" />
-
 
 </LinearLayout>

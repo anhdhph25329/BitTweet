@@ -144,6 +144,7 @@ public class FragFavorite extends Fragment {
                     Tasks.whenAllComplete(tasks)
                             .addOnSuccessListener(results -> {
                                 favoriteProducts.addAll(tempProductMap.values());
+
                                 // Đảm bảo danh sách không trùng lặp
                                 Set<Product> uniqueProducts = new LinkedHashSet<>(favoriteProducts);
                                 favoriteProducts.clear();

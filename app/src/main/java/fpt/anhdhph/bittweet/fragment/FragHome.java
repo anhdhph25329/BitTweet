@@ -127,7 +127,8 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                 baseList.add(product);
             } else if (selectedTabPosition == 2 && "Coffee".equals(product.getCategory())) {
                 baseList.add(product);
-            } else if (selectedTabPosition == 3 && !"Coffee".equals(product.getCategory()) && !"Cocktail".equals(product.getCategory())) {
+            } else if (selectedTabPosition == 3 && !"Coffee".equals(product.getCategory()) &&
+                    !"Cocktail".equals(product.getCategory())) {
                 baseList.add(product);
             }
         }
@@ -196,7 +197,8 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                         }
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(getContext(), "Lỗi khi tải sản phẩm từ danh mục " + categoryName, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Lỗi khi tải sản phẩm từ danh mục " + categoryName,
+                                Toast.LENGTH_SHORT).show();
                     });
             tasks.add(task);
         }
@@ -244,7 +246,8 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                     filterProducts(selectedTabPosition);
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Lỗi khi kiểm tra yêu thích: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Lỗi khi kiểm tra yêu thích: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
                     filterProducts(selectedTabPosition);
                 });
     }
@@ -287,7 +290,8 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                     .get()
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
-                            Toast.makeText(getContext(), "Sản phẩm đã có trong danh sách yêu thích", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Sản phẩm đã có trong danh sách yêu thích",
+                                    Toast.LENGTH_SHORT).show();
                         } else {
                             Map<String, Object> favoriteData = new HashMap<>();
                             favoriteData.put("productId", product.getId());
@@ -302,14 +306,16 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                                         Toast.makeText(getContext(), "Đã thêm vào yêu thích", Toast.LENGTH_SHORT).show();
                                     })
                                     .addOnFailureListener(e -> {
-                                        Toast.makeText(getContext(), "Lỗi khi thêm vào yêu thích: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Lỗi khi thêm vào yêu thích: " + e.getMessage(),
+                                                Toast.LENGTH_SHORT).show();
                                         product.setFavorite(false);
                                         adapter.notifyItemChanged(filteredProducts.indexOf(product));
                                     });
                         }
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(getContext(), "Lỗi khi kiểm tra yêu thích: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Lỗi khi kiểm tra yêu thích: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
                         product.setFavorite(false);
                         adapter.notifyItemChanged(filteredProducts.indexOf(product));
                     });
@@ -323,7 +329,8 @@ public class FragHome extends Fragment implements ProductAdapter.OnProductClickL
                         Toast.makeText(getContext(), "Đã xóa khỏi yêu thích", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(getContext(), "Lỗi khi xóa khỏi yêu thích: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Lỗi khi xóa khỏi yêu thích: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
                         product.setFavorite(true);
                         adapter.notifyItemChanged(filteredProducts.indexOf(product));
                     });

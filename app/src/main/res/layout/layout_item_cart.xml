@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -37,8 +36,25 @@
             android:layout_marginStart="12dp" />
 
         <TextView
+            android:id="@+id/text_note"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:text="Thêm ghi chú"
+            android:textColor="#666666"
+            android:textSize="14sp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toEndOf="@id/image_product"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_title" />
+
+        <TextView
             android:id="@+id/btn_size"
-            android:layout_width="40dp"
+            android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/setting_size_display"
@@ -46,9 +62,8 @@
             android:text="S"
             android:textColor="#fff"
             android:visibility="visible"
-            app:layout_constraintStart_toStartOf="@id/text_title"
-            app:layout_constraintTop_toBottomOf="@id/text_title" />
-
+            app:layout_constraintStart_toStartOf="@id/text_note"
+            app:layout_constraintTop_toBottomOf="@id/text_note" />
 
         <TextView
             android:id="@+id/text_price"
@@ -56,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="65.000 VNĐ"
-            android:textSize="14sp"
+            android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@id/btn_size"
             app:layout_constraintTop_toTopOf="@id/btn_size"
             app:layout_constraintBottom_toBottomOf="@id/btn_size" />
@@ -72,14 +87,15 @@
             app:layout_constraintBottom_toBottomOf="@id/btn_size">
 
             <TextView
-                android:background="@drawable/setting_cart_button"
-                android:gravity="center"
                 android:id="@+id/btn_decrease"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
+                android:background="@drawable/setting_cart_button"
+                android:backgroundTint="#fcc419"
+                android:gravity="center"
                 android:text="-"
                 android:textColor="#fff"
-                android:visibility="visible" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/text_quantity"
@@ -87,19 +103,19 @@
                 android:layout_height="36dp"
                 android:gravity="center"
                 android:text="1"
-                android:textSize="14sp" />
+                android:textSize="18sp" />
 
             <TextView
-                android:background="@drawable/setting_cart_button"
-                android:gravity="center"
                 android:id="@+id/btn_increase"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
+                android:background="@drawable/setting_cart_button"
+                android:backgroundTint="#fcc419"
+                android:gravity="center"
                 android:text="+"
-                android:backgroundTint="#FF7F9F"
                 android:textColor="#fff"
-                android:visibility="visible" />
-        </LinearLayout>
+                android:textSize="20sp" />
 
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

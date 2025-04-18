@@ -1,11 +1,9 @@
 package fpt.anhdhph.bittweet.screen;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -55,12 +53,10 @@ public class ScreenManageIncome extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("LoginPref", MODE_PRIVATE);
         String role = sharedPreferences.getString("role", "user");
         if (!role.equals("admin")) {
+            Toast.makeText(this, "Chỉ admin mới được xem doanh thu!", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
-
-        // Khởi tạo Firestore
-        db = FirebaseFirestore.getInstance();
 
         anhXa();
         layNgay();
@@ -73,6 +69,8 @@ public class ScreenManageIncome extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Quản lý doanh thu");
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
+        db = FirebaseFirestore.getInstance();
 
         btn_tungay = findViewById(R.id.btn_tungay);
         btn_denngay = findViewById(R.id.btn_denngay);
@@ -155,7 +153,8 @@ public class ScreenManageIncome extends AppCompatActivity {
 
             // Kiểm tra nếu ngày trống
             if (fromDateStr.isEmpty() || toDateStr.isEmpty()) {
-                Toast.makeText(this, "Vui lòng chọn cả ngày bắt đầu và ngày kết thúc!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Vui lòng chọn cả ngày bắt đầu và ngày kết thúc!",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -165,17 +164,19 @@ public class ScreenManageIncome extends AppCompatActivity {
                 fromDate = sdf.parse(fromDateStr);
                 toDate = sdf.parse(toDateStr);
             } catch (ParseException e) {
-                Toast.makeText(this, "Định dạng ngày không hợp lệ! (dd/MM/yyyy)", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Định dạng ngày không hợp lệ! (dd/MM/yyyy)",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Kiểm tra ngày hợp lệ (từ ngày không được sau đến ngày)
+            // Kiểm tra ngày hợp lệ
             if (fromDate.after(toDate)) {
-                Toast.makeText(this, "Ngày bắt đầu không được sau ngày kết thúc!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Ngày bắt đầu không được sau ngày kết thúc!",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Đặt thời gian cho toDate là cuối ngày (23:59:59)
+            // Đặt thời gian cho toDate là 23:59:59
             Calendar toDateCal = Calendar.getInstance();
             toDateCal.setTime(toDate);
             toDateCal.set(Calendar.HOUR_OF_DAY, 23);
@@ -183,13 +184,13 @@ public class ScreenManageIncome extends AppCompatActivity {
             toDateCal.set(Calendar.SECOND, 59);
             toDate = toDateCal.getTime();
 
-            // Tính doanh thu từ Firestore
             calculateIncome(fromDate, toDate);
         });
     }
 
     private void calculateIncome(Date fromDate, Date toDate) {
         db.collectionGroup("Orders")
+                .whereEqualTo("status", "Đã nhận")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     double totalIncome = 0;
@@ -198,8 +199,10 @@ public class ScreenManageIncome extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String orderDateStr = document.getString("orderDate");
                         String totalPriceStr = document.getString("totalPrice");
+                        String status = document.getString("status");
 
-                        if (orderDateStr == null || totalPriceStr == null) {
+                        if (orderDateStr == null || totalPriceStr == null || status == null) {
+                            Log.w("ScreenManageIncome", "Dữ liệu đơn hàng thiếu: " + document.getId());
                             continue;
                         }
 
@@ -209,25 +212,32 @@ public class ScreenManageIncome extends AppCompatActivity {
                                 double totalPrice = Double.parseDouble(totalPriceStr);
                                 totalIncome += totalPrice;
                                 orderCount++;
+                                Log.d("ScreenManageIncome", "Đơn hàng: " + document.getId() +
+                                        ", Giá: " + totalPrice + ", Ngày: " + orderDateStr);
                             }
                         } catch (ParseException e) {
-                            Log.e("ScreenManageIncome", "Lỗi parse ngày: " + e.getMessage());
+                            Log.e("ScreenManageIncome", "Lỗi parse ngày đơn hàng " + document.getId() +
+                                    ": " + e.getMessage());
                         } catch (NumberFormatException e) {
-                            Log.e("ScreenManageIncome", "Lỗi parse totalPrice: " + e.getMessage());
+                            Log.e("ScreenManageIncome", "Lỗi parse totalPrice đơn hàng " + document.getId() +
+                                    ": " + e.getMessage());
                         }
                     }
 
                     // Hiển thị kết quả
+                    DecimalFormat df = new DecimalFormat("#,### VNĐ");
                     if (orderCount == 0) {
-                        tv_doanhthu.setText("Doanh thu: 0 VNĐ (Không có đơn hàng)");
+                        tv_doanhthu.setText("Doanh thu: 0 VNĐ\n(Không có đơn hàng 'Đã nhận' trong khoảng thời gian này)");
                     } else {
-                        DecimalFormat df = new DecimalFormat("#,### VNĐ");
-                        tv_doanhthu.setText("Doanh thu:\n\n" + df.format(totalIncome) + " (" + orderCount + " đơn hàng)");
+                        tv_doanhthu.setText("Doanh thu: " + df.format(totalIncome) +
+                                "\n(" + orderCount + " đơn hàng)");
                     }
+                    Log.d("ScreenManageIncome", "Tổng doanh thu: " + totalIncome +
+                            ", Số đơn hàng: " + orderCount);
                 })
                 .addOnFailureListener(e -> {
                     Log.e("ScreenManageIncome", "Lỗi khi lấy đơn hàng: " + e.getMessage());
-                    Toast.makeText(this, "Lỗi khi tính doanh thu!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Lỗi khi tính doanh thu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     tv_doanhthu.setText("Doanh thu: 0 VNĐ (Lỗi)");
                 });
     }

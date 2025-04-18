@@ -49,6 +49,7 @@ public class CartDAO {
                         cartItem.setImage(document.getString("image"));
                         cartItem.setSize(document.getString("size"));
                         cartItem.setPrice(document.getString("price"));
+
                         // Xử lý quantity linh hoạt
                         Object quantityObj = document.get("quantity");
                         if (quantityObj instanceof String) {

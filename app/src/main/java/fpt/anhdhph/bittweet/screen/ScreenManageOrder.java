@@ -5,8 +5,11 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,18 +29,16 @@ import com.google.firebase.firestore.ListenerRegistration;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
-import fpt.anhdhph.bittweet.DAO.UserDAO;
 import fpt.anhdhph.bittweet.R;
-import fpt.anhdhph.bittweet.adapter.AdapterOrder;
+import fpt.anhdhph.bittweet.adapter.AdapterManageOrder;
 import fpt.anhdhph.bittweet.model.CartItem;
 import fpt.anhdhph.bittweet.model.Order;
-import fpt.anhdhph.bittweet.model.User;
 
 public class ScreenManageOrder extends AppCompatActivity {
 
@@ -45,11 +46,12 @@ public class ScreenManageOrder extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private TextView tvEmptyOrders;
     private RecyclerView rvOrders;
-    private AdapterOrder adapterOrder;
+    private AdapterManageOrder adapterManageOrder;
     private FirebaseFirestore db;
     private SearchView searchViewOrd;
-    List<Order> allOrders = new ArrayList<>();
+    private List<Order> allOrders = new ArrayList<>();
     private ListenerRegistration ordersListener;
+    private final String[] statuses = {"Chờ xác nhận", "Đang pha chế", "Hoàn tất", "Đã nhận", "Đã hủy"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,11 +89,11 @@ public class ScreenManageOrder extends AppCompatActivity {
 
         // Thiết lập RecyclerView
         rvOrders.setLayoutManager(new LinearLayoutManager(this));
-        adapterOrder = new AdapterOrder(this, new ArrayList<>());
-        rvOrders.setAdapter(adapterOrder);
+        adapterManageOrder = new AdapterManageOrder(this, new ArrayList<>());
+        rvOrders.setAdapter(adapterManageOrder);
 
         // Thiết lập SearchView
-        searchViewOrd.setQueryHint("Nhập 3 số cuối khách hàng...");
+        searchViewOrd.setQueryHint("Nhập 3 số SĐT cuối của khách hàng...");
         searchViewOrd.setIconified(false);
         setupSearchView();
 
@@ -99,7 +101,7 @@ public class ScreenManageOrder extends AppCompatActivity {
         setupRealTimeUpdates();
 
         // Thêm sự kiện long click để xóa đơn hàng
-        adapterOrder.setOnOrderLongClickListener((order, position) -> {
+        adapterManageOrder.setOnOrderLongClickListener((order, position) -> {
             new AlertDialog.Builder(ScreenManageOrder.this)
                     .setTitle("Xóa đơn hàng")
                     .setMessage("Bạn có chắc muốn xóa đơn hàng này?")
@@ -123,6 +125,8 @@ public class ScreenManageOrder extends AppCompatActivity {
                     .setNegativeButton("Hủy", null)
                     .show();
         });
+
+        adapterManageOrder.setOnOrderClickListener((order, position) -> showUpdateStatusDialog(order));
     }
 
     private void setupSearchView() {
@@ -139,7 +143,7 @@ public class ScreenManageOrder extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.trim().isEmpty()) {
-                    adapterOrder.setOrders(allOrders);
+                    adapterManageOrder.setOrders(allOrders);
                 } else {
                     searchByPhoneSuffix(newText.trim());
                 }
@@ -155,7 +159,52 @@ public class ScreenManageOrder extends AppCompatActivity {
                 filtered.add(order);
             }
         }
-        adapterOrder.setOrders(filtered);
+        adapterManageOrder.setOrders(filtered);
+    }
+
+    private void showUpdateStatusDialog(Order order) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.layout_dialog_update_status, null);
+        builder.setView(dialogView);
+
+        Spinner spinnerStatus = dialogView.findViewById(R.id.spinner_status);
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, statuses);
+        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerStatus.setAdapter(statusAdapter);
+
+        // Đặt trạng thái hiện tại làm mặc định
+        for (int i = 0; i < statuses.length; i++) {
+            if (statuses[i].equals(order.getStatus())) {
+                spinnerStatus.setSelection(i);
+                break;
+            }
+        }
+
+        builder.setPositiveButton("Cập nhật", (dialog, which) -> {
+            String newStatus = spinnerStatus.getSelectedItem().toString();
+            if (order.getReference() != null) {
+                order.getReference()
+                        .update("status", newStatus)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(this, "Đã cập nhật trạng thái thành: " + newStatus,
+                                    Toast.LENGTH_SHORT).show();
+                            order.setStatus(newStatus);
+                            adapterManageOrder.notifyDataSetChanged();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(this, "Cập nhật trạng thái thất bại: " + e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                        });
+            }
+        });
+        builder.setNegativeButton("Hủy", null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // Tùy chỉnh nút để cân đối
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.black));
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(android.R.color.black));
     }
 
     private void setupRealTimeUpdates() {
@@ -179,14 +228,16 @@ public class ScreenManageOrder extends AppCompatActivity {
                             Order order = new Order();
                             order.setId(document.getId());
                             order.setUserId(document.getString("userId"));
-                            order.setOrderDate(document.getString("orderDate"));
+                            String orderDate = document.getString("orderDate");
+                            Log.d("ScreenManageOrder", "orderId: " + document.getId() + ", orderDate: " + orderDate);
+                            order.setOrderDate(orderDate);
                             order.setTotalPrice(document.getString("totalPrice"));
                             order.setCustomerName(document.getString("customerName"));
                             order.setPhoneNumber(document.getString("phoneNumber"));
                             order.setAddress(document.getString("address"));
+                            order.setStatus(document.getString("status"));
                             order.setReference(document.getReference());
 
-                            // Lấy danh sách sản phẩm trong đơn hàng
                             List<CartItem> items = new ArrayList<>();
                             List<Map<String, Object>> itemsData = (List<Map<String, Object>>) document.get("items");
                             if (itemsData != null) {
@@ -206,23 +257,25 @@ public class ScreenManageOrder extends AppCompatActivity {
                             allOrders.add(order);
                         }
 
-                        // Sắp xếp đơn hàng theo thời gian đặt hàng từ mới nhất đến cũ nhất
-                        Collections.sort(allOrders, new Comparator<Order>() {
-                            @Override
-                            public int compare(Order o1, Order o2) {
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                try {
-                                    Date date1 = o1.getOrderDate() != null ? dateFormat.parse(o1.getOrderDate()) : new Date(0);
-                                    Date date2 = o2.getOrderDate() != null ? dateFormat.parse(o2.getOrderDate()) : new Date(0);
-                                    return date2.compareTo(date1);
-                                } catch (ParseException e) {
-                                    Log.e("ScreenManageOrder", "Lỗi parse ngày: " + e.getMessage());
-                                    return 0;
+                        allOrders.sort((o1, o2) -> {
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                            dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
+                            try {
+                                if (o1.getOrderDate() == null || o1.getOrderDate().isEmpty()) {
+                                    return o2.getOrderDate() == null || o2.getOrderDate().isEmpty() ? 0 : 1;
                                 }
+                                if (o2.getOrderDate() == null || o2.getOrderDate().isEmpty()) {
+                                    return -1;
+                                }
+                                Date date1 = dateFormat.parse(o1.getOrderDate());
+                                Date date2 = dateFormat.parse(o2.getOrderDate());
+                                return date2.compareTo(date1);
+                            } catch (ParseException e) {
+                                Log.e("ScreenManageOrder", "Lỗi parse ngày, orderId: " + o1.getId() + ", orderDate: " + o1.getOrderDate() + ", error: " + e.getMessage());
+                                return 1;
                             }
                         });
 
-                        // Xử lý hiển thị
                         if (allOrders.isEmpty()) {
                             tvEmptyOrders.setVisibility(View.VISIBLE);
                             rvOrders.setVisibility(View.GONE);
@@ -230,7 +283,7 @@ public class ScreenManageOrder extends AppCompatActivity {
                             tvEmptyOrders.setVisibility(View.GONE);
                             rvOrders.setVisibility(View.VISIBLE);
                             if (searchViewOrd.getQuery().toString().trim().isEmpty()) {
-                                adapterOrder.setOrders(allOrders);
+                                adapterManageOrder.setOrders(allOrders);
                             } else {
                                 searchByPhoneSuffix(searchViewOrd.getQuery().toString().trim());
                             }

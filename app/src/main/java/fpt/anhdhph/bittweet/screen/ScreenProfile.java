@@ -35,7 +35,6 @@ import fpt.anhdhph.bittweet.R;
 
 public class ScreenProfile extends AppCompatActivity {
 
-    String documentId;
     Toolbar toolbar;
     ImageView dpDob;
     EditText edtName, edtDob, edtPhone, edtEmail, edtAddress, edtPass;
@@ -109,7 +108,6 @@ public class ScreenProfile extends AppCompatActivity {
             String address = sharedPreferences.getString("address", "");
             String password = sharedPreferences.getString("password", "");
 
-            // Hiển thị dữ liệu
             edtName.setText(name);
             edtDob.setText(birthdate);
             edtPhone.setText(phone);
@@ -153,7 +151,8 @@ public class ScreenProfile extends AppCompatActivity {
         }
     }
 
-    private void displayUserData(String name, String gender, String birthdate, String phone, String email, String address, String password) {
+    private void displayUserData(String name, String gender, String birthdate, String phone, String email,
+                                 String address, String password) {
         edtName.setText(name);
         edtDob.setText(birthdate);
         edtPhone.setText(phone);
@@ -223,7 +222,6 @@ public class ScreenProfile extends AppCompatActivity {
         String address = edtAddress.getText().toString().trim();
         String password = edtPass.getText().toString().trim();
 
-        //validate
         if (name.isEmpty()) {
             edtName.setError("Vui lòng nhập họ và tên");
             return;
@@ -279,7 +277,8 @@ public class ScreenProfile extends AppCompatActivity {
                                 .apply();
                         Toast.makeText(this, "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
                     })
-                    .addOnFailureListener(e -> Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                    .addOnFailureListener(e -> Toast.makeText(this, "Lỗi: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show());
         } else {
             Toast.makeText(this, "Không tìm thấy ID tài khoản!", Toast.LENGTH_SHORT).show();
         }

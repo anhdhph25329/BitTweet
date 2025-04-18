@@ -77,7 +77,6 @@ public class FragCart extends Fragment {
 
             updateUI();
 
-            // Khi số lượng thay đổi, cập nhật lại giao diện và tổng tiền
             cartAdapter.setOnQuantityChangedListener(this::updateUI);
         });
     }

@@ -17,6 +17,7 @@
         app:navigationIcon="@drawable/ic_back"
         app:title="Quản lý đơn hàng"
         app:titleTextColor="@color/white" />
+
     <!-- Thanh tìm kiếm -->
     <LinearLayout
         android:layout_width="match_parent"

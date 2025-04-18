@@ -48,7 +48,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/ic_customer"/>
+            android:src="@drawable/ic_his_oder"/>
 
         <TextView
             android:textColor="@color/white"
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="Đơn hàng của bạn"/>
+            android:text="Lịch sử đặt hàng"/>
 
     </LinearLayout>
 
@@ -206,8 +206,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/ic_logout"
-            />
+            android:src="@drawable/ic_logout" />
 
         <TextView
             android:textColor="@color/white"
