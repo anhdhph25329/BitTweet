@@ -39,6 +39,23 @@
             android:text="Thanh toán qua internet banking"/>
     </LinearLayout>
 
+    <TextView
+        android:layout_marginVertical="16dp"
+        android:textSize="15sp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Sau khi thanh toán bạn chỉ có thể hủy đơn hàng khi trạng thái đang là chờ xác nhận"/>
+
+    <TextView
+        android:textSize="15sp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Để hoàn tiền đơn hàng, bạn hãy có mặt tại quầy để xác thực đơn hàng"/>
+
     <LinearLayout
         android:visibility="gone"
         android:id="@+id/btnCash"
