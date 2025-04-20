@@ -51,22 +51,7 @@ public class AdapterManageCli extends RecyclerView.Adapter<AdapterManageCli.User
         holder.tvSdt.setText("SDT: " + user.getPhone());
 
         holder.btnEdit.setOnClickListener(v -> showEditDialog(user));
-        holder.itemView.setOnLongClickListener(v -> {
-            new AlertDialog.Builder(context)
-                    .setTitle("Xác nhận xoá")
-                    .setMessage("Bạn có chắc muốn xoá người dùng này?")
-                    .setPositiveButton("Xoá", (dialog, which) -> {
-                        userDAO.deleteUser(user.getId(),
-                                () -> {
-                                    Toast.makeText(context, "Đã xoá người dùng", Toast.LENGTH_SHORT).show();
-                                },
-                                e -> Toast.makeText(context, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                        );
-                    })
-                    .setNegativeButton("Huỷ", null)
-                    .show();
-            return true;
-        });
+
     }
 
     private void showEditDialog(User user) {
